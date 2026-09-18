@@ -83,6 +83,26 @@
         { id: 'cb_diamond', name: 'Diamond / Ruby Club', pool: '$35,000 – $80,000+', split: '35%', recommended: true }
       ]
     },
+    'Winline': {
+      name: 'Winline VIP',
+      badge: 'WINLINE VIP // СМОЛЛ-МАРКЕТЫ',
+      iconColor: '#F59E0B',
+      tiers: [
+        { id: 'win_silver', name: 'Silver / Gold VIP', pool: '₽1,500,000 – ₽3,000,000 ($15k–$30k)', split: '30%' },
+        { id: 'win_platinum', name: 'Platinum VIP (Фолы/Удары)', pool: '₽2,000,000 – ₽5,000,000 ($20k–$50k)', split: '35%', recommended: true },
+        { id: 'win_diamond', name: 'Brilliant Whale', pool: '₽5,000,000+ ($50k–$100k+)', split: '40%' }
+      ]
+    },
+    'Fonbet': {
+      name: 'Fonbet VIP',
+      badge: 'FONBET VIP // ПРЕМИУМ СТАТУС',
+      iconColor: '#EF4444',
+      tiers: [
+        { id: 'fon_silver', name: 'VIP Silver / Gold', pool: '₽2,000,000 – ₽4,000,000 ($20k–$40k)', split: '30%' },
+        { id: 'fon_platinum', name: 'VIP Platinum / Premier', pool: '₽2,500,000 – ₽6,000,000 ($25k–$60k)', split: '35%', recommended: true },
+        { id: 'fon_elite', name: 'Elite Status (Личный саппорт)', pool: '₽6,000,000+ ($60k–$120k+)', split: '40%' }
+      ]
+    },
     'Other': {
       name: 'Другой крипто-букмекер',
       badge: 'PRIVATE SYNDICATE DESK',
@@ -332,6 +352,8 @@
         const normalized = initialData.bk.toLowerCase();
         if (normalized.includes('stake')) this.state.bkKey = 'Stake';
         else if (normalized.includes('sportsbet')) this.state.bkKey = 'Sportsbet';
+        else if (normalized.includes('winline')) this.state.bkKey = 'Winline';
+        else if (normalized.includes('fonbet')) this.state.bkKey = 'Fonbet';
         else if (normalized.includes('bc')) this.state.bkKey = 'BCGame';
         else if (normalized.includes('roobet')) this.state.bkKey = 'Roobet';
         else if (normalized.includes('cloud')) this.state.bkKey = 'Cloudbet';

@@ -1047,6 +1047,7 @@
   // Instantiate singleton & attach globally
   const syndicateAudio = new SoundEngine();
   window.SyndicateAudio = syndicateAudio;
+  window.SoundEngine = syndicateAudio;
 
   // Auto-init on page load or DOMContentLoaded
   if (document.readyState === 'loading') {

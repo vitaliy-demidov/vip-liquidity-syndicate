@@ -426,15 +426,61 @@
 
   </style>
   <script>
-    // Early global stubs for inline event handlers before modules load
+    // Early global stubs and helpers for interactive elements before modules load
+    window._pendingBK = null;
+    window._pendingLimit = null;
+
     window.scrollToScene = function(idx) {
       if (window.scrubEngine && typeof window.scrubEngine.seekToScene === 'function') {
         window.scrubEngine.seekToScene(idx);
       }
     };
-    window.selectBookmaker = function(name) {};
-    window.setLimitPreset = function(val) {};
-    window.transferCalculatorToModal = function() {};
+
+    window.selectBookmaker = function(name) {
+      window._pendingBK = name;
+      const label = document.getElementById('selected-bk-label');
+      if (label) label.innerText = name;
+    };
+
+    window.setLimitPreset = function(val) {
+      window._pendingLimit = val;
+      const slider = document.getElementById('calc-limit-slider');
+      if (slider) slider.value = val;
+      const disp = document.getElementById('display-limit');
+      if (disp) disp.innerText = '$' + Number(val).toLocaleString('en-US');
+    };
+
+    window.openConcierge = function(data, config) {
+      if (window.SyndicateAudio && typeof window.SyndicateAudio.playMechanicalSwitch === 'function') {
+        window.SyndicateAudio.playMechanicalSwitch({ pitch: 1.1, direction: 'up' });
+      }
+      if (window.VIPConcierge && typeof window.VIPConcierge.open === 'function') {
+        const payload = Object.assign({
+          sessionFormatId: (typeof currentFunnelCity !== 'undefined' && currentFunnelCity === 'dubai') ? 'dubai_lounge' : 'moscow_lounge',
+          location: typeof currentFunnelCity !== 'undefined' ? currentFunnelCity : 'moscow'
+        }, data || {});
+        return window.VIPConcierge.open(payload, config);
+      }
+      const targetCity = (data && data.location) || (typeof currentFunnelCity !== 'undefined' ? currentFunnelCity : 'moscow');
+      const url = targetCity === 'dubai'
+        ? 'https://t.me/YOUR_BOT_USERNAME?start=web_audit_dubai'
+        : 'https://t.me/YOUR_BOT_USERNAME?start=web_audit';
+      window.open(url, '_blank');
+    };
+
+    window.transferCalculatorToModal = function() {
+      if (typeof window._realTransferCalculator === 'function') {
+        return window._realTransferCalculator();
+      }
+      return window.openConcierge({ limit: '$25,000' });
+    };
+
+    window.openWebConciergeModal = function() {
+      return window.openConcierge({
+        sessionFormatId: (typeof currentFunnelCity !== 'undefined' && currentFunnelCity === 'dubai') ? 'dubai_lounge' : 'moscow_lounge',
+        location: typeof currentFunnelCity !== 'undefined' ? currentFunnelCity : 'moscow'
+      });
+    };
   </script>
 </head>
 <body class="selection:bg-amber-400/20 selection:text-amber-300">
@@ -488,7 +534,7 @@
         </a>
 
         <!-- CTA Trigger Modal (24K Bullion Gold Styling) -->
-        <button onclick="VIPConcierge.open()" class="magnetic-btn px-3 sm:px-4 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-cinzel font-bold text-[11px] sm:text-xs tracking-wider uppercase shadow-[0_0_20px_rgba(212,175,55,0.4)] border border-amber-300/40 active:scale-95 transition-all">
+        <button id="header-cta-btn" onclick="openConcierge()" class="magnetic-btn px-3 sm:px-4 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-cinzel font-bold text-[11px] sm:text-xs tracking-wider uppercase shadow-[0_0_20px_rgba(212,175,55,0.4)] border border-amber-300/40 active:scale-95 transition-all">
           <span>Согласовать<span class="hidden sm:inline"> сессию</span></span>
         </button>
 
@@ -767,7 +813,7 @@
               <span class="text-xs text-brand-emerald font-bold font-mono">+$1,500.00 (30% SPLIT)</span>
             </div>
 
-            <button onclick="VIPConcierge.open()" class="magnetic-btn w-full py-4 rounded-xl bg-gradient-to-r from-brand-emerald to-[#059669] hover:from-[#15cc90] hover:to-[#047857] text-white font-bold text-xs font-cinzel tracking-widest uppercase shadow-[0_0_30px_rgba(16,185,129,0.45)] transition-all active:scale-95">
+            <button id="scene4-cta-btn" onclick="openConcierge({ limit: '$10,000' })" class="magnetic-btn w-full py-4 rounded-xl bg-gradient-to-r from-brand-emerald to-[#059669] hover:from-[#15cc90] hover:to-[#047857] text-white font-bold text-xs font-cinzel tracking-widest uppercase shadow-[0_0_30px_rgba(16,185,129,0.45)] transition-all active:scale-95">
               Согласовать тестовый слот $5,000 – $10,000 ->
             </button>
           </div>
@@ -998,7 +1044,7 @@
           </div>
 
           <!-- Direct Trigger Button (24K Bullion Gold) -->
-          <button onclick="transferCalculatorToModal()" class="magnetic-btn w-full py-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-cinzel font-bold text-xs sm:text-sm tracking-[0.22em] uppercase flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(212,175,55,0.45)] border border-amber-300/40 transition-all active:scale-95">
+          <button id="calc-book-slot-btn" onclick="transferCalculatorToModal()" class="magnetic-btn w-full py-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-cinzel font-bold text-xs sm:text-sm tracking-[0.22em] uppercase flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(212,175,55,0.45)] border border-amber-300/40 transition-all active:scale-95">
             <i data-lucide="shield-check" class="w-4 h-4"></i>
             <span>Забронировать слот аллокации</span>
           </button>
@@ -1375,7 +1421,8 @@
 
         <!-- Fallback Link: Trigger Internal VIP Concierge Modal -->
         <div class="pt-2">
-          <button type="button" 
+          <button id="fallback-web-modal-btn" 
+                  type="button" 
                   onclick="openWebConciergeModal()" 
                   class="inline-flex items-center gap-2 font-mono text-xs text-zinc-400 hover:text-amber-300 underline underline-offset-4 decoration-white/20 hover:decoration-amber-400/60 transition-all cursor-pointer">
             <i data-lucide="file-text" class="w-3.5 h-3.5 text-zinc-400"></i>
@@ -1582,7 +1629,10 @@
 
     function selectBookmaker(name) {
       selectedBK = name;
-      document.getElementById('selected-bk-label').innerText = `${BOOKMAKERS[name].name} (${BOOKMAKERS[name].tier})`;
+      const label = document.getElementById('selected-bk-label');
+      if (label && BOOKMAKERS[name]) {
+        label.innerText = `${BOOKMAKERS[name].name} (${BOOKMAKERS[name].tier})`;
+      }
 
       Object.keys(BOOKMAKERS).forEach(bk => {
         const btn = document.getElementById(`bk-btn-${bk}`);
@@ -1597,27 +1647,41 @@
         }
       });
 
-      if (window.SyndicateAudio) {
+      if (window.SyndicateAudio && typeof window.SyndicateAudio.playMechanicalSwitch === 'function') {
         window.SyndicateAudio.playMechanicalSwitch();
       }
 
       updateCalculator();
+    }
+    window.selectBookmaker = selectBookmaker;
+
+    // Flush any early bookmaker clicks made prior to module evaluation
+    if (window._pendingBK) {
+      selectBookmaker(window._pendingBK);
+      window._pendingBK = null;
     }
 
     function setLimitPreset(val) {
       const slider = document.getElementById('calc-limit-slider');
       if (slider) {
         slider.value = val;
-        currentLimitVal = val;
-        updateCalculator();
-        if (window.SyndicateAudio) {
-          window.SyndicateAudio.playHapticClick({ pitch: 1.2 });
-        }
       }
+      currentLimitVal = Number(val);
+      updateCalculator();
+      if (window.SyndicateAudio && typeof window.SyndicateAudio.playHapticClick === 'function') {
+        window.SyndicateAudio.playHapticClick({ pitch: 1.2 });
+      }
+    }
+    window.setLimitPreset = setLimitPreset;
+
+    // Flush any early limit presets clicked prior to module evaluation
+    if (window._pendingLimit) {
+      setLimitPreset(window._pendingLimit);
+      window._pendingLimit = null;
     }
 
     function updateCalculator() {
-      const bk = BOOKMAKERS[selectedBK];
+      const bk = BOOKMAKERS[selectedBK] || BOOKMAKERS['Stake'];
       const bankroll = Math.round(currentLimitVal * bk.multiplier);
       const sessionProfit = Math.round(bankroll * 0.10); // ~10% net per session
       const whaleSessionDividend = Math.round(sessionProfit * 0.30); // 30% split
@@ -1635,12 +1699,18 @@
         sessionSliderEl.style.setProperty('--slider-pct', `${sessionsPct.toFixed(1)}%`);
       }
 
-      document.getElementById('display-limit').innerText = '$' + currentLimitVal.toLocaleString('en-US');
-      document.getElementById('display-sessions').innerText = `${currentSessionsVal} ${currentSessionsVal === 1 ? 'сессия' : (currentSessionsVal < 5 ? 'сессии' : 'сессий')}`;
-      document.getElementById('res-bankroll').innerText = '$' + bankroll.toLocaleString('en-US') + ' USDT';
-      document.getElementById('res-session-profit').innerText = '~$' + sessionProfit.toLocaleString('en-US') + ' USDT';
-      document.getElementById('res-whale-dividend').innerText = '$' + whaleMonthlyDividend.toLocaleString('en-US') + ' USDT';
-      document.getElementById('res-session-dividend').innerText = '+$' + whaleSessionDividend.toLocaleString('en-US') + ' USDT / сессия';
+      const dispLimit = document.getElementById('display-limit');
+      if (dispLimit) dispLimit.innerText = '$' + currentLimitVal.toLocaleString('en-US');
+      const dispSessions = document.getElementById('display-sessions');
+      if (dispSessions) dispSessions.innerText = `${currentSessionsVal} ${currentSessionsVal === 1 ? 'сессия' : (currentSessionsVal < 5 ? 'сессии' : 'сессий')}`;
+      const resBankroll = document.getElementById('res-bankroll');
+      if (resBankroll) resBankroll.innerText = '$' + bankroll.toLocaleString('en-US') + ' USDT';
+      const resProfit = document.getElementById('res-session-profit');
+      if (resProfit) resProfit.innerText = '~$' + sessionProfit.toLocaleString('en-US') + ' USDT';
+      const resWhale = document.getElementById('res-whale-dividend');
+      if (resWhale) resWhale.innerText = '$' + whaleMonthlyDividend.toLocaleString('en-US') + ' USDT';
+      const resSession = document.getElementById('res-session-dividend');
+      if (resSession) resSession.innerText = '+$' + whaleSessionDividend.toLocaleString('en-US') + ' USDT / сессия';
     }
 
     const limitSlider = document.getElementById('calc-limit-slider');
@@ -1666,17 +1736,23 @@
     }
 
     function transferCalculatorToModal() {
-      if (window.SyndicateAudio) {
+      if (window.SyndicateAudio && typeof window.SyndicateAudio.playPayoutConfirmation === 'function') {
         window.SyndicateAudio.playPayoutConfirmation();
       }
-      if (typeof VIPConcierge !== 'undefined') {
-        VIPConcierge.open({
+      if (window.VIPConcierge && typeof window.VIPConcierge.open === 'function') {
+        window.VIPConcierge.open({
           bk: selectedBK,
-          tier: BOOKMAKERS[selectedBK].tier,
-          limit: '$' + currentLimitVal.toLocaleString('en-US')
+          tier: BOOKMAKERS[selectedBK] ? BOOKMAKERS[selectedBK].tier : '',
+          limit: '$' + currentLimitVal.toLocaleString('en-US'),
+          location: typeof currentFunnelCity !== 'undefined' ? currentFunnelCity : 'moscow'
         });
+      } else {
+        const url = 'https://t.me/YOUR_BOT_USERNAME?start=web_audit_calc_' + selectedBK + '_' + currentLimitVal;
+        window.open(url, '_blank');
       }
     }
+    window.transferCalculatorToModal = transferCalculatorToModal;
+    window._realTransferCalculator = transferCalculatorToModal;
 
     // -----------------------------------------------------------------------
     // 3. AUDIO HEADER CONTROLLER
@@ -1690,19 +1766,17 @@
       audioBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         if (!window.SyndicateAudio) return;
-        const isMuted = window.SyndicateAudio.toggle();
+        const isPlaying = window.SyndicateAudio.toggle();
         
-        if (isMuted) {
-          eqBars.classList.add('hidden');
-          eqBars.classList.remove('flex');
-          muteIcon.classList.remove('hidden');
-          audioLabel.innerHTML = '<span class="hidden sm:inline">[AUDIO: </span>OFF<span class="hidden sm:inline">]</span>';
+        if (!isPlaying) {
+          if (eqBars) { eqBars.classList.add('hidden'); eqBars.classList.remove('flex'); }
+          if (muteIcon) { muteIcon.classList.remove('hidden'); }
+          if (audioLabel) { audioLabel.innerHTML = '<span class="hidden sm:inline">[AUDIO: </span>OFF<span class="hidden sm:inline">]</span>'; }
           audioBtn.classList.remove('border-amber-400', 'text-amber-300');
         } else {
-          eqBars.classList.remove('hidden');
-          eqBars.classList.add('flex');
-          muteIcon.classList.add('hidden');
-          audioLabel.innerHTML = '<span class="hidden sm:inline">[AUDIO: </span>ON<span class="hidden sm:inline">]</span>';
+          if (eqBars) { eqBars.classList.remove('hidden'); eqBars.classList.add('flex'); }
+          if (muteIcon) { muteIcon.classList.add('hidden'); }
+          if (audioLabel) { audioLabel.innerHTML = '<span class="hidden sm:inline">[AUDIO: </span>ON<span class="hidden sm:inline">]</span>'; }
           audioBtn.classList.add('border-amber-400', 'text-amber-300');
         }
       });
@@ -1794,18 +1868,45 @@
       if (deskLabel) deskLabel.textContent = 'Москва (Сити / Four Seasons)';
     }
 
-    if (window.SoundEngine && typeof window.SoundEngine.playMechanicalSwitch === 'function') {
-      window.SoundEngine.playMechanicalSwitch({ pitch: city === 'dubai' ? 1.15 : 0.95, direction: 'down' });
+    if (window.SyndicateAudio && typeof window.SyndicateAudio.playMechanicalSwitch === 'function') {
+      window.SyndicateAudio.playMechanicalSwitch({ pitch: city === 'dubai' ? 1.15 : 0.95, direction: 'down' });
     }
   }
 
   function handleTelegramCtaClick(e) {
-    if (window.SoundEngine && typeof window.SoundEngine.playHapticClick === 'function') {
-      window.SoundEngine.playHapticClick({ pitch: 1.25, volume: 1.0 });
+    if (window.SyndicateAudio && typeof window.SyndicateAudio.playHapticClick === 'function') {
+      window.SyndicateAudio.playHapticClick({ pitch: 1.25, volume: 1.0 });
     }
   }
   window.selectFunnelCity = selectFunnelCity;
   window.handleTelegramCtaClick = handleTelegramCtaClick;
+
+  function openConcierge(data, config) {
+    if (window.SyndicateAudio && typeof window.SyndicateAudio.playMechanicalSwitch === 'function') {
+      window.SyndicateAudio.playMechanicalSwitch({ pitch: 1.1, direction: 'up' });
+    }
+    if (window.VIPConcierge && typeof window.VIPConcierge.open === 'function') {
+      const payload = Object.assign({
+        sessionFormatId: currentFunnelCity === 'dubai' ? 'dubai_lounge' : 'moscow_lounge',
+        location: currentFunnelCity
+      }, data || {});
+      return window.VIPConcierge.open(payload, config);
+    }
+    const targetCity = (data && data.location) || currentFunnelCity;
+    const url = targetCity === 'dubai'
+      ? 'https://t.me/YOUR_BOT_USERNAME?start=web_audit_dubai'
+      : 'https://t.me/YOUR_BOT_USERNAME?start=web_audit';
+    window.open(url, '_blank');
+  }
+  window.openConcierge = openConcierge;
+
+  function openWebConciergeModal() {
+    return openConcierge({
+      sessionFormatId: currentFunnelCity === 'dubai' ? 'dubai_lounge' : 'moscow_lounge',
+      location: currentFunnelCity
+    });
+  }
+  window.openWebConciergeModal = openWebConciergeModal;
 
   // Progressive lazy preloading of scenes 2-4 upon scroll engagement
   let hasTriggeredLazyPreload = false;
@@ -1820,7 +1921,6 @@
       setTimeout(() => { if (v4) { v4.preload = 'auto'; v4.load(); } }, 800);
     }
   }, { passive: true });
-    window.openWebConciergeModal = openWebConciergeModal;
   </script>
 </body>
 </html>
