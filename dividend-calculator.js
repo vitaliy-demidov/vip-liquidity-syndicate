@@ -168,7 +168,12 @@
     const val = parseFloat(slider.value) || 0;
     const pct = Math.max(0, Math.min(100, ((val - min) / (max - min)) * 100));
 
-    slider.style.background = `linear-gradient(to right, #00F0FF 0%, #00F0FF ${pct}%, #1E2638 ${pct}%, #1E2638 100%)`;
+    slider.style.setProperty('--slider-pct', `${pct}%`);
+    if (sliderId.includes('session')) {
+      slider.style.background = `linear-gradient(to right, #10B981 0%, #059669 ${pct}%, #181B22 ${pct}%, #181B22 100%)`;
+    } else {
+      slider.style.background = `linear-gradient(to right, #D4AF37 0%, #F59E0B ${pct}%, #181B22 ${pct}%, #181B22 100%)`;
+    }
   }
 
   /**
