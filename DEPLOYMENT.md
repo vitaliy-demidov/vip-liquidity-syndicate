@@ -10,7 +10,6 @@
 | :--- | :--- | :---: |
 | **Primary Cinematic Story** | [https://attendance-onion-timing-chargers.trycloudflare.com/](https://attendance-onion-timing-chargers.trycloudflare.com/) | `200 OK` |
 | **Direct Cinematic Landing** | [https://attendance-onion-timing-chargers.trycloudflare.com/cinematic-story.html](https://attendance-onion-timing-chargers.trycloudflare.com/cinematic-story.html) | `200 OK` |
-| **Whale Command Portal** | [https://attendance-onion-timing-chargers.trycloudflare.com/portal](https://attendance-onion-timing-chargers.trycloudflare.com/portal) | `200 OK` |
 | **Interactive Calculator** | [https://attendance-onion-timing-chargers.trycloudflare.com/calculator-demo.html](https://attendance-onion-timing-chargers.trycloudflare.com/calculator-demo.html) | `200 OK` |
 | **VIP Concierge Modal** | [https://attendance-onion-timing-chargers.trycloudflare.com/vip-concierge-modal.html](https://attendance-onion-timing-chargers.trycloudflare.com/vip-concierge-modal.html) | `200 OK` |
 | **Video Stream (Range 206)** | [https://attendance-onion-timing-chargers.trycloudflare.com/media/master_narrative_scrub.mp4](https://attendance-onion-timing-chargers.trycloudflare.com/media/master_narrative_scrub.mp4) | `206 Partial Content` |

@@ -273,10 +273,8 @@ const handleRequest = async (req, res) => {
     res.end();
     return;
   }
-  if (cleanUrl === '/' || cleanUrl === '/story' || cleanUrl === '/cinematic') {
+  if (cleanUrl === '/' || cleanUrl === '/story' || cleanUrl === '/cinematic' || cleanUrl === '/portal' || cleanUrl === '/dashboard') {
     cleanUrl = '/index.html';
-  } else if (cleanUrl === '/portal' || cleanUrl === '/dashboard') {
-    cleanUrl = '/portal.html';
   }
 
   const filePath = path.join(__dirname, cleanUrl);
@@ -326,7 +324,6 @@ const server = http.createServer(handleRequest);
 server.listen(PRIMARY_PORT, () => {
   console.log(`[VIP SYNDICATE SERVER] Active on http://localhost:${PRIMARY_PORT}`);
   console.log(`[CINEMATIC STORY] Available at http://localhost:${PRIMARY_PORT}/ (index.html)`);
-  console.log(`[PORTAL] Available at http://localhost:${PRIMARY_PORT}/portal (portal.html)`);
 });
 
 // Dual port support for concurrent access (e.g. 3040 and 3060)
