@@ -717,14 +717,15 @@
         <div class="space-y-6">
           
           <div>
-            <div class="vip-mono text-xs text-[#00F0FF] uppercase tracking-wider mb-1 font-semibold">
-              // ШАГ 1 ИЗ 4: КВАЛИФИКАЦИЯ СТАТУСА
+            <div class="vip-mono text-xs text-[#D4AF37] uppercase tracking-wider mb-1 font-semibold flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse"></span>
+              // ШАГ I ИЗ IV: КВАЛИФИКАЦИЯ СТАТУСА
             </div>
             <h3 class="text-xl sm:text-2xl font-bold text-white tracking-tight">
               Выберите крипто-букмекера и VIP-ранг
             </h3>
             <p class="text-xs text-zinc-400 mt-1 leading-relaxed">
-              Синдикат выделяет капитал от <strong class="text-[#00F0FF] font-mono font-medium">$10,000</strong> до <strong class="text-[#00F0FF] font-mono font-medium">$150,000+</strong> под зрелые аккаунты с активным VIP-уровнем.
+              Синдикат выделяет капитал от <strong class="text-[#D4AF37] font-mono font-medium">$10,000</strong> до <strong class="text-[#D4AF37] font-mono font-medium">$150,000+</strong> под зрелые аккаунты с активным VIP-уровнем.
             </p>
           </div>
 
@@ -738,8 +739,8 @@
                 return `
                   <div class="vip-radio-card p-3 rounded-xl border ${isSelected ? 'is-selected' : 'border-white/10 bg-white/[0.03]'}" data-bk="${key}">
                     <div class="flex items-center justify-between mb-1">
-                      <span class="font-semibold text-xs ${isSelected ? 'text-[#00F0FF]' : 'text-white'}">${bk.name}</span>
-                      <span class="w-2 h-2 rounded-full ${isSelected ? 'bg-[#00F0FF] shadow-[0_0_8px_#00f0ff]' : 'bg-white/20'}"></span>
+                      <span class="font-semibold text-xs ${isSelected ? 'text-[#D4AF37]' : 'text-white'}">${bk.name}</span>
+                      <span class="w-2 h-2 rounded-full ${isSelected ? 'bg-[#D4AF37] shadow-[0_0_8px_#D4AF37]' : 'bg-white/20'}"></span>
                     </div>
                     <div class="vip-mono text-[9px] text-zinc-400 tracking-wider truncate">${bk.badge}</div>
                   </div>
@@ -749,7 +750,7 @@
 
             ${this.state.bkKey === 'Other' ? `
               <div class="pt-2">
-                <input type="text" id="vip-custom-bk" placeholder="Название букмекера (например, Rollbit, Shuffle, Thunderpick...)" value="${this.escapeHtml(this.state.customBkName)}" class="w-full bg-black/40 border border-white/15 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#00F0FF] font-mono">
+                <input type="text" id="vip-custom-bk" placeholder="Название букмекера (например, Rollbit, Shuffle, Thunderpick...)" value="${this.escapeHtml(this.state.customBkName)}" class="w-full bg-black/40 border border-white/15 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#D4AF37] font-mono">
               </div>
             ` : ''}
           </div>
@@ -758,7 +759,7 @@
           <div class="space-y-2">
             <div class="flex items-center justify-between">
               <label class="block text-xs font-semibold text-zinc-300">Текущий VIP-уровень профиля:</label>
-              <span class="vip-mono text-[10px] text-[#00F0FF]">АЛЛОКАЦИЯ ДО ${selectedTier.pool.split('–')[1] || selectedTier.pool}</span>
+              <span class="vip-mono text-[10px] text-[#D4AF37]">АЛЛОКАЦИЯ ДО ${selectedTier.pool.split('–')[1] || selectedTier.pool}</span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -767,8 +768,8 @@
                 return `
                   <div class="vip-radio-card p-3 rounded-xl border ${isSelected ? 'is-selected' : 'border-white/10 bg-white/[0.03]'}" data-tier="${tier.id}">
                     <div class="flex items-center justify-between mb-1">
-                      <span class="text-xs font-medium ${isSelected ? 'text-[#00F0FF] font-semibold' : 'text-zinc-200'}">${tier.name}</span>
-                      ${tier.recommended ? `<span class="vip-mono text-[9px] px-1.5 py-0.5 rounded bg-[#00F0FF]/20 text-[#00F0FF] font-semibold">PRIORITY</span>` : ''}
+                      <span class="text-xs font-medium ${isSelected ? 'text-[#D4AF37] font-semibold' : 'text-zinc-200'}">${tier.name}</span>
+                      ${tier.recommended ? `<span class="vip-mono text-[9px] px-1.5 py-0.5 rounded bg-[#D4AF37]/20 text-[#D4AF37] font-semibold border border-[#D4AF37]/30">PRIORITY</span>` : ''}
                     </div>
                     <div class="flex items-center justify-between text-[11px] text-zinc-400 font-mono">
                       <span>Банкролл: <strong class="text-white">${tier.pool}</strong></span>
@@ -782,7 +783,7 @@
 
           <!-- High Roller / Negative PnL Confirmation Checkbox -->
           <div class="p-3.5 rounded-xl border border-white/10 bg-black/30 flex items-start gap-3">
-            <input type="checkbox" id="vip-pnl-check" ${this.state.pnlConfirmed ? 'checked' : ''} class="mt-1 w-4 h-4 rounded border-white/20 bg-white/5 text-[#00F0FF] focus:ring-0 focus:ring-offset-0 cursor-pointer">
+            <input type="checkbox" id="vip-pnl-check" ${this.state.pnlConfirmed ? 'checked' : ''} class="mt-1 w-4 h-4 rounded border-white/20 bg-white/5 text-[#D4AF37] accent-[#D4AF37] focus:ring-0 focus:ring-offset-0 cursor-pointer">
             <div>
               <label for="vip-pnl-check" class="text-xs font-medium text-white cursor-pointer select-none">
                 Подтверждаю общий отрицательный баланс (минус) на аккаунте
@@ -796,9 +797,9 @@
           <!-- Bottom Action Buttons -->
           <div class="pt-2 flex items-center justify-between">
             <div class="vip-mono text-[11px] text-zinc-500">
-              Шаг 1 из 4
+              Шаг I из IV
             </div>
-            <button id="vip-step1-next" class="px-6 py-3 rounded-xl bg-[#00F0FF] hover:bg-[#33f3ff] text-black font-semibold text-xs vip-mono tracking-wide flex items-center gap-2 shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-all active:scale-95">
+            <button id="vip-step1-next" class="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-cinzel font-bold text-xs tracking-wider uppercase shadow-[0_0_20px_rgba(212,175,55,0.4)] border border-amber-300/40 flex items-center gap-2 transition-all active:scale-95 min-h-[48px]">
               <span>Перейти к проверке лимита</span>
               <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
@@ -815,8 +816,9 @@
         <div class="space-y-6">
           
           <div>
-            <div class="vip-mono text-xs text-[#00F0FF] uppercase tracking-wider mb-1 font-semibold">
-              // ШАГ 2 ИЗ 4: ЭКСПРЕСС-АУДИТ ПОТОЛКА СТАВКИ
+            <div class="vip-mono text-xs text-[#D4AF37] uppercase tracking-wider mb-1 font-semibold flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse"></span>
+              // ШАГ II ИЗ IV: ЭКСПРЕСС-АУДИТ ПОТОЛКА СТАВКИ
             </div>
             <h3 class="text-xl sm:text-2xl font-bold text-white tracking-tight">
               Зафиксируйте лимит на исход 1X2 (АПЛ / ЛЧ)
@@ -827,16 +829,16 @@
           </div>
 
           <!-- Institutional Walkthrough Box -->
-          <div class="p-4 rounded-xl border border-[#00F0FF]/30 bg-[#00F0FF]/[0.04] space-y-2.5">
-            <div class="flex items-center gap-2 text-[#00F0FF] text-xs font-semibold vip-mono">
+          <div class="p-4 rounded-xl border border-[#D4AF37]/30 bg-[#D4AF37]/[0.04] space-y-2.5">
+            <div class="flex items-center gap-2 text-[#D4AF37] text-xs font-semibold vip-mono">
               <i data-lucide="help-circle" class="w-4 h-4"></i>
               <span>РЕГЛАМЕНТ ПРОВЕРКИ МАКСИМАЛЬНОЙ СТАВКИ:</span>
             </div>
             <ol class="text-xs text-zinc-300 space-y-1.5 list-decimal list-inside pl-1 leading-relaxed">
               <li>Откройте ближайший топ-матч (<strong class="text-white">Английская Премьер-Лига</strong> или <strong class="text-white">Лига Чемпионов</strong>).</li>
-              <li>Выберите основной исход <strong class="text-[#00F0FF]">1X2</strong> (Победа 1, Ничья или Победа 2).</li>
+              <li>Выберите основной исход <strong class="text-[#D4AF37]">1X2</strong> (Победа 1, Ничья или Победа 2).</li>
               <li>Введите в купон сумму <strong class="text-white font-mono">$50,000</strong> (размещать ставку НЕ нужно).</li>
-              <li>Зафиксируйте значение <strong class="text-[#00F0FF] font-mono">Max Bet</strong> (потолок ставки, который допускает букмекер).</li>
+              <li>Зафиксируйте значение <strong class="text-[#D4AF37] font-mono">Max Bet</strong> (потолок ставки, который допускает букмекер).</li>
             </ol>
           </div>
 
@@ -848,7 +850,7 @@
               ${presets.map(p => {
                 const isSelected = this.state.limitAmount === p;
                 return `
-                  <button type="button" class="vip-limit-preset py-2.5 px-3 rounded-lg border text-xs font-mono text-left transition-all ${isSelected ? 'border-[#00F0FF] bg-[#00F0FF]/15 text-[#00F0FF] font-bold shadow-[0_0_12px_rgba(0,240,255,0.2)]' : 'border-white/10 bg-white/[0.02] text-zinc-300 hover:border-white/20'}" data-val="${p}">
+                  <button type="button" class="vip-limit-preset py-2.5 px-3 rounded-lg border text-xs font-mono text-left transition-all ${isSelected ? 'border-[#D4AF37] bg-[#D4AF37]/15 text-[#D4AF37] font-bold shadow-[0_0_15px_rgba(212,175,55,0.2)]' : 'border-white/10 bg-white/[0.02] text-zinc-300 hover:border-white/20'}" data-val="${p}">
                     ${p}
                   </button>
                 `;
@@ -859,7 +861,7 @@
               <label class="block text-[11px] text-zinc-400 font-mono mb-1">Или укажите точную сумму ($):</label>
               <div class="relative">
                 <span class="absolute left-3 top-2.5 text-zinc-400 font-mono text-xs">$</span>
-                <input type="text" id="vip-limit-custom" value="${this.escapeHtml(this.state.limitAmount)}" placeholder="25,000" class="w-full bg-black/40 border border-white/15 rounded-lg pl-7 pr-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-[#00F0FF]">
+                <input type="text" id="vip-limit-custom" value="${this.escapeHtml(this.state.limitAmount)}" placeholder="25,000" class="w-full bg-black/40 border border-white/15 rounded-lg pl-7 pr-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-[#D4AF37]">
               </div>
             </div>
           </div>
@@ -878,13 +880,13 @@
           <!-- Verifications Checkbox -->
           <div class="space-y-2">
             <div class="flex items-center gap-2 text-xs text-zinc-300">
-              <input type="checkbox" id="vip-noholds-check" ${this.state.noHoldsConfirmed ? 'checked' : ''} class="w-4 h-4 rounded border-white/20 bg-white/5 text-[#00F0FF] cursor-pointer">
+              <input type="checkbox" id="vip-noholds-check" ${this.state.noHoldsConfirmed ? 'checked' : ''} class="w-4 h-4 rounded border-white/20 bg-white/5 text-[#D4AF37] accent-[#D4AF37] cursor-pointer">
               <label for="vip-noholds-check" class="cursor-pointer select-none">
                 Вывод средств активен, холдов безопасности и нерешенных тикетов нет
               </label>
             </div>
             <div class="flex items-center gap-2 text-xs text-zinc-300">
-              <input type="checkbox" id="vip-anti-inspect-check" ${this.state.antiInspectAcknowledged ? 'checked' : ''} class="w-4 h-4 rounded border-white/20 bg-white/5 text-[#00F0FF] cursor-pointer">
+              <input type="checkbox" id="vip-anti-inspect-check" ${this.state.antiInspectAcknowledged ? 'checked' : ''} class="w-4 h-4 rounded border-white/20 bg-white/5 text-[#D4AF37] accent-[#D4AF37] cursor-pointer">
               <label for="vip-anti-inspect-check" class="cursor-pointer select-none">
                 Готов подтвердить лимит по видеозаписи F5 или Telegram Screen Share
               </label>
@@ -898,7 +900,7 @@
               <span>Назад</span>
             </button>
 
-            <button id="vip-step2-next" class="px-6 py-3 rounded-xl bg-[#00F0FF] hover:bg-[#33f3ff] text-black font-semibold text-xs vip-mono tracking-wide flex items-center gap-2 shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-all active:scale-95">
+            <button id="vip-step2-next" class="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-cinzel font-bold text-xs tracking-wider uppercase shadow-[0_0_20px_rgba(212,175,55,0.4)] border border-amber-300/40 flex items-center gap-2 transition-all active:scale-95 min-h-[48px]">
               <span>Выбрать формат сессии</span>
               <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
@@ -913,14 +915,15 @@
         <div class="space-y-6">
           
           <div>
-            <div class="vip-mono text-xs text-[#00F0FF] uppercase tracking-wider mb-1 font-semibold">
-              // ШАГ 3 ИЗ 4: ВЫБОР ФОРМАТА И ЛОКАЦИИ
+            <div class="vip-mono text-xs text-[#D4AF37] uppercase tracking-wider mb-1 font-semibold flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse"></span>
+              // ШАГ III ИЗ IV: ВЫБОР ФОРМАТА И ЛОКАЦИИ
             </div>
             <h3 class="text-xl sm:text-2xl font-bold text-white tracking-tight">
               Где и как вам комфортно проводить сессию?
             </h3>
             <p class="text-xs text-zinc-400 mt-1 leading-relaxed">
-              Мы ценим приватность партнеров. Все форматы соответствуют институциональному протоколу <strong class="text-[#00F0FF]">Non-Custodial</strong> (0 паролей, личный баланс выводится в ноль).
+              Мы ценим приватность партнеров. Все форматы соответствуют институциональному протоколу <strong class="text-[#D4AF37]">Non-Custodial</strong> (0 паролей, личный баланс выводится в ноль).
             </p>
           </div>
 
@@ -932,18 +935,18 @@
                 <div class="vip-radio-card p-4 rounded-xl border ${isSelected ? 'is-selected' : 'border-white/10 bg-white/[0.02]'}" data-format="${fmt.id}">
                   <div class="flex items-start justify-between gap-3">
                     <div class="flex items-start gap-3">
-                      <div class="p-2 rounded-lg ${isSelected ? 'bg-[#00F0FF]/20 text-[#00F0FF]' : 'bg-white/5 text-zinc-400'} shrink-0 mt-0.5">
+                      <div class="p-2 rounded-lg ${isSelected ? 'bg-[#D4AF37]/20 text-[#D4AF37]' : 'bg-white/5 text-zinc-400'} shrink-0 mt-0.5">
                         <i data-lucide="${fmt.icon}" class="w-4 h-4"></i>
                       </div>
                       <div>
                         <div class="flex items-center gap-2 flex-wrap">
                           <h4 class="text-xs sm:text-sm font-semibold ${isSelected ? 'text-white' : 'text-zinc-200'}">${fmt.name}</h4>
-                          <span class="vip-mono text-[9px] px-2 py-0.5 rounded-full ${isSelected ? 'bg-[#00F0FF]/20 text-[#00F0FF] font-semibold' : 'bg-white/5 text-zinc-400'}">${fmt.badge}</span>
+                          <span class="vip-mono text-[9px] px-2 py-0.5 rounded-full ${isSelected ? 'bg-[#D4AF37]/20 text-[#D4AF37] font-semibold border border-[#D4AF37]/30' : 'bg-white/5 text-zinc-400'}">${fmt.badge}</span>
                         </div>
                         <p class="text-[11px] text-zinc-400 mt-1 leading-relaxed">${fmt.desc}</p>
                       </div>
                     </div>
-                    <span class="w-4 h-4 rounded-full border ${isSelected ? 'border-[#00F0FF] bg-[#00F0FF] shadow-[0_0_8px_#00f0ff]' : 'border-white/20'} shrink-0 mt-1 flex items-center justify-center">
+                    <span class="w-4 h-4 rounded-full border ${isSelected ? 'border-[#D4AF37] bg-[#D4AF37] shadow-[0_0_8px_#D4AF37]' : 'border-white/20'} shrink-0 mt-1 flex items-center justify-center">
                       ${isSelected ? `<span class="w-1.5 h-1.5 rounded-full bg-black"></span>` : ''}
                     </span>
                   </div>
@@ -967,7 +970,7 @@
               <span>Назад</span>
             </button>
 
-            <button id="vip-step3-next" class="px-6 py-3 rounded-xl bg-[#00F0FF] hover:bg-[#33f3ff] text-black font-semibold text-xs vip-mono tracking-wide flex items-center gap-2 shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-all active:scale-95">
+            <button id="vip-step3-next" class="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-cinzel font-bold text-xs tracking-wider uppercase shadow-[0_0_20px_rgba(212,175,55,0.4)] border border-amber-300/40 flex items-center gap-2 transition-all active:scale-95 min-h-[48px]">
               <span>Указать контакт и кошелек</span>
               <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
@@ -989,8 +992,9 @@
         <div class="space-y-6">
           
           <div>
-            <div class="vip-mono text-xs text-[#00F0FF] uppercase tracking-wider mb-1 font-semibold">
-              // ШАГ 4 ИЗ 4: ПРИВАТНЫЙ ДИСПЕТЧЕР И ВЫПЛАТЫ
+            <div class="vip-mono text-xs text-[#D4AF37] uppercase tracking-wider mb-1 font-semibold flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse"></span>
+              // ШАГ IV ИЗ IV: ПРИВАТНЫЙ ДИСПЕТЧЕР И ВЫПЛАТЫ
             </div>
             <h3 class="text-xl sm:text-2xl font-bold text-white tracking-tight">
               Реквизиты связи и начисления прибыли
@@ -1006,12 +1010,12 @@
             <!-- Telegram Handle -->
             <div>
               <div class="flex items-center justify-between mb-1">
-                <label class="block text-xs font-semibold text-zinc-300">Ваш Telegram (@username): <span class="text-[#00F0FF]">*</span></label>
+                <label class="block text-xs font-semibold text-zinc-300">Ваш Telegram (@username): <span class="text-[#D4AF37]">*</span></label>
                 <span class="vip-mono text-[10px] text-zinc-400">ШИФРОВАННЫЙ КАНАЛ СВЯЗИ</span>
               </div>
               <div class="relative">
-                <span class="absolute left-3.5 top-2.5 text-[#00F0FF] font-mono text-xs font-bold">@</span>
-                <input type="text" id="vip-telegram-input" value="${this.escapeHtml(rawTg)}" placeholder="whale_boss" class="w-full bg-black/40 border border-white/15 rounded-xl pl-8 pr-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-[#00F0FF] transition-all">
+                <span class="absolute left-3.5 top-2.5 text-[#D4AF37] font-mono text-xs font-bold">@</span>
+                <input type="text" id="vip-telegram-input" value="${this.escapeHtml(rawTg)}" placeholder="whale_boss" class="w-full bg-black/40 border border-white/15 rounded-xl pl-8 pr-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-[#D4AF37] transition-all">
               </div>
               <div id="vip-telegram-msg" class="text-[11px] mt-1.5 font-mono text-zinc-500">
                 Консьерж напишет вам в Telegram с верифицированного деска синдиката.
@@ -1025,14 +1029,14 @@
                 <span class="vip-mono text-[10px] text-[#10B981]">ДЛЯ ВЫПЛАТ ДИВИДЕНДОВ</span>
               </div>
               <div class="relative">
-                <input type="text" id="vip-wallet-input" value="${this.escapeHtml(rawWallet)}" placeholder="T... (TRC-20, 34 симв.) или 0x... (ERC-20, 42 симв.)" class="w-full bg-black/40 border ${isWalletError ? 'vip-input-error' : (isWalletValid ? 'vip-input-success' : 'border-white/15')} rounded-xl px-3.5 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-[#00F0FF] transition-all">
+                <input type="text" id="vip-wallet-input" value="${this.escapeHtml(rawWallet)}" placeholder="T... (TRC-20, 34 симв.) или 0x... (ERC-20, 42 симв.)" class="w-full bg-black/40 border ${isWalletError ? 'vip-input-error' : (isWalletValid ? 'vip-input-success' : 'border-white/15')} rounded-xl px-3.5 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-[#D4AF37] transition-all">
               </div>
               <div id="vip-wallet-msg" class="text-[11px] mt-1.5 font-mono text-zinc-500">
                 ${rawWallet && walletCheck.valid ? `<span class="text-emerald-400">${walletCheck.message}</span>` : (rawWallet && !walletCheck.valid ? `<span class="text-rose-400">✕ ${walletCheck.message}</span>` : '🔒 30–40% чистой прибыли начисляются НА этот кошелек (или согласуйте лично в чате).')}
               </div>
               <div class="pt-1 flex items-center justify-between text-[10px] font-mono text-zinc-400">
                 <span>Форматы: <b>TRC-20</b> (T..., 34 симв.) или <b>ERC-20</b> (0x..., 42 симв.)</span>
-                <button type="button" id="vip-defer-wallet-btn" class="text-[#00F0FF] hover:underline cursor-pointer">
+                <button type="button" id="vip-defer-wallet-btn" class="text-[#D4AF37] hover:underline cursor-pointer">
                   Указать в личном чате
                 </button>
               </div>
@@ -1045,7 +1049,7 @@
                 ${pools.map(p => {
                   const isSelected = this.state.targetPool.includes(p.replace('+', ''));
                   return `
-                    <button type="button" class="vip-pool-btn py-2 px-1 rounded-lg border text-[11px] font-mono transition-all ${isSelected ? 'border-[#00F0FF] bg-[#00F0FF]/20 text-[#00F0FF] font-semibold shadow-[0_0_10px_rgba(0,240,255,0.2)]' : 'border-white/10 bg-white/[0.02] text-zinc-400 hover:border-white/20'}" data-pool="${p}">
+                    <button type="button" class="vip-pool-btn py-2 px-1 rounded-lg border text-[11px] font-mono transition-all ${isSelected ? 'border-[#D4AF37] bg-[#D4AF37]/20 text-[#D4AF37] font-semibold shadow-[0_0_12px_rgba(212,175,55,0.2)]' : 'border-white/10 bg-white/[0.02] text-zinc-400 hover:border-white/20'}" data-pool="${p}">
                       ${p}
                     </button>
                   `;
@@ -1055,7 +1059,7 @@
 
             <!-- Safety Zero Balance Agreement -->
             <div id="vip-zero-balance-container" class="p-3.5 rounded-xl border border-white/10 bg-black/30 flex items-start gap-3 transition-colors">
-              <input type="checkbox" id="vip-zero-balance-check" ${this.state.zeroBalanceAgreed ? 'checked' : ''} class="mt-1 w-4 h-4 rounded border-white/20 bg-white/5 text-[#00F0FF] cursor-pointer">
+              <input type="checkbox" id="vip-zero-balance-check" ${this.state.zeroBalanceAgreed ? 'checked' : ''} class="mt-1 w-4 h-4 rounded border-white/20 bg-white/5 text-[#D4AF37] accent-[#D4AF37] cursor-pointer">
               <div>
                 <label for="vip-zero-balance-check" class="text-xs font-medium text-white cursor-pointer select-none">
                   Обязуюсь вывести все личные средства с баланса до нуля перед запуском пула
@@ -1076,7 +1080,7 @@
               <span>Назад</span>
             </button>
 
-            <button id="vip-step4-submit" class="px-6 py-3 rounded-xl bg-[#00F0FF] hover:bg-[#33f3ff] text-black font-semibold text-xs vip-mono tracking-wide flex items-center gap-2 shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-all active:scale-95">
+            <button id="vip-step4-submit" class="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-cinzel font-bold text-xs tracking-wider uppercase shadow-[0_0_25px_rgba(212,175,55,0.45)] border border-amber-300/40 flex items-center gap-2 transition-all active:scale-95 min-h-[48px]">
               <i data-lucide="shield-check" class="w-4 h-4"></i>
               <span>Сформировать тикет аудита</span>
             </button>
@@ -1096,19 +1100,20 @@
       const walletVal = (this.state.wallet || '').trim();
       const walletCheck = this.validateWallet(walletVal, true);
       const walletBadge = walletVal && walletCheck.valid && walletCheck.type !== 'deferred'
-        ? `<span class="text-zinc-200 truncate block">${walletVal.slice(0, 8)}...${walletVal.slice(-6)} <span class="text-[#00F0FF] text-[10px]">(${walletCheck.type})</span></span>`
+        ? `<span class="text-zinc-200 truncate block">${walletVal.slice(0, 8)}...${walletVal.slice(-6)} <span class="text-[#D4AF37] text-[10px]">(${walletCheck.type})</span></span>`
         : `<span class="text-zinc-400 italic">Согласование лично в Telegram</span>`;
 
       return `
         <div class="space-y-6 text-center">
           
           <!-- Animated Status -->
-          <div class="w-16 h-16 rounded-2xl bg-[#00F0FF]/10 border border-[#00F0FF]/40 text-[#00F0FF] mx-auto flex items-center justify-center shadow-[0_0_30px_rgba(0,240,255,0.25)]">
+          <div class="w-16 h-16 rounded-2xl bg-[#D4AF37]/10 border border-[#D4AF37]/40 text-[#D4AF37] mx-auto flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.25)]">
             <i data-lucide="check-check" class="w-8 h-8"></i>
           </div>
 
           <div>
-            <div class="vip-mono text-xs text-[#00F0FF] uppercase tracking-wider mb-1 font-semibold">
+            <div class="vip-mono text-xs text-[#D4AF37] uppercase tracking-wider mb-1 font-semibold flex items-center justify-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse"></span>
               // TICKET REGISTERED • STATUS: PRE-APPROVED
             </div>
             <h3 class="text-xl sm:text-2xl font-bold text-white tracking-tight">
@@ -1122,7 +1127,7 @@
           <!-- Institutional Ticket Card -->
           <div class="text-left rounded-xl border border-white/10 bg-black/50 p-4 sm:p-5 space-y-3 font-mono text-xs shadow-inner">
             <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
-              <span class="text-[#00F0FF] font-bold tracking-wider">${this.state.ticketId}</span>
+              <span class="text-[#D4AF37] font-bold tracking-wider">${this.state.ticketId}</span>
               <span class="text-[10px] px-2 py-0.5 rounded bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30 font-semibold">TIER-A ALLOCATED</span>
             </div>
 
@@ -1133,7 +1138,7 @@
               </div>
               <div>
                 <span class="text-zinc-500 block">Лимит 1X2 (АПЛ/ЛЧ):</span>
-                <span class="text-[#00F0FF] font-semibold">${this.state.limitAmount}</span>
+                <span class="text-[#D4AF37] font-semibold">${this.state.limitAmount}</span>
               </div>
               <div>
                 <span class="text-zinc-500 block">Формат сессии:</span>
@@ -1163,7 +1168,7 @@
           <div class="space-y-3 pt-1">
             
             <!-- Primary CTA: Direct Telegram Link with pre-filled text -->
-            <a href="${tgDeepLink}" id="vip-open-tg-btn" target="_blank" rel="noopener noreferrer" class="w-full py-4 px-4 rounded-xl bg-[#00F0FF] hover:bg-[#33f3ff] text-black font-bold text-xs vip-mono tracking-wide flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(0,240,255,0.4)] transition-all active:scale-[0.98]">
+            <a href="${tgDeepLink}" id="vip-open-tg-btn" target="_blank" rel="noopener noreferrer" class="w-full py-4 px-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-cinzel font-bold text-xs tracking-widest uppercase flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(212,175,55,0.45)] border border-amber-300/40 transition-all active:scale-[0.98] min-h-[48px]">
               <i data-lucide="send" class="w-4 h-4"></i>
               <span>Открыть в Telegram с готовым тикетом</span>
             </a>
@@ -1173,7 +1178,7 @@
               
               <!-- Webhook Trigger Button -->
               <button type="button" id="vip-webhook-btn" class="py-2.5 px-3 rounded-lg border border-white/15 bg-white/[0.03] hover:bg-white/[0.08] text-white font-mono text-xs flex items-center justify-center gap-2 transition-all">
-                <i data-lucide="${this.state.webhookSent ? 'check' : 'cpu'}" class="w-3.5 h-3.5 ${this.state.webhookSent ? 'text-[#10B981]' : 'text-[#00F0FF]'}"></i>
+                <i data-lucide="${this.state.webhookSent ? 'check' : 'cpu'}" class="w-3.5 h-3.5 ${this.state.webhookSent ? 'text-[#10B981]' : 'text-[#D4AF37]'}"></i>
                 <span>${this.state.webhookSending ? 'Отправка...' : (this.state.webhookSent ? 'В деске синдиката ✓' : 'Отправить в Webhook')}</span>
               </button>
 
