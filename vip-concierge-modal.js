@@ -358,6 +358,17 @@
         this.state.telegram = initialData.telegram;
       }
 
+      if (initialData.sessionFormatId) {
+        this.state.sessionFormatId = initialData.sessionFormatId;
+      } else if (initialData.location) {
+        const loc = String(initialData.location).toLowerCase();
+        if (loc.includes('moscow') || loc.includes('москв')) {
+          this.state.sessionFormatId = 'moscow_lounge';
+        } else if (loc.includes('dubai') || loc.includes('дубай')) {
+          this.state.sessionFormatId = 'dubai_lounge';
+        }
+      }
+
       this.currentStep = 1;
       this.isOpen = true;
       this.container.classList.add('is-active');

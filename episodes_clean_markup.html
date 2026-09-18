@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>VIP Liquidity Syndicate // 4 Episodes Clean Narrative Markup</title>
+
+  <!-- Google Fonts: Cinzel, Cormorant Garamond, Manrope, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Manrope:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            cinzel: ['"Cinzel"', 'Georgia', 'serif'],
+            serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans: ['"Manrope"', '-apple-system', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+          colors: {
+            brand: {
+              gold: '#D4AF37',
+              emerald: '#10B981',
+              amber: '#F59E0B',
+              whiskey: '#D4923B',
+              orange: '#FF5A1F',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --font-cinzel: "Cinzel", "Times New Roman", serif;
+      --font-serif: "Cormorant Garamond", Georgia, serif;
+      --font-sans: "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    }
+
+    body {
+      background-color: #030406;
+      color: #E2E8F0;
+      font-family: var(--font-sans);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Master Editorial Display Headlines (Audemars Piguet / The Row standard) */
+    .editorial-display-headline {
+      font-family: var(--font-serif);
+      font-weight: 300;
+      letter-spacing: -0.038em;
+      line-height: 0.94;
+      color: #FFFFFF;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "liga" 1, "dlig" 1, "kern" 1, "cv01" 1, "cv02" 1, "ss01" 1;
+      font-optical-sizing: auto;
+      text-shadow: 0 4px 30px rgba(0, 0, 0, 0.85);
+      word-break: normal;
+      overflow-wrap: break-word;
+    }
+
+    /* 24K Bullion Gold Specular Gradient */
+    .gold-foil-text {
+      background: linear-gradient(135deg, #FFFDF5 0%, #FBE8C5 18%, #D4AF37 42%, #9E7728 72%, #FBF0D9 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 2px 22px rgba(212, 175, 55, 0.38));
+      display: inline-block;
+      will-change: filter;
+    }
+
+    /* Frosted Liquid Platinum Gradient */
+    .platinum-foil-text {
+      background: linear-gradient(135deg, #FFFFFF 0%, #EFF4F9 24%, #BAC7D5 55%, #7D8E9F 82%, #EBF1F7 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 2px 20px rgba(186, 199, 213, 0.32));
+      display: inline-block;
+      will-change: filter;
+    }
+
+    /* Sovereign Private Wealth Emerald Gradient */
+    .emerald-foil-text {
+      background: linear-gradient(135deg, #F0FDF4 0%, #6EE7B7 26%, #10B981 56%, #047857 85%, #A7F3D0 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 2px 22px rgba(16, 185, 129, 0.40));
+      display: inline-block;
+      will-change: filter;
+    }
+
+    /* Imperial Roman Chapter Badge */
+    .chapter-badge-roman {
+      font-family: var(--font-cinzel);
+      font-size: 10px;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 18px;
+      border-radius: 9999px;
+      background: rgba(7, 8, 12, 0.90);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      box-shadow: 
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.20),
+        inset 0 -1px 0 0 rgba(0, 0, 0, 0.6),
+        0 8px 28px rgba(0, 0, 0, 0.8);
+      color: #EBD4A7;
+      font-feature-settings: "cpsp" 1, "titl" 1;
+    }
+
+    /* Amex Centurion Matte Titanium Surface with Chamfered Micro-Bevels */
+    .glass-card {
+      background: linear-gradient(145deg, rgba(26, 31, 41, 0.82) 0%, rgba(14, 17, 23, 0.94) 50%, rgba(8, 10, 14, 0.98) 100%);
+      backdrop-filter: blur(28px) saturate(140%);
+      -webkit-backdrop-filter: blur(28px) saturate(140%);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      box-shadow: 
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+        inset 1px 0 0 0 rgba(255, 255, 255, 0.08),
+        inset 0 -1px 0 0 rgba(0, 0, 0, 0.8),
+        inset -1px 0 0 0 rgba(0, 0, 0, 0.6),
+        0 30px 60px -15px rgba(0, 0, 0, 0.92),
+        0 4px 16px rgba(0, 0, 0, 0.7);
+      transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(212, 175, 55, 0.35);
+      box-shadow: 
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.32),
+        inset 1px 0 0 0 rgba(212, 175, 55, 0.18),
+        inset 0 -1px 0 0 rgba(0, 0, 0, 0.9),
+        0 38px 76px -16px rgba(0, 0, 0, 0.96),
+        0 0 35px -8px rgba(212, 175, 55, 0.18);
+      transform: translateY(-2px);
+    }
+
+    .magnetic-btn {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .magnetic-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 40px rgba(16, 185, 129, 0.6);
+    }
+  </style>
+</head>
+<body class="bg-[#030406] text-white">
+
+  <!-- ========================================================================= -->
+  <!-- START: DROP-IN REPLACEMENT BLOCK FOR cinematic-story.html & index.html    -->
+  <!-- ========================================================================= -->
+  <!-- NARRATIVE TEXT OVERLAYS (Positioned along scroll track) -->
+  <div class="relative z-30 pointer-events-none -mt-[100vh]">
+
+    <!-- ===================================================================== -->
+    <!-- EPISODE I // THE UNTAPPED ASSET (0vh - 100vh)                         -->
+    <!-- ===================================================================== -->
+    <div class="h-screen w-full flex items-center justify-start px-6 sm:px-16 lg:px-24">
+      <div class="max-w-2xl pointer-events-auto space-y-6">
+        
+        <div class="chapter-badge-roman">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-amber animate-ping"></span>
+          <span class="font-cinzel">EPISODE I // THE UNTAPPED ASSET</span>
+        </div>
+
+        <h1 class="editorial-display-headline text-4xl sm:text-6xl lg:text-7xl xl:text-8xl">
+          Ваш телефон за 60 минут <span class="italic font-light gold-foil-text">ни разу не коснется</span> чужих рук.
+        </h1>
+
+        <div class="glass-card p-6 sm:p-7 rounded-2xl space-y-3">
+          <p class="text-sm sm:text-base text-zinc-200 font-light leading-relaxed">
+            Ваш отрицательный баланс в конторе сформировал редкий иммунитет: букмекер не режет максимальные лимиты, пока считает вас любителем.
+          </p>
+          <p class="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
+            Для нашего капитала ваш нерезанный VIP-статус — готовый шлюз ликвидности на закрытых рынках.
+          </p>
+          <div class="pt-3 border-t border-white/[0.06] flex items-center justify-between font-mono text-xs text-white/50">
+            <span class="font-cinzel tracking-wider text-[11px]">СТАТУС: ZERO-FRAUD LIST</span>
+            <span class="text-amber-400 font-semibold font-mono">ЛИМИТ $25k+</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- EPISODE II // HARDWARE ENCLAVE (100vh - 200vh)                        -->
+    <!-- ===================================================================== -->
+    <div class="h-screen w-full flex items-center justify-start px-6 sm:px-16 lg:px-24">
+      <div class="max-w-2xl pointer-events-auto space-y-6">
+        
+        <div class="chapter-badge-roman border-amber-500/30 text-amber-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+          <span class="font-cinzel">EPISODE II // HARDWARE ENCLAVE</span>
+        </div>
+
+        <h2 class="editorial-display-headline text-4xl sm:text-6xl lg:text-7xl xl:text-8xl">
+          Ноль передачи паролей. <span class="italic font-light platinum-foil-text">Ноль AnyDesk.</span>
+        </h2>
+
+        <div class="glass-card p-6 sm:p-7 rounded-2xl space-y-3">
+          <p class="text-sm sm:text-base text-zinc-200 font-light leading-relaxed">
+            Мы принципиально не берем чужие учетные данные и не ставим сторонний софт.
+          </p>
+          <p class="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
+            Вы сидите в лаундже, держите свой смартфон в своих руках и сохраняете 100% контроль над биометрией и сессиями.
+          </p>
+          <div class="pt-3 border-t border-white/[0.06] flex items-center justify-between font-mono text-xs text-white/50">
+            <span class="font-cinzel tracking-wider text-[11px]">УДАЛЕННЫЙ ДОСТУП: ЗАПРЕЩЕН</span>
+            <span class="text-brand-emerald font-semibold font-mono">100% NON-CUSTODIAL</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- EPISODE III // LIQUIDITY INJECTION (200vh - 300vh)                    -->
+    <!-- ===================================================================== -->
+    <div class="h-screen w-full flex items-center justify-start px-6 sm:px-16 lg:px-24">
+      <div class="max-w-2xl pointer-events-auto space-y-6">
+        
+        <div class="chapter-badge-roman border-orange-500/30 text-orange-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-orange"></span>
+          <span class="font-cinzel">EPISODE III // LIQUIDITY INJECTION</span>
+        </div>
+
+        <h2 class="editorial-display-headline text-4xl sm:text-6xl lg:text-7xl xl:text-8xl">
+          Фонд рискует капиталом. <span class="italic font-light gold-foil-text">Вы подтверждаете ордера.</span>
+        </h2>
+
+        <div class="glass-card p-6 sm:p-7 rounded-2xl space-y-3">
+          <p class="text-sm sm:text-base text-zinc-200 font-light leading-relaxed">
+            Аналитик за столом передает параметры валуйной позиции на смолл-маркете. Депозит фонда заводится криптой на ваших глазах ровно под серию.
+          </p>
+          <p class="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
+            Кнопку в купоне нажимаете только вы лично со своего устройства.
+          </p>
+          <div class="pt-3 border-t border-white/[0.06] flex items-center justify-between font-mono text-xs text-white/50">
+            <span class="font-cinzel tracking-wider text-[11px]">ЛИЧНЫЙ БАЛАНС: $0.00</span>
+            <span class="text-brand-emerald font-semibold font-mono">ДЕПОЗИТ СИНДИКАТА 100%</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- EPISODE IV // IMMEDIATE SOVEREIGN PAYOUT (300vh - 400vh)              -->
+    <!-- ===================================================================== -->
+    <div class="h-screen w-full flex items-center justify-start px-6 sm:px-16 lg:px-24">
+      <div class="max-w-2xl pointer-events-auto space-y-6">
+        
+        <div class="chapter-badge-roman border-emerald-500/30 text-emerald-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse"></span>
+          <span class="font-cinzel">EPISODE IV // IMMEDIATE SOVEREIGN PAYOUT</span>
+        </div>
+
+        <h2 class="editorial-display-headline text-4xl sm:text-6xl lg:text-7xl xl:text-8xl">
+          Свои 30% прибыли <span class="italic font-light emerald-foil-text">забираете на месте.</span>
+        </h2>
+
+        <div class="glass-card p-6 sm:p-7 rounded-2xl space-y-4">
+          <p class="text-sm sm:text-base text-zinc-200 font-light leading-relaxed">
+            После финального свистка чистая прибыль выводится на ваш личный криптокошелек. Расчет 70/30 происходит прямо за столом в лаундже.
+          </p>
+          <p class="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
+            Любые возможные просадки полностью компенсируются фондом.
+          </p>
+          
+          <div class="pt-3 border-t border-white/[0.06] flex items-center justify-between font-mono text-xs text-white/50">
+            <span class="font-cinzel tracking-wider text-[11px]">ВЫПЛАТА: МОМЕНТАЛЬНО</span>
+            <span class="text-brand-emerald font-semibold font-mono">USDT TRC20/ERC20</span>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-black/50 border border-brand-emerald/40 flex items-center justify-between font-mono">
+            <div class="flex items-center gap-3">
+              <span class="w-2.5 h-2.5 rounded-full bg-brand-emerald shadow-[0_0_12px_rgba(16,185,129,0.9)]"></span>
+              <span class="text-xs text-white font-cinzel tracking-wider">USDT TRANSACTION CONFIRMED</span>
+            </div>
+            <span class="text-xs text-brand-emerald font-bold font-mono">+$1,500.00 (30% SPLIT)</span>
+          </div>
+
+          <button onclick="if(window.VIPConcierge){VIPConcierge.open()}else{alert('VIP Concierge Protocol Initiated')}" class="magnetic-btn w-full py-4 rounded-xl bg-gradient-to-r from-brand-emerald to-[#059669] hover:from-[#15cc90] hover:to-[#047857] text-white font-bold text-xs font-cinzel tracking-widest uppercase shadow-[0_0_30px_rgba(16,185,129,0.45)] transition-all active:scale-95">
+            Согласовать тестовый слот $5,000 – $10,000 ->
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- ========================================================================= -->
+  <!-- END: DROP-IN REPLACEMENT BLOCK                                            -->
+  <!-- ========================================================================= -->
+
+  <script>
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

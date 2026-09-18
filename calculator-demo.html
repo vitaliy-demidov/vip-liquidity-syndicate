@@ -191,28 +191,28 @@
             Выберите крипто-букмекера с минусовым профилем и открытыми лимитами на спорт:
           </p>
 
-          <!-- 4 VIP Cards Grid (Stake, Sportsbet.io, BC.Game, Roobet) -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="bookmaker-selector">
+          <!-- 5 VIP Cards Grid (Stake.com, Sportsbet.io, Roobet, Winline VIP, Fonbet VIP) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="bookmaker-selector">
             
             <!-- Stake -->
-            <button type="button" onclick="selectBookmaker('Stake')" id="bk-btn-Stake" class="bk-card active text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-24 bg-brand-surfaceLight border-brand-cyan shadow-[0_0_20px_rgba(0,240,255,0.25)] ring-1 ring-brand-cyan/50">
+            <button type="button" onclick="selectBookmaker('Stake')" id="bk-btn-Stake" class="bk-card active text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-28 bg-brand-surfaceLight border-brand-cyan shadow-[0_0_20px_rgba(0,240,255,0.25)] ring-1 ring-brand-cyan/50">
               <div class="flex items-center justify-between w-full">
                 <span class="font-bold text-sm text-white flex items-center gap-2">
                   <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse"></span>
-                  Stake
+                  Stake.com
                 </span>
                 <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-brand-cyan/15 text-brand-cyan border border-brand-cyan/30 font-semibold">MAX LIMITS</span>
               </div>
               <div class="text-[11px] text-brand-muted font-mono leading-tight">
-                Platinum IV – Diamond • x2.0 банкролл
+                Platinum IV–Diamond • x2.0 банкролл
               </div>
               <div class="text-[10px] text-brand-cyan/80 font-mono">
-                Пул: $20k – $50k+ • Soft Football / NBA
+                Пул: $25k – $50k+ • Фолы / Створы
               </div>
             </button>
 
             <!-- Sportsbet.io -->
-            <button type="button" onclick="selectBookmaker('Sportsbet.io')" id="bk-btn-Sportsbet.io" class="bk-card text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-24 bg-brand-surface border-brand-surfaceBorder hover:border-brand-muted/50">
+            <button type="button" onclick="selectBookmaker('Sportsbet')" id="bk-btn-Sportsbet" class="bk-card text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-28 bg-brand-surface border-brand-surfaceBorder hover:border-brand-muted/50">
               <div class="flex items-center justify-between w-full">
                 <span class="font-bold text-sm text-white flex items-center gap-2">
                   <span class="w-2 h-2 rounded-full bg-slate-600"></span>
@@ -224,29 +224,12 @@
                 Clubhouse Legend • x2.2 банкролл
               </div>
               <div class="text-[10px] text-slate-400 font-mono">
-                Пул: $30k – $70k+ • EPL & UCL
-              </div>
-            </button>
-
-            <!-- BC.Game -->
-            <button type="button" onclick="selectBookmaker('BC.Game')" id="bk-btn-BC.Game" class="bk-card text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-24 bg-brand-surface border-brand-surfaceBorder hover:border-brand-muted/50">
-              <div class="flex items-center justify-between w-full">
-                <span class="font-bold text-sm text-white flex items-center gap-2">
-                  <span class="w-2 h-2 rounded-full bg-slate-600"></span>
-                  BC.Game
-                </span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/15 text-purple-400 border border-purple-500/30 font-semibold">SVIP 55+</span>
-              </div>
-              <div class="text-[11px] text-brand-muted font-mono leading-tight">
-                SVIP 55+ • x2.4 банкролл
-              </div>
-              <div class="text-[10px] text-slate-400 font-mono">
-                Пул: $50k – $120k+ • High Turnover
+                Пул: $35k – $70k+ • Ауты / Желтые карты
               </div>
             </button>
 
             <!-- Roobet -->
-            <button type="button" onclick="selectBookmaker('Roobet')" id="bk-btn-Roobet" class="bk-card text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-24 bg-brand-surface border-brand-surfaceBorder hover:border-brand-muted/50">
+            <button type="button" onclick="selectBookmaker('Roobet')" id="bk-btn-Roobet" class="bk-card text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-28 bg-brand-surface border-brand-surfaceBorder hover:border-brand-muted/50">
               <div class="flex items-center justify-between w-full">
                 <span class="font-bold text-sm text-white flex items-center gap-2">
                   <span class="w-2 h-2 rounded-full bg-slate-600"></span>
@@ -258,7 +241,39 @@
                 King Whale • x1.8 банкролл
               </div>
               <div class="text-[10px] text-slate-400 font-mono">
-                Пул: $20k – $45k+ • Private Desk
+                Пул: $20k – $45k+ • VIP Lounge
+              </div>
+            </button>
+
+            <!-- Winline VIP -->
+            <button type="button" onclick="selectBookmaker('Winline')" id="bk-btn-Winline" class="bk-card text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-28 bg-brand-surface border-brand-surfaceBorder hover:border-brand-muted/50">
+              <div class="flex items-center justify-between w-full">
+                <span class="font-bold text-sm text-white flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-slate-600"></span>
+                  Winline VIP
+                </span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/15 text-orange-400 border border-orange-500/30 font-semibold">LOCAL VIP</span>
+              </div>
+              <div class="text-[11px] text-brand-muted font-mono leading-tight">
+                Локальный VIP • x2.0 банкролл
+              </div>
+              <div class="text-[10px] text-slate-400 font-mono">
+                ₽2M – ₽5M+ ($20k–$50k) • РПЛ Статистика
+              </div>
+            </button>
+
+            <!-- Fonbet VIP -->
+            <button type="button" onclick="selectBookmaker('Fonbet')" id="bk-btn-Fonbet" class="bk-card text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-28 bg-brand-surface border-brand-surfaceBorder hover:border-brand-muted/50 sm:col-span-2 lg:col-span-2">
+              <div class="flex items-center justify-between w-full">
+                <span class="font-bold text-sm text-white flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-slate-600"></span>
+                  Fonbet VIP
+                </span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/15 text-rose-400 border border-rose-500/30 font-semibold">PREMIUM VIP</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px] text-brand-muted font-mono leading-tight">
+                <div>Премиум статус • x2.2 банкролл</div>
+                <div class="text-[10px] text-slate-400">₽2.5M – ₽6M+ ($25k–$60k) • Фолы / Ауты</div>
               </div>
             </button>
 
@@ -270,7 +285,7 @@
           <div class="flex items-center justify-between mb-2">
             <label class="text-xs font-mono uppercase text-brand-cyan tracking-wider font-semibold flex items-center gap-2">
               <span class="w-5 h-5 rounded bg-brand-cyan/20 text-brand-cyan flex items-center justify-center text-[10px] font-bold">02</span>
-              Подтвержденный лимит на ставку (Limit Ceiling)
+              Подтвержденный потолок ордера (Смолл-маркеты):
             </label>
             <div class="flex items-center gap-2">
               <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-brand-cyan/10 border border-brand-cyan/30 text-brand-cyan hidden sm:inline-block" id="tier-badge-display">
@@ -283,7 +298,7 @@
           </div>
 
           <p class="text-xs text-brand-muted mb-4">
-            Максимальная ставка, которую принимает букмекер в 1 клик на топ-событие без ручной задержки:
+            Сумма максимального ордера на смолл-маркеты (фолы, ауты, удары в створ, Челленджеры). Обычным аналитикам эти рынки режут до $15, но на вашем VIP-профиле они открыты на тысячи долларов.
           </p>
 
           <!-- Glowing Range Slider -->
@@ -521,7 +536,7 @@
           <span class="text-white font-bold" id="modal-summary-sessions">8 сессий / мес</span>
         </div>
         <div class="flex justify-between items-center text-brand-muted border-t border-brand-surfaceBorder pt-2">
-          <span class="text-brand-cyan font-semibold">Дивиденд кита (30%):</span>
+          <span class="text-brand-cyan font-semibold">Ваш дивиденд (30%):</span>
           <span class="text-brand-emerald font-bold text-sm" id="modal-summary-dividend">$12,000 USDT / мес</span>
         </div>
         <div class="flex justify-between items-center text-brand-muted">
