@@ -10,6 +10,15 @@
  */
 
 :root {
+  /* Stealth Luxury Design System Tokens (Private Liquidity Desk) */
+  --stealth-bg: #080809;
+  --stealth-surface: #111215;
+  --stealth-border: #22242A;
+  --stealth-text-primary: #EDEDEF;
+  --stealth-text-secondary: #7E808A;
+  --stealth-accent-amber: #D4A373;
+  --stealth-accent-liquidity: #2ED573;
+
   /* ==========================================================================
      0. HAUTE HORLOGERIE TYPOGRAPHY & FONT STACKS
      ========================================================================== */
@@ -711,6 +720,15 @@ body, .font-features-global {
 /* High-Density 4K Monitors (3840px / Ultra-Wide Displays) */
 @media (min-width: 2560px) {
   :root {
+  /* Stealth Luxury Design System Tokens (Private Liquidity Desk) */
+  --stealth-bg: #080809;
+  --stealth-surface: #111215;
+  --stealth-border: #22242A;
+  --stealth-text-primary: #EDEDEF;
+  --stealth-text-secondary: #7E808A;
+  --stealth-accent-amber: #D4A373;
+  --stealth-accent-liquidity: #2ED573;
+
     --type-display-hero: clamp(4.5rem, 5.5vw, 9.5rem);
     --type-display-h1: clamp(3.5rem, 4.2vw, 7.5rem);
     --type-display-h2: clamp(2.8rem, 3.2vw, 5.5rem);
@@ -736,6 +754,15 @@ body, .font-features-global {
 
 /* 1. Ambient Mouse Spotlight (Haute Horlogerie 24K Gold Specular Halo) */
 :root {
+  /* Stealth Luxury Design System Tokens (Private Liquidity Desk) */
+  --stealth-bg: #080809;
+  --stealth-surface: #111215;
+  --stealth-border: #22242A;
+  --stealth-text-primary: #EDEDEF;
+  --stealth-text-secondary: #7E808A;
+  --stealth-accent-amber: #D4A373;
+  --stealth-accent-liquidity: #2ED573;
+
   --mouse-x: 50%;
   --mouse-y: 50%;
   --spotlight-opacity: 0.85;
