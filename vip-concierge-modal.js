@@ -35,7 +35,7 @@
     'Stake': {
       name: 'Stake.com',
       badge: 'STAKE PLATINUM / DIAMOND',
-      iconColor: '#00F0FF',
+      iconColor: '#D4AF37',
       tiers: [
         { id: 'plat_1_3', name: 'Platinum I – III', pool: '$10,000 – $25,000', split: '30%' },
         { id: 'plat_4', name: 'Platinum IV', pool: '$25,000 – $50,000', split: '35%', recommended: true },
@@ -67,7 +67,7 @@
     'Roobet': {
       name: 'Roobet',
       badge: 'ROOBET VIP LOUNGE',
-      iconColor: '#EC4899',
+      iconColor: '#D4AF37',
       tiers: [
         { id: 'roo_silver_gold', name: 'VIP Silver / Gold', pool: '$10,000 – $25,000', split: '30%' },
         { id: 'roo_platinum', name: 'VIP Platinum', pool: '$25,000 – $50,000', split: '35%', recommended: true },
@@ -77,7 +77,7 @@
     'Cloudbet': {
       name: 'Cloudbet',
       badge: 'CRYPTO HIGH-ROLLER',
-      iconColor: '#8B5CF6',
+      iconColor: '#10B981',
       tiers: [
         { id: 'cb_gold', name: 'VIP Gold / Emerald', pool: '$15,000 – $35,000', split: '30%' },
         { id: 'cb_diamond', name: 'Diamond / Ruby Club', pool: '$35,000 – $80,000+', split: '35%', recommended: true }
@@ -86,7 +86,7 @@
     'Other': {
       name: 'Другой крипто-букмекер',
       badge: 'PRIVATE SYNDICATE DESK',
-      iconColor: '#00F0FF',
+      iconColor: '#CBD0DA',
       tiers: [
         { id: 'other_20k', name: 'High-Roller (Минус $20,000+)', pool: '$15,000 – $35,000', split: '30%' },
         { id: 'other_50k', name: 'Whale (Минус $50,000+)', pool: '$35,000 – $80,000', split: '35%', recommended: true },
@@ -198,10 +198,13 @@
         .vip-modal-dialog {
           width: 100%;
           max-width: 680px;
+          max-height: calc(100dvh - 32px);
           margin: auto;
-          background: linear-gradient(180deg, rgba(21, 26, 36, 0.98) 0%, rgba(11, 14, 20, 0.99) 100%);
-          border: 1px solid rgba(0, 240, 255, 0.25);
-          box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.95), 0 0 45px rgba(0, 240, 255, 0.14);
+          display: flex;
+          flex-direction: column;
+          background: linear-gradient(165deg, rgba(24, 27, 34, 0.98) 0%, rgba(12, 14, 18, 0.99) 100%);
+          border: 1px solid rgba(212, 175, 55, 0.35);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 0 0 1px rgba(212, 175, 55, 0.12), 0 30px 80px -15px rgba(0, 0, 0, 0.96), 0 0 45px rgba(212, 175, 55, 0.12);
           border-radius: 1.25rem;
           transform: scale(0.96) translateY(12px);
           transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -216,27 +219,32 @@
           transition: all 0.2s ease;
         }
         .vip-step-pill.is-active {
-          border-color: #00F0FF;
-          background: rgba(0, 240, 255, 0.12);
-          color: #00F0FF;
+          border-color: #D4AF37;
+          background: rgba(212, 175, 55, 0.12);
+          color: #D4AF37;
+          box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
         }
         .vip-step-pill.is-done {
-          border-color: rgba(16, 185, 129, 0.4);
-          background: rgba(16, 185, 129, 0.1);
+          border-color: rgba(16, 185, 129, 0.45);
+          background: rgba(16, 185, 129, 0.12);
           color: #10B981;
         }
         .vip-radio-card {
           cursor: pointer;
           transition: all 0.2s ease;
+          background: rgba(20, 23, 30, 0.7);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
         }
         .vip-radio-card:hover {
-          border-color: rgba(0, 240, 255, 0.4);
+          border-color: rgba(212, 175, 55, 0.45);
+          background: rgba(212, 175, 55, 0.04);
           transform: translateY(-1px);
         }
         .vip-radio-card.is-selected {
-          border-color: #00F0FF;
-          background: rgba(0, 240, 255, 0.08);
-          box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+          border-color: #D4AF37;
+          background: rgba(212, 175, 55, 0.09);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 0 20px rgba(212, 175, 55, 0.16);
         }
         .vip-mono {
           font-family: 'JetBrains Mono', monospace, ui-monospace;
@@ -249,6 +257,21 @@
           border-color: #10B981 !important;
           box-shadow: 0 0 15px rgba(16, 185, 129, 0.25) !important;
         }
+        /* Mobile iOS input zoom prevention: must be 16px on phone viewports */
+        .vip-modal-dialog input[type="text"],
+        .vip-modal-dialog input[type="number"],
+        .vip-modal-dialog select,
+        .vip-modal-dialog textarea {
+          font-size: 16px !important;
+        }
+        @media (min-width: 640px) {
+          .vip-modal-dialog input[type="text"],
+          .vip-modal-dialog input[type="number"],
+          .vip-modal-dialog select,
+          .vip-modal-dialog textarea {
+            font-size: 12px !important;
+          }
+        }
         @keyframes vipShake {
           0%, 100% { transform: translateX(0); }
           20%, 60% { transform: translateX(-6px); }
@@ -257,6 +280,11 @@
         .vip-shake {
           animation: vipShake 0.4s ease-in-out;
         }
+        .vip-modal-body {
+          flex: 1 1 auto;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+        }
         .vip-modal-body::-webkit-scrollbar {
           width: 6px;
         }
@@ -264,7 +292,7 @@
           background: rgba(255, 255, 255, 0.02);
         }
         .vip-modal-body::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.15);
+          background: rgba(212, 175, 55, 0.35);
           border-radius: 3px;
         }
       `;
@@ -599,10 +627,10 @@
       if (!toast) {
         toast = document.createElement('div');
         toast.id = 'vip-toast';
-        toast.className = 'fixed bottom-6 right-6 z-[999999] px-4 py-3 rounded-lg bg-[#151A24] border border-[#00F0FF]/50 text-[#00F0FF] font-mono text-xs shadow-2xl flex items-center gap-2 transition-all';
+        toast.className = 'fixed bottom-6 right-6 z-[999999] px-4 py-3 rounded-xl bg-[#14171F] border border-[#D4AF37]/50 text-[#D4AF37] font-mono text-xs shadow-[0_10px_30px_rgba(0,0,0,0.8),0_0_20px_rgba(212,175,55,0.2)] flex items-center gap-2.5 transition-all';
         document.body.appendChild(toast);
       }
-      toast.innerHTML = `<span class="w-2 h-2 rounded-full bg-[#00F0FF] animate-pulse"></span> ${message}`;
+      toast.innerHTML = `<span class="w-2 h-2 rounded-full bg-[#D4AF37] shadow-[0_0_8px_#D4AF37] animate-pulse"></span> ${message}`;
       toast.style.opacity = '1';
       toast.style.transform = 'translateY(0)';
       setTimeout(() => {
@@ -623,15 +651,15 @@
         <div class="vip-modal-dialog">
           
           <!-- Top Institutional Header -->
-          <div class="px-6 py-4 border-b border-white/10 bg-black/40 flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
+          <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-white/10 bg-black/50 flex items-center justify-between">
+            <div class="flex items-center gap-2 sm:gap-2.5">
               <div class="flex items-center gap-1.5">
                 <span class="w-2.5 h-2.5 rounded-full bg-red-500/80"></span>
                 <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
                 <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
               </div>
               <div class="h-4 w-[1px] bg-white/10 mx-1"></div>
-              <span class="vip-mono text-[11px] tracking-wider text-brand-cyan uppercase font-semibold text-[#00F0FF]">
+              <span class="vip-mono text-[10px] sm:text-[11px] tracking-[0.14em] uppercase font-semibold text-[#D4AF37] truncate">
                 VIP ALLOCATION DESK // VERIFICATION PROTOCOL
               </span>
             </div>
@@ -641,33 +669,33 @@
             </button>
           </div>
 
-          <!-- Step Progress Segmented Bar -->
-          <div class="px-6 pt-4 pb-3 border-b border-white/5 bg-black/20">
-            <div class="grid grid-cols-4 gap-2 text-center">
-              <div class="vip-step-pill p-2 rounded-lg border text-left ${this.currentStep === 1 ? 'is-active' : (this.currentStep > 1 ? 'is-done' : 'border-white/5 bg-white/[0.02] text-zinc-500')}">
-                <div class="vip-mono text-[10px] uppercase font-semibold opacity-75">01 // TIER</div>
-                <div class="text-xs font-medium truncate">Букмекер & Ранг</div>
+          <!-- Step Progress Segmented Bar (Roman Numerals I–IV) -->
+          <div class="px-3 sm:px-6 pt-3 pb-2.5 border-b border-white/5 bg-black/25">
+            <div class="grid grid-cols-4 gap-1.5 sm:gap-2 text-center">
+              <div class="vip-step-pill p-1.5 sm:p-2 rounded-lg border text-left ${this.currentStep === 1 ? 'is-active' : (this.currentStep > 1 ? 'is-done' : 'border-white/5 bg-white/[0.02] text-zinc-500')}">
+                <div class="vip-mono text-[9px] sm:text-[10px] uppercase font-semibold opacity-75">I // TIER</div>
+                <div class="text-[10px] sm:text-xs font-medium truncate">Букмекер & Ранг</div>
               </div>
 
-              <div class="vip-step-pill p-2 rounded-lg border text-left ${this.currentStep === 2 ? 'is-active' : (this.currentStep > 2 ? 'is-done' : 'border-white/5 bg-white/[0.02] text-zinc-500')}">
-                <div class="vip-mono text-[10px] uppercase font-semibold opacity-75">02 // LIMIT</div>
-                <div class="text-xs font-medium truncate">Потолок 1X2</div>
+              <div class="vip-step-pill p-1.5 sm:p-2 rounded-lg border text-left ${this.currentStep === 2 ? 'is-active' : (this.currentStep > 2 ? 'is-done' : 'border-white/5 bg-white/[0.02] text-zinc-500')}">
+                <div class="vip-mono text-[9px] sm:text-[10px] uppercase font-semibold opacity-75">II // LIMIT</div>
+                <div class="text-[10px] sm:text-xs font-medium truncate">Потолок 1X2</div>
               </div>
 
-              <div class="vip-step-pill p-2 rounded-lg border text-left ${this.currentStep === 3 ? 'is-active' : (this.currentStep > 3 ? 'is-done' : 'border-white/5 bg-white/[0.02] text-zinc-500')}">
-                <div class="vip-mono text-[10px] uppercase font-semibold opacity-75">03 // VENUE</div>
-                <div class="text-xs font-medium truncate">Формат сессии</div>
+              <div class="vip-step-pill p-1.5 sm:p-2 rounded-lg border text-left ${this.currentStep === 3 ? 'is-active' : (this.currentStep > 3 ? 'is-done' : 'border-white/5 bg-white/[0.02] text-zinc-500')}">
+                <div class="vip-mono text-[9px] sm:text-[10px] uppercase font-semibold opacity-75">III // VENUE</div>
+                <div class="text-[10px] sm:text-xs font-medium truncate">Формат сессии</div>
               </div>
 
-              <div class="vip-step-pill p-2 rounded-lg border text-left ${this.currentStep >= 4 ? 'is-active' : 'border-white/5 bg-white/[0.02] text-zinc-500'}">
-                <div class="vip-mono text-[10px] uppercase font-semibold opacity-75">04 // DISPATCH</div>
-                <div class="text-xs font-medium truncate">Выплаты & TG</div>
+              <div class="vip-step-pill p-1.5 sm:p-2 rounded-lg border text-left ${this.currentStep >= 4 ? 'is-active' : 'border-white/5 bg-white/[0.02] text-zinc-500'}">
+                <div class="vip-mono text-[9px] sm:text-[10px] uppercase font-semibold opacity-75">IV // DISPATCH</div>
+                <div class="text-[10px] sm:text-xs font-medium truncate">Выплаты & TG</div>
               </div>
             </div>
           </div>
 
           <!-- Modal Scrollable Content Area -->
-          <div class="vip-modal-body p-6 max-h-[75vh] overflow-y-auto">
+          <div class="vip-modal-body p-4 sm:p-6 overflow-y-auto">
             ${stepContent}
           </div>
 
