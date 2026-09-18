@@ -52,7 +52,8 @@
             obsidian: '#07080B',
             carbon: '#0D0F14',
             brand: {
-              cyan: '#00F0FF',
+              gold: '#D4AF37',
+              cyan: '#D4AF37',
               emerald: '#10B981',
               amber: '#F59E0B',
               whiskey: '#D4923B',
@@ -1196,9 +1197,10 @@
   <script src="cinematic-qa-audit-engine.js"></script>
 
   <!-- Video Scrub Engine (60 FPS Damped Lerp & Low-Power Optimizer) -->
-  <script src="video-scrub-engine.js"></script>
+  <script type="module">
+    import { VideoScrubEngine } from './video-scrub-engine.js';
+    window.VideoScrubEngine = VideoScrubEngine;
 
-  <script>
     // Initialize Lucide Icons
     lucide.createIcons();
 
@@ -1299,6 +1301,7 @@
         }
       }
     });
+    window.scrubEngine = scrubEngine;
 
     // Wire Adaptive Low-Power / Slow Network Fallback Monitor
     if (typeof CinematicQAAudit !== 'undefined' && CinematicQAAudit.AdaptivePerformanceFallbackEngine) {
@@ -1535,6 +1538,12 @@
 
     // Initial calculation and slider percentage run
     updateCalculator();
+
+    // Expose interactive functions to window for inline HTML onclick attributes
+    window.selectBookmaker = selectBookmaker;
+    window.setLimitPreset = setLimitPreset;
+    window.transferCalculatorToModal = transferCalculatorToModal;
+    window.updateCalculator = updateCalculator;
   </script>
 </body>
 </html>

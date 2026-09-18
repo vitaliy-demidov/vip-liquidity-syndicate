@@ -392,6 +392,10 @@
       return () => this.listeners.delete(callback);
     }
 
+    onStateChange(callback) {
+      return this.onModeChange(callback);
+    }
+
     _notifyListeners(change) {
       for (const cb of this.listeners) {
         try {
