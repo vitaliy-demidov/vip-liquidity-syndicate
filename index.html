@@ -736,6 +736,319 @@
 
   </section>
 
+  <!-- ========================================================================= -->
+  <!-- SCREEN 3: CINEMATIC CHANGING VIDEO THEATER & 4-SCENE NARRATIVE             -->
+  <!-- "История очной сессии: 4 кадра за 60 минут — Меняющееся видео 60 FPS"       -->
+  <!-- ========================================================================= -->
+  <section id="story" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full relative border-t border-white/[0.08]">
+    
+    <!-- Background Ambient Glow -->
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-4/5 h-96 bg-gold-500/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+    <!-- Section Header -->
+    <div class="text-center max-w-4xl mx-auto mb-14">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold-500/10 border border-gold-500/30 text-gold-400 font-cinzel text-xs mb-4 shadow-[0_0_20px_rgba(212,146,59,0.2)]">
+        <span class="w-2 h-2 rounded-full bg-gold-400 animate-pulse"></span>
+        <span>// КИНО-ХРОНИКА СЕССИИ • МЕНЯЮЩЕЕСЯ ВИДЕО 60 FPS</span>
+      </div>
+      <h2 class="text-3xl sm:text-5xl font-cinzel font-bold text-white tracking-tight leading-[1.15] mb-5">
+        Ваш телефон за 60 минут <br class="hidden sm:inline">
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-white to-emerald-400 font-serif italic font-normal">
+          ни разу не коснется чужих рук
+        </span>
+      </h2>
+      <p class="text-slate-300 text-sm sm:text-base md:text-lg leading-relaxed font-sans max-w-3xl mx-auto">
+        Очная аллокация синдикатного капитала в закрытом VIP-лаундже: смотрите динамическую видео-хронику всех 4 этапов в реальном времени. Переключайте сцены кнопками или листайте карточки.
+      </p>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- CENTRAL INTERACTIVE CHANGING VIDEO THEATER                        -->
+    <!-- ================================================================= -->
+    <div class="max-w-5xl mx-auto mb-16 fintech-card rounded-3xl p-4 sm:p-7 border-gold-500/40 relative shadow-[0_0_50px_rgba(212,146,59,0.18)]">
+      
+      <!-- Top HUD & Scene Selector Tabs -->
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-white/[0.08] mb-5">
+        <div class="flex items-center gap-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="font-cinzel text-xs font-bold text-white uppercase tracking-wider">
+            ХРОНИКА СЕССИИ // МЕНЯЮЩЕЕСЯ ВИДЕО
+          </span>
+          <span id="theater-active-badge" class="px-2 py-0.5 rounded bg-gold-500/20 border border-gold-500/40 text-gold-300 font-mono text-[10px] font-bold">
+            КАДР I / IV
+          </span>
+        </div>
+
+        <!-- 4 Interactive Scene Jump Tabs -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 w-full md:w-auto bg-[#07080B] p-1 rounded-xl border border-white/[0.08]" id="scene-selector-tabs">
+          <button type="button" onclick="jumpToScene(0)" id="scene-tab-0" class="scene-tab active px-3 py-1.5 rounded-lg text-[11px] font-cinzel font-bold tracking-wider transition-all bg-gold-500 text-black shadow-[0_0_15px_rgba(212,146,59,0.4)]">
+            I • АКТИВ
+          </button>
+          <button type="button" onclick="jumpToScene(1)" id="scene-tab-1" class="scene-tab px-3 py-1.5 rounded-lg text-[11px] font-cinzel font-semibold tracking-wider transition-all text-slate-400 hover:text-white border border-transparent">
+            II • АЛЬЯНС
+          </button>
+          <button type="button" onclick="jumpToScene(2)" id="scene-tab-2" class="scene-tab px-3 py-1.5 rounded-lg text-[11px] font-cinzel font-semibold tracking-wider transition-all text-slate-400 hover:text-white border border-transparent">
+            III • ЗАЛИВКА
+          </button>
+          <button type="button" onclick="jumpToScene(3)" id="scene-tab-3" class="scene-tab px-3 py-1.5 rounded-lg text-[11px] font-cinzel font-semibold tracking-wider transition-all text-slate-400 hover:text-white border border-transparent">
+            IV • СПЛИТ
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Widescreen Video Screen (16:9 Aspect Ratio) -->
+      <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-black border border-white/[0.12] shadow-2xl group">
+        
+        <!-- The Continuous Changing Video (FastStart Web-Optimized, 2.8 MB) -->
+        <video id="master-theater-video" class="w-full h-full object-cover" autoplay muted loop playsinline poster="media/scene1_still.jpg" preload="auto">
+          <source src="media/master_narrative_scrub_web.mp4" type="video/mp4">
+        </video>
+
+        <!-- Subtle Chiaroscuro & Film Grain Overlay -->
+        <div class="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/80 via-transparent to-black/30"></div>
+
+        <!-- Real-time HUD Dynamic Overlay Bar (Changes dynamically as video plays!) -->
+        <div class="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none z-10">
+          <div class="px-3 py-1.5 rounded-lg bg-black/75 backdrop-blur-md border border-white/15 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-gold-400 animate-ping"></span>
+            <span id="theater-hud-phase" class="font-mono text-xs font-semibold text-gold-300 tracking-wider">
+              КАДР 01: ОБНАРУЖЕНИЕ АКТИВА • СТАВКА АПЛ $35,000
+            </span>
+          </div>
+
+          <div class="px-3 py-1.5 rounded-lg bg-black/75 backdrop-blur-md border border-white/15 font-mono text-xs text-white/80 hidden sm:flex items-center gap-2">
+            <span>ТАЙМЕР:</span>
+            <span id="theater-hud-time" class="text-emerald-400 font-bold">00:15 / 01:00</span>
+          </div>
+        </div>
+
+        <!-- Video Controls Bar on Bottom Overlay -->
+        <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between z-10 gap-3">
+          <div class="flex items-center gap-2">
+            <!-- Play / Pause Button -->
+            <button type="button" onclick="toggleTheaterPlay()" id="theater-play-btn" aria-label="Воспроизвести / Пауза" class="w-10 h-10 rounded-xl bg-black/80 hover:bg-gold-500 hover:text-black text-white border border-white/20 flex items-center justify-center transition-all backdrop-blur shadow-lg">
+              <i id="theater-play-icon" data-lucide="pause" class="w-4 h-4"></i>
+            </button>
+            <!-- Mute / Unmute Button -->
+            <button type="button" onclick="toggleTheaterMute()" id="theater-mute-btn" aria-label="Включить / Выключить звук" class="px-3 h-10 rounded-xl bg-black/80 hover:bg-white/20 text-white border border-white/20 flex items-center gap-2 transition-all backdrop-blur text-xs font-mono">
+              <i id="theater-sound-icon" data-lucide="volume-x" class="w-4 h-4 text-gold-400"></i>
+              <span id="theater-sound-text" class="hidden sm:inline">ЗВУК</span>
+            </button>
+          </div>
+
+          <!-- Scene Description Pill -->
+          <div id="theater-hud-caption" class="px-4 py-2 rounded-xl bg-black/85 backdrop-blur border border-gold-500/30 text-xs sm:text-sm text-slate-200 font-sans max-w-md text-right truncate">
+            Телефон лежит на столе. Отрицательный баланс открывает лимит $35,000.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Interactive Scrubber Bar Below Video -->
+      <div class="mt-4 pt-3 flex items-center gap-4">
+        <span class="text-[11px] font-mono text-slate-400 font-semibold w-12 text-right" id="scrubber-current-time">00:00</span>
+        <div class="relative flex-1 flex items-center">
+          <input type="range" id="theater-scrubber-slider" min="0" max="12" step="0.05" value="0" aria-label="Скруббер видео хроники" class="w-full h-1.5 bg-titanium-800 rounded-lg appearance-none cursor-pointer accent-gold-400">
+        </div>
+        <span class="text-[11px] font-mono text-gold-400 font-semibold w-12">01:00</span>
+      </div>
+
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- 4 CHAPTER CARDS WITH LIVE INLINE VIDEO PREVIEWS                   -->
+    <!-- ================================================================= -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+      
+      <!-- CARD 1: HOOK (Live Video Preview) -->
+      <div id="scene-card-1" onclick="jumpToScene(0)" class="fintech-card rounded-2xl overflow-hidden border-white/[0.1] hover:border-gold-500/60 transition-all flex flex-col group shadow-2xl cursor-pointer">
+        <div class="relative aspect-video overflow-hidden bg-black">
+          <video src="media/scene1_web.mp4" autoplay muted loop playsinline poster="media/scene1_still.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"></video>
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none"></div>
+          
+          <!-- Top Badges -->
+          <div class="absolute top-4 left-4 flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded bg-black/80 backdrop-blur border border-gold-500/40 text-gold-300 font-cinzel text-[10px] tracking-wider font-bold">
+              КАДР I // 00:00 - 00:15
+            </span>
+            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[10px] border border-emerald-500/30">
+              ВХОДНОЙ АУДИТ
+            </span>
+          </div>
+
+          <div class="absolute bottom-4 right-4 px-3 py-1.5 rounded-lg bg-carbon/90 border border-gold-500/40 text-gold-300 font-cinzel text-[10px] font-bold tracking-wider flex items-center gap-1.5 backdrop-blur">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>ЖИВОЕ ВИДЕО</span>
+          </div>
+        </div>
+
+        <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
+              <span class="text-gold-400 font-semibold font-cinzel">01. УПУЩЕННЫЙ АКТИВ</span>
+              <span class="text-white font-semibold font-mono">ЛИМИТ: $35,000</span>
+            </div>
+            <h3 class="text-xl font-cinzel font-bold text-white mb-3 group-hover:text-gold-300 transition-colors">
+              Смартфон на столе: отрицательный баланс как шлюз капитала
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans mb-4">
+              Сверхкрупный план. Матовый стол в лаундже. Экран смартфона загорается от системного пуша: подтвержденный VIP-ранг Stake Platinum IV и открытый лимит $35,000 на вечерний тур АПЛ. Для букмекера вы ценный VIP-клиент. Пока аккаунт простаивает, вы теряете до $12,000 в месяц неиспользованных дивидендов.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between text-[11px] font-mono text-slate-400">
+            <span class="text-emerald-400 font-semibold">✓ Личный баланс на старте: $0.00</span>
+            <span>Упущенные дивиденды: ~$12,000/мес</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 2: TRUST (Live Video Preview) -->
+      <div id="scene-card-2" onclick="jumpToScene(1)" class="fintech-card rounded-2xl overflow-hidden border-white/[0.1] hover:border-gold-500/60 transition-all flex flex-col group shadow-2xl cursor-pointer">
+        <div class="relative aspect-video overflow-hidden bg-black">
+          <video src="media/scene2_web.mp4" autoplay muted loop playsinline poster="media/scene2_still.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"></video>
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none"></div>
+          
+          <!-- Top Badges -->
+          <div class="absolute top-4 left-4 flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded bg-black/80 backdrop-blur border border-gold-500/40 text-gold-300 font-cinzel text-[10px] tracking-wider font-bold">
+              КАДР II // 00:15 - 00:35
+            </span>
+            <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[10px] border border-cyan-500/30">
+              VIP LOUNGE MEETING
+            </span>
+          </div>
+
+          <div class="absolute bottom-4 right-4 px-3 py-1.5 rounded-lg bg-carbon/90 border border-gold-500/40 text-gold-300 font-cinzel text-[10px] font-bold tracking-wider flex items-center gap-1.5 backdrop-blur">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>ЖИВОЕ ВИДЕО</span>
+          </div>
+        </div>
+
+        <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
+              <span class="text-gold-400 font-semibold font-cinzel">02. ТИХИЙ АЛЬЯНС</span>
+              <span class="text-cyan-400 font-semibold font-mono">MOSCOW CITY / DUBAI</span>
+            </div>
+            <h3 class="text-xl font-cinzel font-bold text-white mb-3 group-hover:text-gold-300 transition-colors">
+              Чашка эспрессо и личный контакт: телефон не покидает ваших рук
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans mb-4">
+              Закрытая комната в башне Сити. На переднем плане чашка эспрессо, на заднем — риск-аналитик синдиката открывает рабочий терминал с математическими перевесами. Никаких пересылок паролей или 2FA. Полная конфиденциальность, уважение к частной жизни и 100% физический контроль с вашей стороны.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between text-[11px] font-mono text-slate-400">
+            <span class="text-cyan-400 font-semibold">✓ 0 паролей, 0 доступов к почте</span>
+            <span>100% Non-Custodial сессия</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3: ACTION (Live Video Preview) -->
+      <div id="scene-card-3" onclick="jumpToScene(2)" class="fintech-card rounded-2xl overflow-hidden border-white/[0.1] hover:border-gold-500/60 transition-all flex flex-col group shadow-2xl cursor-pointer">
+        <div class="relative aspect-video overflow-hidden bg-black">
+          <video src="media/scene3_web.mp4" autoplay muted loop playsinline poster="media/scene3_still.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"></video>
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none"></div>
+          
+          <!-- Top Badges -->
+          <div class="absolute top-4 left-4 flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded bg-black/80 backdrop-blur border border-gold-500/40 text-gold-300 font-cinzel text-[10px] tracking-wider font-bold">
+              КАДР III // 00:35 - 00:50
+            </span>
+            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[10px] border border-amber-500/30">
+              ЗАЛИВКА КАПИТАЛА
+            </span>
+          </div>
+
+          <div class="absolute bottom-4 right-4 px-3 py-1.5 rounded-lg bg-carbon/90 border border-gold-500/40 text-gold-300 font-cinzel text-[10px] font-bold tracking-wider flex items-center gap-1.5 backdrop-blur">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>ЖИВОЕ ВИДЕО</span>
+          </div>
+        </div>
+
+        <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
+              <span class="text-gold-400 font-semibold font-cinzel">03. ХИРУРГИЧЕСКАЯ ЛИКВИДНОСТЬ</span>
+              <span class="text-amber-400 font-semibold font-mono">ПУЛ: $35,000 USDT</span>
+            </div>
+            <h3 class="text-xl font-cinzel font-bold text-white mb-3 group-hover:text-gold-300 transition-colors">
+              Планшет генерирует QR-код депозита: заливка без посредников
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans mb-4">
+              POV-ракурс со стороны кита. Аналитик разворачивает планшет с QR-кодом прямого он-чейн перевода $35,000 со счета синдиката. Баланс профиля пополняется оборотными средствами фонда. Телефон владельца лежит на столе нетронутым. Все ставки совершаются перед вашими глазами.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between text-[11px] font-mono text-slate-400">
+            <span class="text-amber-400 font-semibold">✓ Капитал синдиката: 100%</span>
+            <span>Риск владельца: $0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 4: PAYOUT (Live Video Preview) -->
+      <div id="scene-card-4" onclick="jumpToScene(3)" class="fintech-card rounded-2xl overflow-hidden border-emerald-500/30 hover:border-emerald-500/70 transition-all flex flex-col group shadow-2xl cursor-pointer">
+        <div class="relative aspect-video overflow-hidden bg-black">
+          <video src="media/scene4_web.mp4" autoplay muted loop playsinline poster="media/scene4_still.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"></video>
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none"></div>
+          
+          <!-- Top Badges -->
+          <div class="absolute top-4 left-4 flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded bg-black/80 backdrop-blur border border-emerald-500/40 text-emerald-300 font-cinzel text-[10px] tracking-wider font-bold">
+              КАДР IV // 00:50 - 01:00
+            </span>
+            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[10px] border border-emerald-500/30">
+              МГНОВЕННЫЙ СПЛИТ 70/30
+            </span>
+          </div>
+
+          <div class="absolute bottom-4 right-4 px-3 py-1.5 rounded-lg bg-carbon/90 border border-emerald-500/40 text-emerald-300 font-cinzel text-[10px] font-bold tracking-wider flex items-center gap-1.5 backdrop-blur">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>ЖИВОЕ ВИДЕО</span>
+          </div>
+        </div>
+
+        <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
+              <span class="text-emerald-400 font-semibold font-cinzel">04. ЧИСТЫЙ РЕЗУЛЬТАТ</span>
+              <span class="text-emerald-400 font-semibold font-mono">ПРОФИТ: +$14,200 USDT</span>
+            </div>
+            <h3 class="text-xl font-cinzel font-bold text-white mb-3 group-hover:text-emerald-300 transition-colors">
+              Фиксация прибыли за 60 минут: 30% на ваш личный кошелек
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans mb-4">
+              Через 60 минут сессия закрыта с положительным математическим результатом. Кит расслабленно держит смартфон: пуш от букмекера подтверждает вывод +$14,200 USDT. Чистый 30% сплит ($4,260 USDT) поступил на личный холодный кошелек владельца прямо на месте. Телефон ни разу не коснулся чужих рук.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between text-[11px] font-mono text-slate-400">
+            <span class="text-emerald-400 font-bold">✓ Выплата партнеру: $4,260 USDT</span>
+            <span>Время сессии: 58 минут</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Summary Banner below cards -->
+    <div class="mt-12 max-w-4xl mx-auto p-5 rounded-2xl bg-carbon border border-gold-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-xl bg-gold-500/10 border border-gold-500/30 flex items-center justify-center text-gold-400 shrink-0">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="text-xs font-cinzel font-bold text-white tracking-wider">Хотите протестировать полноэкранный видео-скролл?</div>
+          <div class="text-xs text-slate-400 font-sans">Покадровая прокрутка видео с 60 FPS адаптивным управлением колесиком мыши.</div>
+        </div>
+      </div>
+      <a href="cinematic-story.html" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-gold-500/20 to-gold-400/10 hover:from-gold-500/30 hover:to-gold-400/20 border border-gold-500/40 text-gold-300 font-cinzel text-xs font-semibold tracking-wider flex items-center gap-2 whitespace-nowrap transition-all shadow-[0_0_15px_rgba(212,146,59,0.15)]">
+        <span>Открыть видео-скролл</span>
+        <i data-lucide="arrow-right" class="w-4 h-4 text-gold-400"></i>
+      </a>
+    </div>
+
+  </section>
+
   <!-- SCREEN 4: INTERACTIVE DIVIDEND & RISK CALCULATOR -->
   <section id="calculator" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full relative">
     
@@ -2247,6 +2560,115 @@
         closeVideoModal();
       }
     });
+  </script>
+
+  <!-- CHANGING VIDEO THEATER SCRIPT -->
+  <script>
+    const SCENE_TIMES = [
+      { start: 0, end: 3, label: 'КАДР I / IV', phase: 'КАДР 01: ОБНАРУЖЕНИЕ АКТИВА • СТАВКА АПЛ $35,000', caption: 'Телефон лежит на столе. Отрицательный баланс открывает лимит $35,000.', timeDisplay: '00:15 / 01:00' },
+      { start: 3, end: 6, label: 'КАДР II / IV', phase: 'КАДР 02: ТИХИЙ АЛЬЯНС • VIP-ЛАУНДЖ МОСКВА-СИТИ / DUBAI', caption: 'Встреча за чашкой кофе. Телефон ни разу не покидает ваших рук.', timeDisplay: '00:35 / 01:00' },
+      { start: 6, end: 9, label: 'КАДР III / IV', phase: 'КАДР 03: ХИРУРГИЧЕСКАЯ ЛИКВИДНОСТЬ • ДЕПОЗИТ $35,000 USDT', caption: 'Планшет генерирует QR-код он-чейн перевода фонда. Личный баланс $0.00.', timeDisplay: '00:50 / 01:00' },
+      { start: 9, end: 12, label: 'КАДР IV / IV', phase: 'КАДР 04: ЧИСТЫЙ РЕЗУЛЬТАТ • ВЫПЛАТА +$14,200 USDT ЗА 60 МИН', caption: 'Сессия закрыта. 30% сплит ($4,260 USDT) поступил на ваш кошелек.', timeDisplay: '01:00 / 01:00' }
+    ];
+
+    let activeSceneIndex = 0;
+    const masterVideo = document.getElementById('master-theater-video');
+    const scrubber = document.getElementById('theater-scrubber-slider');
+
+    function jumpToScene(index) {
+      if (!masterVideo) return;
+      activeSceneIndex = index;
+      const targetTime = SCENE_TIMES[index].start + 0.05;
+      masterVideo.currentTime = targetTime;
+      updateSceneTabs(index);
+      if (masterVideo.paused) {
+        masterVideo.play().catch(() => {});
+      }
+      if (window.SyndicateAudio) {
+        window.SyndicateAudio.playHapticClick({ pitch: 1.1 + index * 0.1 });
+      }
+    }
+
+    function updateSceneTabs(index) {
+      for (let i = 0; i < 4; i++) {
+        const tab = document.getElementById('scene-tab-' + i);
+        if (tab) {
+          if (i === index) {
+            tab.className = 'scene-tab active px-3 py-1.5 rounded-lg text-[11px] font-cinzel font-bold tracking-wider transition-all bg-gold-500 text-black shadow-[0_0_15px_rgba(212,146,59,0.4)]';
+          } else {
+            tab.className = 'scene-tab px-3 py-1.5 rounded-lg text-[11px] font-cinzel font-semibold tracking-wider transition-all text-slate-400 hover:text-white border border-transparent';
+          }
+        }
+      }
+
+      const badge = document.getElementById('theater-active-badge');
+      const phase = document.getElementById('theater-hud-phase');
+      const caption = document.getElementById('theater-hud-caption');
+      const timeEl = document.getElementById('theater-hud-time');
+
+      if (badge) badge.innerText = SCENE_TIMES[index].label;
+      if (phase) phase.innerText = SCENE_TIMES[index].phase;
+      if (caption) caption.innerText = SCENE_TIMES[index].caption;
+      if (timeEl) timeEl.innerText = SCENE_TIMES[index].timeDisplay;
+    }
+
+    if (masterVideo) {
+      masterVideo.addEventListener('timeupdate', () => {
+        const cur = masterVideo.currentTime;
+        if (scrubber) scrubber.value = cur;
+        
+        const curMin = Math.floor(cur / 12 * 60);
+        const timeDisplayEl = document.getElementById('scrubber-current-time');
+        if (timeDisplayEl) {
+          timeDisplayEl.innerText = '00:' + (curMin < 10 ? '0' : '') + curMin;
+        }
+
+        let newIdx = 0;
+        if (cur >= 9) newIdx = 3;
+        else if (cur >= 6) newIdx = 2;
+        else if (cur >= 3) newIdx = 1;
+        else newIdx = 0;
+
+        if (newIdx !== activeSceneIndex) {
+          activeSceneIndex = newIdx;
+          updateSceneTabs(newIdx);
+        }
+      });
+    }
+
+    if (scrubber && masterVideo) {
+      scrubber.addEventListener('input', (e) => {
+        masterVideo.currentTime = parseFloat(e.target.value);
+      });
+    }
+
+    function toggleTheaterPlay() {
+      if (!masterVideo) return;
+      const icon = document.getElementById('theater-play-icon');
+      if (masterVideo.paused) {
+        masterVideo.play().catch(() => {});
+        if (icon) icon.setAttribute('data-lucide', 'pause');
+      } else {
+        masterVideo.pause();
+        if (icon) icon.setAttribute('data-lucide', 'play');
+      }
+      lucide.createIcons();
+    }
+
+    function toggleTheaterMute() {
+      if (!masterVideo) return;
+      masterVideo.muted = !masterVideo.muted;
+      const soundIcon = document.getElementById('theater-sound-icon');
+      const soundText = document.getElementById('theater-sound-text');
+      if (masterVideo.muted) {
+        if (soundIcon) soundIcon.setAttribute('data-lucide', 'volume-x');
+        if (soundText) soundText.innerText = 'БЕЗ ЗВУКА';
+      } else {
+        if (soundIcon) soundIcon.setAttribute('data-lucide', 'volume-2');
+        if (soundText) soundText.innerText = 'ЗВУК ВКЛ';
+      }
+      lucide.createIcons();
+    }
   </script>
 </body>
 </html>
