@@ -164,6 +164,7 @@
     }
 
     init() {
+      if (typeof document === 'undefined') return;
       this.ensureStyles();
       this.injectContainer();
       this.attachGlobalListeners();
@@ -365,7 +366,7 @@
     }
 
     validateTelegram(raw) {
-      const clean = (raw || '').trim().replace(/^@+/, '').replace(/^https?:\/\/(t\.me|telegram\.me)\//i, '').replace(/\/+$/, '');
+      const clean = (raw || '').trim().replace(/^@+/, '').replace(/^(https?:\/\/)?(t\.me|telegram\.me)\//i, '').replace(/\/+$/, '');
       if (!clean) {
         return {
           valid: false,
@@ -480,7 +481,7 @@
       const bkName = this.state.bkKey === 'Other' && this.state.customBkName ? this.state.customBkName : bk.name;
       const tier = this.getSelectedTier();
       const format = this.getSelectedFormat();
-      const cleanTg = (this.state.telegram || '').trim().replace(/^@+/, '').replace(/^https?:\/\/(t\.me|telegram\.me)\//i, '');
+      const cleanTg = (this.state.telegram || '').trim().replace(/^@+/, '').replace(/^(https?:\/\/)?(t\.me|telegram\.me)\//i, '').replace(/\/+$/, '');
       const walletVal = (this.state.wallet || '').trim();
       const walletCheck = this.validateWallet(walletVal, true);
       const walletDisplay = (walletVal && walletCheck.valid && walletCheck.type !== 'deferred')
@@ -1273,16 +1274,86 @@
 
       if (this.currentStep === 4) {
         const tgInput = document.getElementById('vip-telegram-input');
+        const tgMsg = document.getElementById('vip-telegram-msg');
+        const walletInput = document.getElementById('vip-wallet-input');
+        const walletMsg = document.getElementById('vip-wallet-msg');
+
+        const updateTgFeedback = (showErrors = false) => {
+          if (!tgInput || !tgMsg) return;
+          const raw = tgInput.value;
+          this.state.telegram = raw;
+          if (!raw.trim()) {
+            if (showErrors) {
+              tgInput.classList.add('vip-input-error');
+              tgInput.classList.remove('vip-input-success');
+              tgMsg.innerHTML = '<span class="text-rose-400">✕ Укажите Telegram (@username) для связи с риск-консьержем</span>';
+            } else {
+              tgInput.classList.remove('vip-input-error', 'vip-input-success');
+              tgMsg.innerHTML = '<span class="text-zinc-500">Консьерж напишет вам в Telegram с верифицированного деска.</span>';
+            }
+            return;
+          }
+          const check = this.validateTelegram(raw);
+          if (check.valid) {
+            tgInput.classList.remove('vip-input-error');
+            tgInput.classList.add('vip-input-success');
+            tgMsg.innerHTML = `<span class="text-emerald-400">✓ Корректный аккаунт: @${check.clean}</span>`;
+          } else if (showErrors) {
+            tgInput.classList.add('vip-input-error');
+            tgInput.classList.remove('vip-input-success');
+            tgMsg.innerHTML = `<span class="text-rose-400">✕ ${check.message}</span>`;
+          }
+        };
+
+        const updateWalletFeedback = (showErrors = false) => {
+          if (!walletInput || !walletMsg) return;
+          const raw = walletInput.value;
+          this.state.wallet = raw;
+          if (!raw.trim()) {
+            walletInput.classList.remove('vip-input-error', 'vip-input-success');
+            walletMsg.innerHTML = '<span class="text-zinc-500">🔒 Если не указан — реквизиты будут согласованы в закрытом чате.</span>';
+            return;
+          }
+          const check = this.validateWallet(raw, false);
+          if (check.valid) {
+            walletInput.classList.remove('vip-input-error');
+            walletInput.classList.add('vip-input-success');
+            walletMsg.innerHTML = `<span class="text-emerald-400">${check.message}</span>`;
+          } else {
+            if (raw.startsWith('T') && raw.length < 34) {
+              walletInput.classList.remove('vip-input-success');
+              if (showErrors) walletInput.classList.add('vip-input-error');
+              walletMsg.innerHTML = `<span class="text-amber-400">⏳ Сеть TRC-20 (Tron): введено ${raw.length} / 34 симв.</span>`;
+            } else if (raw.toLowerCase().startsWith('0x') && raw.length < 42) {
+              walletInput.classList.remove('vip-input-success');
+              if (showErrors) walletInput.classList.add('vip-input-error');
+              walletMsg.innerHTML = `<span class="text-amber-400">⏳ Сеть ERC-20 (Ethereum): введено ${raw.length} / 42 симв.</span>`;
+            } else if (showErrors) {
+              walletInput.classList.add('vip-input-error');
+              walletInput.classList.remove('vip-input-success');
+              walletMsg.innerHTML = `<span class="text-rose-400">✕ ${check.message}</span>`;
+            }
+          }
+        };
+
         if (tgInput) {
-          tgInput.oninput = (e) => {
-            this.state.telegram = e.target.value.trim();
-          };
+          tgInput.oninput = () => updateTgFeedback(false);
+          tgInput.onblur = () => updateTgFeedback(true);
         }
 
-        const walletInput = document.getElementById('vip-wallet-input');
         if (walletInput) {
-          walletInput.oninput = (e) => {
-            this.state.wallet = e.target.value.trim();
+          walletInput.oninput = () => updateWalletFeedback(false);
+          walletInput.onblur = () => updateWalletFeedback(true);
+        }
+
+        const deferWalletBtn = document.getElementById('vip-defer-wallet-btn');
+        if (deferWalletBtn) {
+          deferWalletBtn.onclick = () => {
+            if (walletInput) {
+              walletInput.value = '';
+              this.state.wallet = '';
+              updateWalletFeedback(false);
+            }
           };
         }
 
@@ -1298,6 +1369,10 @@
         if (zeroCheck) {
           zeroCheck.onchange = (e) => {
             this.state.zeroBalanceAgreed = e.target.checked;
+            const zeroMsg = document.getElementById('vip-zero-msg');
+            if (zeroMsg && e.target.checked) {
+              zeroMsg.classList.add('hidden');
+            }
           };
         }
 
@@ -1307,13 +1382,42 @@
         const step4Submit = document.getElementById('vip-step4-submit');
         if (step4Submit) {
           step4Submit.onclick = () => {
-            const tg = (this.state.telegram || '').replace(/^@+/, '').trim();
-            if (!tg) {
-              alert('Пожалуйста, укажите ваш Telegram (@username) для связи с риск-консьержем.');
-              const el = document.getElementById('vip-telegram-input');
-              if (el) el.focus();
+            const tgVal = (this.state.telegram || '').trim();
+            const tgCheck = this.validateTelegram(tgVal);
+            if (!tgCheck.valid) {
+              updateTgFeedback(true);
+              if (tgInput) {
+                tgInput.focus();
+                tgInput.classList.add('vip-shake');
+                setTimeout(() => tgInput.classList.remove('vip-shake'), 500);
+              }
               return;
             }
+
+            const walletVal = (this.state.wallet || '').trim();
+            const walletCheck = this.validateWallet(walletVal, true);
+            if (!walletCheck.valid) {
+              updateWalletFeedback(true);
+              if (walletInput) {
+                walletInput.focus();
+                walletInput.classList.add('vip-shake');
+                setTimeout(() => walletInput.classList.remove('vip-shake'), 500);
+              }
+              return;
+            }
+
+            if (!this.state.zeroBalanceAgreed) {
+              const zeroMsg = document.getElementById('vip-zero-msg');
+              if (zeroMsg) {
+                zeroMsg.classList.remove('hidden');
+                zeroMsg.innerHTML = 'Подтвердите обязательство вывести личный баланс в ноль для обеспечения 0% риска';
+              }
+              const zeroCheckEl = document.getElementById('vip-zero-balance-check');
+              if (zeroCheckEl) zeroCheckEl.focus();
+              return;
+            }
+
+            this.state.telegram = tgCheck.clean;
             this.dispatchWebhook();
             this.goToStep(5);
           };
