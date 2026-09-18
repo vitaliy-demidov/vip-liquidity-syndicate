@@ -339,8 +339,20 @@
         line-height: 0.92;
       }
     }
-  </style></head>
-<body class="selection:bg-brand-cyan/20 selection:text-brand-cyan">
+  </style>
+  <script>
+    // Early global stubs for inline event handlers before modules load
+    window.scrollToScene = function(idx) {
+      if (window.scrubEngine && typeof window.scrubEngine.seekToScene === 'function') {
+        window.scrubEngine.seekToScene(idx);
+      }
+    };
+    window.selectBookmaker = function(name) {};
+    window.setLimitPreset = function(val) {};
+    window.transferCalculatorToModal = function() {};
+  </script>
+</head>
+<body class="selection:bg-amber-400/20 selection:text-amber-300">
 
   <!-- 35mm Film Grain Layer -->
   <div class="film-grain"></div>
@@ -478,9 +490,9 @@
           NARRATIVE TIMELINE // 60 SEC
         </div>
         <div class="w-[1px] h-36 bg-white/10 relative overflow-hidden">
-          <div id="hud-progress-fill" class="w-full bg-brand-cyan absolute top-0 left-0 transition-all duration-75" style="height: 0%;"></div>
+          <div id="hud-progress-fill" class="w-full bg-gradient-to-b from-amber-400 to-amber-600 absolute top-0 left-0 transition-all duration-75" style="height: 0%;"></div>
         </div>
-        <div id="hud-scene-counter" class="font-mono text-xs text-brand-cyan tracking-wider font-semibold">
+        <div id="hud-scene-counter" class="font-mono text-xs text-amber-400 tracking-wider font-semibold">
           [01/04]
         </div>
       </div>
@@ -491,7 +503,7 @@
           SCRUB RATE: <span id="hud-telemetry-fps" class="text-brand-emerald font-semibold">60.0 FPS</span>
         </div>
         <div class="px-2.5 py-1 rounded bg-black/50 border border-white/[0.08] backdrop-blur-md">
-          DECODER: <span id="hud-telemetry-decoder" class="text-brand-cyan font-semibold">HW ACCEL</span>
+          DECODER: <span id="hud-telemetry-decoder" class="text-amber-400 font-semibold">HW ACCEL</span>
         </div>
         <div class="px-2.5 py-1 rounded bg-black/50 border border-white/[0.08] backdrop-blur-md">
           POWER: <span id="hud-telemetry-power" class="text-brand-emerald font-semibold">OPTIMAL</span>
@@ -504,7 +516,7 @@
       <!-- Bottom Floating Scrubber Progress Indicator -->
       <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 px-4 py-2 rounded-full border border-white/[0.08] bg-black/60 backdrop-blur-md">
         <span class="font-mono text-[10px] tracking-[0.18em] text-white/50 uppercase">SCROLL TO PROGRESS</span>
-        <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-brand-cyan animate-bounce"></i>
+        <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-amber-400 animate-bounce"></i>
       </div>
 
     </div>
@@ -527,14 +539,14 @@
 
           <div class="glass-card p-6 sm:p-7 rounded-2xl space-y-3">
             <p class="text-sm sm:text-base text-zinc-300 font-light leading-relaxed">
-              <strong class="text-white font-medium">Сверхкрупный план (Macro).</strong> Матовый черный стол в лаундже, экран лежащего смартфона загорается от уведомления: подтвержденный VIP-ранг и лимит <span class="text-brand-cyan font-mono font-semibold">$35,000</span> на вечерний тур.
+              <strong class="text-white font-medium">Сверхкрупный план (Macro).</strong> Матовый черный стол в лаундже, экран лежащего смартфона загорается от уведомления: подтвержденный VIP-ранг и лимит <span class="text-amber-400 font-mono font-semibold">$35,000</span> на вечерний тур.
             </p>
             <p class="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
               Кит оставил конторе состояние, но букмекер обязан держать линию открытой. Его профиль — дефицитный и готовый шлюз ликвидности.
             </p>
             <div class="pt-3 border-t border-white/[0.06] flex items-center justify-between font-mono text-xs text-white/50">
               <span class="font-cinzel tracking-wider text-[11px]">СТАТУС: ПОДТВЕРЖДЕН</span>
-              <span class="text-brand-cyan font-semibold">STAKE PLATINUM IV • $35k</span>
+              <span class="text-amber-400 font-semibold">STAKE PLATINUM IV • $35k</span>
             </div>
           </div>
 
@@ -545,8 +557,8 @@
       <div class="h-screen w-full flex items-center justify-start px-6 sm:px-16 lg:px-24">
         <div class="max-w-2xl pointer-events-auto space-y-6">
           
-          <div class="chapter-badge-roman border-cyan-500/30 text-cyan-200">
-            <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan"></span>
+          <div class="chapter-badge-roman border-amber-500/30 text-amber-200">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
             <span class="font-cinzel">EPISODE II // HARDWARE ENCLAVE</span>
           </div>
 
@@ -592,7 +604,7 @@
             </p>
             <div class="pt-3 border-t border-white/[0.06] flex items-center justify-between font-mono text-xs text-white/50">
               <span class="font-cinzel tracking-wider text-[11px]">ЛИЧНЫЙ БАЛАНС: $0.00</span>
-              <span class="text-brand-cyan font-semibold">СИНДИКАТНЫЙ ПУЛ 100%</span>
+              <span class="text-brand-emerald font-semibold">СИНДИКАТНЫЙ ПУЛ 100%</span>
             </div>
           </div>
 
@@ -647,7 +659,7 @@
     
     <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
       <div class="chapter-badge-roman mx-auto mb-2">
-        <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan animate-pulse"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
         <span class="font-cinzel">ALGORITHMIC VALUE ESTIMATOR</span>
       </div>
       <h2 class="editorial-display-headline text-3xl sm:text-5xl lg:text-6xl text-white">
@@ -1150,7 +1162,7 @@
   <!-- ========================================================================= -->
   <section class="py-28 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full text-center space-y-8">
     <div class="chapter-badge-roman mx-auto mb-2 tracking-[0.26em]">
-      <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan animate-pulse"></span>
+      <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
       <span class="font-cinzel">ALLOCATION DESK // PRIVATE ACCESS</span>
     </div>
     
@@ -1286,10 +1298,10 @@
             hudDecoder.className = 'text-amber-400 font-semibold';
           } else if (state.isInterpolating) {
             hudDecoder.innerText = 'INTERPOLATING';
-            hudDecoder.className = 'text-brand-cyan font-semibold';
+            hudDecoder.className = 'text-amber-400 font-semibold';
           } else {
             hudDecoder.innerText = 'HW READY';
-            hudDecoder.className = 'text-brand-cyan font-semibold';
+            hudDecoder.className = 'text-amber-400 font-semibold';
           }
         }
       },

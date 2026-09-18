@@ -762,7 +762,6 @@ export class VideoScrubEngine {
         const ch = this.channels[i];
         if (ch.isSeeking && ch.seekStartTime && (now - ch.seekStartTime) > timeout) {
           ch.isSeeking = false;
-          if (ch.video) ch.video.seeking = false;
           if (ch.pendingSeekTime !== null) {
             const nextTime = ch.pendingSeekTime;
             ch.pendingSeekTime = null;
@@ -1048,7 +1047,6 @@ export class VideoScrubEngine {
       const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
       if (channel.seekStartTime && (now - channel.seekStartTime) > (this.options.seekWatchdogTimeout || 150)) {
         channel.isSeeking = false;
-        if (channel.video) channel.video.seeking = false;
         this._executeSeek(channel, clampedTime, useFast);
       } else if (typeof this.options.onInterpolate === 'function') {
         this.options.onInterpolate({
