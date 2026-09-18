@@ -8,7 +8,13 @@
   <!-- Google Fonts: Cinzel (Imperial Roman Caps), Cormorant Garamond (High-Luxury Editorial Cyrillic Serif), Playfair Display, Prata, Manrope, JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Prata&family=Manrope:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap&subset=cyrillic,cyrillic-ext,latin,latin-ext" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Prata&family=Manrope:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Preload High-Resolution Scene Posters (Zero Black Screen Architecture) -->
+  <link rel="preload" as="image" href="media/scene1_still.jpg" fetchpriority="high">
+  <link rel="preload" as="image" href="media/scene2_still.jpg">
+  <link rel="preload" as="image" href="media/scene3_still.jpg">
+  <link rel="preload" as="image" href="media/scene4_still.jpg">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -126,6 +132,20 @@
       z-index: 1;
     }
 
+    .poster-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: opacity;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      pointer-events: none;
+    }
+
     .video-layer {
       position: absolute;
       inset: 0;
@@ -160,25 +180,33 @@
       user-select: none;
     }
 
-    /* Luxury Glassmorphism Surface (Centurion Matte Titanium) */
-    .glass-card {
-      background: linear-gradient(145deg, rgba(22, 26, 35, 0.7) 0%, rgba(10, 12, 18, 0.92) 100%);
+    /* Amex Centurion Matte Titanium Surface with Chamfered Micro-Bevels */
+    .glass-card, .titanium-card {
+      background: linear-gradient(145deg, rgba(26, 31, 41, 0.82) 0%, rgba(14, 17, 23, 0.94) 50%, rgba(8, 10, 14, 0.98) 100%);
       backdrop-filter: blur(28px) saturate(140%);
       -webkit-backdrop-filter: blur(28px) saturate(140%);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.09);
       box-shadow: 
-        inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
-        inset 0 -1px 0 0 rgba(0, 0, 0, 0.5),
-        0 30px 60px -15px rgba(0, 0, 0, 0.9);
-      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+        inset 1px 0 0 0 rgba(255, 255, 255, 0.08),
+        inset 0 -1px 0 0 rgba(0, 0, 0, 0.8),
+        inset -1px 0 0 0 rgba(0, 0, 0, 0.6),
+        0 30px 60px -15px rgba(0, 0, 0, 0.92),
+        0 4px 16px rgba(0, 0, 0, 0.7);
+      transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .glass-card:hover {
-      border-color: rgba(255, 255, 255, 0.16);
+    .glass-card:hover, .titanium-card:hover {
+      border-color: rgba(212, 175, 55, 0.35);
       box-shadow: 
-        inset 0 1px 0 0 rgba(255, 255, 255, 0.25),
-        0 36px 72px -16px rgba(0, 0, 0, 0.95),
-        0 0 30px -8px rgba(0, 240, 255, 0.12);
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.32),
+        inset 1px 0 0 0 rgba(212, 175, 55, 0.18),
+        inset 0 -1px 0 0 rgba(0, 0, 0, 0.9),
+        0 38px 76px -16px rgba(0, 0, 0, 0.96),
+        0 0 35px -8px rgba(212, 175, 55, 0.18);
+      transform: translateY(-2px);
     }
 
     /* Luxury Haute Horlogerie & Editorial Typography Styling */
@@ -276,35 +304,6 @@
       font-feature-settings: "cpsp" 1, "titl" 1;
     }
 
-    /* Range slider custom styling */
-    input[type=range] {
-      -webkit-appearance: none;
-      width: 100%;
-      background: transparent;
-    }
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      height: 22px;
-      width: 22px;
-      border-radius: 6px;
-      background: #00F0FF;
-      cursor: pointer;
-      margin-top: -9px;
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.65);
-      border: 2px solid #08090C;
-      transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    input[type=range]::-webkit-slider-thumb:hover {
-      transform: scale(1.2);
-    }
-    input[type=range]::-webkit-slider-runnable-track {
-      width: 100%;
-      height: 4px;
-      cursor: pointer;
-      background: #181E2B;
-      border-radius: 2px;
-    }
-
     /* Audio Equalizer animation */
     @keyframes barWave {
       0%, 100% { height: 4px; }
@@ -316,10 +315,10 @@
 
     /* Magnetic interactive button hover */
     .magnetic-btn {
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Mobile Responsive Optimizations */
+    /* Mobile Responsive Typography & Safe Area */
     @media (max-width: 640px) {
       .editorial-display-headline {
         letter-spacing: -0.035em;
@@ -339,28 +338,26 @@
         line-height: 0.92;
       }
     }
-  </style>
-  </style>
-</head>
+  </style></head>
 <body class="selection:bg-brand-cyan/20 selection:text-brand-cyan">
 
   <!-- 35mm Film Grain Layer -->
   <div class="film-grain"></div>
 
-  <!-- Interactive Mouse-Tracking Ambient Spotlight (Haute Horlogerie Specular Sheen) -->
-  <div id="ambient-spotlight" class="pointer-events-none fixed inset-0 z-30 opacity-70 transition-opacity duration-300" style="background: radial-gradient(750px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(212, 175, 55, 0.045), transparent 50%);"></div>
+  <!-- Interactive Mouse-Tracking Ambient Spotlight (Haute Horlogerie 24K Gold Specular Halo) -->
+  <div id="ambient-spotlight" class="ambient-mouse-spotlight pointer-events-none fixed inset-0 z-30"></div>
 
   <!-- FIXED TOP HUD STATUS BAR -->
-  <header class="fixed top-0 left-0 w-full z-50 py-3.5 px-4 sm:px-8 border-b border-white/[0.08] bg-[#05070A]/85 backdrop-blur-2xl transition-all">
+  <header class="fixed top-0 left-0 w-full z-50 py-2.5 sm:py-3.5 px-3 sm:px-8 border-b border-white/[0.08] bg-[#05070A]/85 backdrop-blur-2xl transition-all">
     <div class="max-w-7xl mx-auto flex items-center justify-between font-mono text-xs">
       
       <!-- Logo / Institutional Identity -->
-      <div class="flex items-center gap-3">
-        <a href="#" class="flex items-center gap-2.5 tracking-wider text-white hover:text-amber-400 transition-colors">
-          <div class="w-7 h-7 rounded bg-gradient-to-br from-amber-400/20 via-black to-amber-900/30 border border-amber-500/40 flex items-center justify-center text-amber-300 font-cinzel font-bold text-xs shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="#" class="flex items-center gap-2 sm:gap-2.5 tracking-wider text-white hover:text-amber-400 transition-colors">
+          <div class="w-6 h-6 sm:w-7 sm:h-7 rounded bg-gradient-to-br from-amber-400/20 via-black to-amber-900/30 border border-amber-500/40 flex items-center justify-center text-amber-300 font-cinzel font-bold text-[11px] sm:text-xs shadow-[0_0_15px_rgba(212,175,55,0.3)]">
             Σ
           </div>
-          <span class="font-cinzel tracking-[0.14em] text-xs sm:text-sm font-semibold text-white">VIP LIQUIDITY SYNDICATE</span>
+          <span class="font-cinzel tracking-[0.12em] sm:tracking-[0.14em] text-[11px] sm:text-sm font-semibold text-white truncate max-w-[140px] sm:max-w-none">VIP SYNDICATE</span>
         </a>
         <span class="hidden md:inline-block px-2.5 py-0.5 rounded-full bg-white/[0.03] border border-amber-500/20 text-[10px] text-amber-200/60 font-cinzel tracking-[0.18em]">
           NON-CUSTODIAL // 60-MIN SESSION
@@ -397,28 +394,28 @@
       </div>
 
       <!-- Right: Audio Toggle + Primary Action -->
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 sm:gap-3">
         
         <!-- Audio Procedural Toggle -->
-        <button id="audio-toggle-btn" class="px-3 py-1.5 rounded border border-white/[0.1] bg-white/[0.03] hover:border-brand-cyan/50 text-white/70 hover:text-white flex items-center gap-2 transition-all">
+        <button id="audio-toggle-btn" class="px-2.5 sm:px-3 py-1.5 rounded border border-white/[0.1] bg-white/[0.03] hover:border-amber-400/50 text-white/70 hover:text-white flex items-center gap-1.5 sm:gap-2 transition-all">
           <div id="audio-eq-bars" class="hidden items-end gap-0.5 h-3.5 w-3">
-            <span class="w-0.5 bg-brand-cyan rounded eq-bar-1"></span>
-            <span class="w-0.5 bg-brand-cyan rounded eq-bar-2"></span>
-            <span class="w-0.5 bg-brand-cyan rounded eq-bar-3"></span>
+            <span class="w-0.5 bg-amber-400 rounded eq-bar-1"></span>
+            <span class="w-0.5 bg-amber-400 rounded eq-bar-2"></span>
+            <span class="w-0.5 bg-amber-400 rounded eq-bar-3"></span>
           </div>
           <i id="audio-mute-icon" data-lucide="volume-x" class="w-3.5 h-3.5 text-white/50"></i>
-          <span id="audio-status-label" class="text-[11px] tracking-wider uppercase">[AUDIO: OFF]</span>
+          <span id="audio-status-label" class="text-[10px] sm:text-[11px] tracking-wider uppercase"><span class="hidden sm:inline">[AUDIO: </span>OFF<span class="hidden sm:inline">]</span></span>
         </button>
 
         <!-- Link to Full Portal -->
-        <a href="portal.html" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded border border-white/[0.1] bg-white/[0.03] hover:border-amber-500/40 text-amber-200/80 hover:text-amber-200 text-xs font-cinzel tracking-wider transition-all" title="Перейти в интерактивный терминал синдиката">
+        <a href="portal.html" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded border border-white/[0.1] bg-white/[0.03] hover:border-amber-500/40 text-amber-200/80 hover:text-amber-200 text-xs font-cinzel tracking-wider transition-all" title="Перейти в интерактивный терминал синдиката">
           <span>ПОРТАЛ</span>
           <i data-lucide="arrow-up-right" class="w-3 h-3 text-amber-300/60"></i>
         </a>
 
-        <!-- CTA Trigger Modal -->
-        <button onclick="VIPConcierge.open()" class="magnetic-btn px-4 py-1.5 rounded bg-brand-cyan hover:bg-[#33f3ff] text-black font-semibold text-xs tracking-wider uppercase shadow-[0_0_20px_rgba(0,240,255,0.35)] transition-all active:scale-95">
-          Согласовать сессию
+        <!-- CTA Trigger Modal (24K Bullion Gold Styling) -->
+        <button onclick="VIPConcierge.open()" class="magnetic-btn px-3 sm:px-4 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-cinzel font-bold text-[11px] sm:text-xs tracking-wider uppercase shadow-[0_0_20px_rgba(212,175,55,0.4)] border border-amber-300/40 active:scale-95 transition-all">
+          <span>Согласовать<span class="hidden sm:inline"> сессию</span></span>
         </button>
 
       </div>
@@ -434,8 +431,16 @@
     <!-- STICKY VIEWPORT (Locked Fullscreen) -->
     <div class="video-viewport-fixed flex items-center justify-center">
       
-      <!-- Video Stage (4 Multi-Clip Layers) -->
-      <div id="video-stage" class="absolute inset-0 w-full h-full bg-[#030406]">
+      <!-- High-Resolution Still Poster Layers (Zero Black Screens / Low-Power & Slow Network Fallback) -->
+      <div id="poster-stage" class="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <img id="poster-scene-1" src="media/scene1_still.jpg" alt="Scene 1 Hook Still" class="poster-layer opacity-100" fetchpriority="high">
+        <img id="poster-scene-2" src="media/scene2_still.jpg" alt="Scene 2 Trust Still" class="poster-layer opacity-0">
+        <img id="poster-scene-3" src="media/scene3_still.jpg" alt="Scene 3 Action Still" class="poster-layer opacity-0">
+        <img id="poster-scene-4" src="media/scene4_still.jpg" alt="Scene 4 Payout Still" class="poster-layer opacity-0">
+      </div>
+
+      <!-- Video Stage (4 Multi-Clip Hardware Layers on top of posters) -->
+      <div id="video-stage" class="absolute inset-0 w-full h-full pointer-events-none z-[1]">
         <!-- Scene 1: Hook -->
         <video id="video-scene-1" class="video-layer opacity-100" muted playsinline preload="auto" poster="media/scene1_still.jpg">
           <source src="media/scene1_hook.mp4" type="video/mp4">
@@ -447,12 +452,12 @@
         </video>
 
         <!-- Scene 3: Action -->
-        <video id="video-scene-3" class="video-layer opacity-0" muted playsinline preload="auto" poster="media/scene3_action.mp4">
+        <video id="video-scene-3" class="video-layer opacity-0" muted playsinline preload="auto" poster="media/scene3_still.jpg">
           <source src="media/scene3_action.mp4" type="video/mp4">
         </video>
 
         <!-- Scene 4: Payout -->
-        <video id="video-scene-4" class="video-layer opacity-0" muted playsinline preload="auto" poster="media/scene4_payout.mp4">
+        <video id="video-scene-4" class="video-layer opacity-0" muted playsinline preload="auto" poster="media/scene4_still.jpg">
           <source src="media/scene4_payout.mp4" type="video/mp4">
         </video>
       </div>
@@ -482,13 +487,16 @@
       <!-- Right Rail: Telemetry Diagnostics -->
       <div class="absolute right-6 sm:right-10 top-1/2 -translate-y-1/2 hidden xl:flex flex-col items-end gap-2 z-20 font-mono text-[10px] tracking-[0.14em] text-white/40 uppercase">
         <div class="px-2.5 py-1 rounded bg-black/50 border border-white/[0.08] backdrop-blur-md">
-          SCRUB RATE: <span class="text-brand-emerald font-semibold">60.0 FPS</span>
+          SCRUB RATE: <span id="hud-telemetry-fps" class="text-brand-emerald font-semibold">60.0 FPS</span>
         </div>
         <div class="px-2.5 py-1 rounded bg-black/50 border border-white/[0.08] backdrop-blur-md">
-          ISOLATION: <span class="text-white font-semibold">HARDWARE ENCLAVE</span>
+          DECODER: <span id="hud-telemetry-decoder" class="text-brand-cyan font-semibold">HW ACCEL</span>
         </div>
         <div class="px-2.5 py-1 rounded bg-black/50 border border-white/[0.08] backdrop-blur-md">
-          PERSONAL RISK: <span class="text-brand-cyan font-semibold">$0.00 ZERO</span>
+          POWER: <span id="hud-telemetry-power" class="text-brand-emerald font-semibold">OPTIMAL</span>
+        </div>
+        <div class="px-2.5 py-1 rounded bg-black/50 border border-white/[0.08] backdrop-blur-md">
+          VELOCITY: <span id="hud-telemetry-vel" class="text-white/80 font-semibold">0.00</span>
         </div>
       </div>
 
@@ -658,55 +666,55 @@
         <!-- Step 1: Bookmaker Selection -->
         <div class="glass-card p-6 sm:p-7 rounded-2xl">
           <div class="flex items-center justify-between mb-4">
-            <label class="text-xs font-cinzel uppercase text-brand-cyan tracking-wider font-semibold flex items-center gap-2">
-              <span class="w-5 h-5 rounded bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-[10px] font-mono">01</span>
+            <label class="text-xs font-cinzel uppercase text-brand-cyan tracking-[0.20em] font-semibold flex items-center gap-2">
+              <span class="w-5 h-5 rounded bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-[10px] font-mono font-features-tabular">01</span>
               <span>Платформа и VIP-ранг:</span>
             </label>
-            <span class="text-xs font-mono text-white/70" id="selected-bk-label">Stake (Platinum IV)</span>
+            <span class="text-xs font-mono font-features-tabular text-white/70" id="selected-bk-label">Stake (Platinum IV)</span>
           </div>
 
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="bookmaker-selector">
             <button type="button" onclick="selectBookmaker('Stake')" id="bk-btn-Stake" class="bk-card active text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-24 bg-brand-surfaceLight border-brand-cyan shadow-[0_0_20px_rgba(0,240,255,0.25)] ring-1 ring-brand-cyan/50">
               <div class="flex items-center justify-between w-full">
-                <span class="font-bold text-white text-xs font-mono">Stake.com</span>
+                <span class="font-bold text-white text-xs font-mono font-features-tabular">Stake.com</span>
                 <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse"></span>
               </div>
               <div>
                 <span class="text-[10px] font-mono text-zinc-400 block">Platinum IV–Diamond</span>
-                <span class="text-[9px] font-mono text-brand-cyan block">Пул: $25k – $50k+</span>
+                <span class="text-[9px] font-mono font-features-tabular text-brand-cyan block">Пул: $25k – $50k+</span>
               </div>
             </button>
 
             <button type="button" onclick="selectBookmaker('Sportsbet')" id="bk-btn-Sportsbet" class="bk-card text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-24 bg-white/[0.02] border-white/[0.08] hover:border-white/20">
               <div class="flex items-center justify-between w-full">
-                <span class="font-bold text-white text-xs font-mono">Sportsbet.io</span>
+                <span class="font-bold text-white text-xs font-mono font-features-tabular">Sportsbet.io</span>
                 <span class="w-2 h-2 rounded-full bg-slate-600"></span>
               </div>
               <div>
                 <span class="text-[10px] font-mono text-zinc-400 block">Clubhouse Legend</span>
-                <span class="text-[9px] font-mono text-brand-cyan block">Пул: $35k – $70k+</span>
+                <span class="text-[9px] font-mono font-features-tabular text-brand-cyan block">Пул: $35k – $70k+</span>
               </div>
             </button>
 
             <button type="button" onclick="selectBookmaker('BCGame')" id="bk-btn-BCGame" class="bk-card text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-24 bg-white/[0.02] border-white/[0.08] hover:border-white/20">
               <div class="flex items-center justify-between w-full">
-                <span class="font-bold text-white text-xs font-mono">BC.Game</span>
+                <span class="font-bold text-white text-xs font-mono font-features-tabular">BC.Game</span>
                 <span class="w-2 h-2 rounded-full bg-slate-600"></span>
               </div>
               <div>
                 <span class="text-[10px] font-mono text-zinc-400 block">SVIP 55+ Tier</span>
-                <span class="text-[9px] font-mono text-brand-cyan block">Пул: $60k – $120k+</span>
+                <span class="text-[9px] font-mono font-features-tabular text-brand-cyan block">Пул: $60k – $120k+</span>
               </div>
             </button>
 
             <button type="button" onclick="selectBookmaker('Roobet')" id="bk-btn-Roobet" class="bk-card text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-24 bg-white/[0.02] border-white/[0.08] hover:border-white/20">
               <div class="flex items-center justify-between w-full">
-                <span class="font-bold text-white text-xs font-mono">Roobet</span>
+                <span class="font-bold text-white text-xs font-mono font-features-tabular">Roobet</span>
                 <span class="w-2 h-2 rounded-full bg-slate-600"></span>
               </div>
               <div>
                 <span class="text-[10px] font-mono text-zinc-400 block">King Whale Tier</span>
-                <span class="text-[9px] font-mono text-brand-cyan block">Пул: $20k – $45k+</span>
+                <span class="text-[9px] font-mono font-features-tabular text-brand-cyan block">Пул: $20k – $45k+</span>
               </div>
             </button>
           </div>
@@ -715,22 +723,22 @@
         <!-- Step 2: Limit Ceiling Slider -->
         <div class="glass-card p-6 sm:p-7 rounded-2xl">
           <div class="flex items-center justify-between mb-2">
-            <label class="text-xs font-cinzel uppercase text-brand-cyan tracking-wider font-semibold flex items-center gap-2">
-              <span class="w-5 h-5 rounded bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-[10px] font-mono">02</span>
+            <label class="text-xs font-cinzel uppercase text-brand-cyan tracking-[0.20em] font-semibold flex items-center gap-2">
+              <span class="w-5 h-5 rounded bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-[10px] font-mono font-features-tabular">02</span>
               <span>Подтвержденный потолок ставки (Max Bet 1X2):</span>
             </label>
-            <div class="text-xl font-mono font-bold text-white tracking-tight" id="display-limit">
+            <div class="text-xl font-mono font-features-tabular font-bold text-white tracking-tight" id="display-limit">
               $25,000
             </div>
           </div>
 
-          <p class="text-xs text-zinc-400 mb-6 font-light">
+          <p class="text-xs text-zinc-400 mb-6 font-sans font-light">
             Сумма максимальной ставки на топовый матч (АПЛ / Лига Чемпионов, рынок 1X2) без скрытых лимитных ограничений.
           </p>
 
           <input type="range" id="calc-limit-slider" min="5000" max="100000" step="1000" value="25000" class="mb-4">
 
-          <div class="flex justify-between text-[10px] font-mono text-zinc-500">
+          <div class="flex justify-between text-[10px] font-mono font-features-tabular text-zinc-400">
             <span>$5,000 (Тестовый)</span>
             <span>$25,000 (Tier-A)</span>
             <span>$50,000 (Whale)</span>
@@ -740,26 +748,26 @@
           <!-- Quick Chips -->
           <div class="flex flex-wrap gap-2 pt-4 mt-4 border-t border-white/[0.06]">
             <span class="text-[10px] font-mono text-zinc-400 self-center mr-1">Быстрый выбор:</span>
-            <button type="button" onclick="setLimitPreset(10000)" class="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] hover:border-brand-cyan/50 text-[11px] font-mono text-white transition-colors">$10k</button>
-            <button type="button" onclick="setLimitPreset(25000)" class="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] hover:border-brand-cyan/50 text-[11px] font-mono text-white transition-colors">$25k</button>
-            <button type="button" onclick="setLimitPreset(50000)" class="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] hover:border-brand-cyan/50 text-[11px] font-mono text-white transition-colors">$50k</button>
-            <button type="button" onclick="setLimitPreset(75000)" class="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] hover:border-brand-cyan/50 text-[11px] font-mono text-white transition-colors">$75k</button>
+            <button type="button" onclick="setLimitPreset(10000)" class="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] hover:border-brand-cyan/50 text-[11px] font-mono font-features-tabular text-white transition-colors">$10k</button>
+            <button type="button" onclick="setLimitPreset(25000)" class="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] hover:border-brand-cyan/50 text-[11px] font-mono font-features-tabular text-white transition-colors">$25k</button>
+            <button type="button" onclick="setLimitPreset(50000)" class="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] hover:border-brand-cyan/50 text-[11px] font-mono font-features-tabular text-white transition-colors">$50k</button>
+            <button type="button" onclick="setLimitPreset(75000)" class="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] hover:border-brand-cyan/50 text-[11px] font-mono font-features-tabular text-white transition-colors">$75k</button>
           </div>
         </div>
 
         <!-- Step 3: Sessions Frequency Slider -->
         <div class="glass-card p-6 sm:p-7 rounded-2xl">
           <div class="flex items-center justify-between mb-2">
-            <label class="text-xs font-cinzel uppercase text-brand-cyan tracking-wider font-semibold flex items-center gap-2">
-              <span class="w-5 h-5 rounded bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-[10px] font-mono">03</span>
+            <label class="text-xs font-cinzel uppercase text-brand-cyan tracking-[0.20em] font-semibold flex items-center gap-2">
+              <span class="w-5 h-5 rounded bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-[10px] font-mono font-features-tabular">03</span>
               <span>Количество 60-минутных сессий в месяц:</span>
             </label>
-            <div class="text-base font-mono font-bold text-white tracking-tight" id="display-sessions">
+            <div class="text-base font-mono font-features-tabular font-bold text-white tracking-tight" id="display-sessions">
               4 сессии
             </div>
           </div>
           <input type="range" id="calc-sessions-slider" min="1" max="12" step="1" value="4" class="mb-4">
-          <div class="flex justify-between text-[10px] font-mono text-zinc-500">
+          <div class="flex justify-between text-[10px] font-mono font-features-tabular text-zinc-400">
             <span>1 сессия (Тест)</span>
             <span>4 сессии (Раз в неделю)</span>
             <span>8 сессий (Дважды в неделю)</span>
@@ -774,8 +782,8 @@
         <div class="glass-card p-6 sm:p-8 rounded-2xl sticky top-24 border-brand-cyan/40 shadow-[0_0_50px_rgba(0,240,255,0.15)]">
           
           <div class="flex items-center justify-between pb-4 border-b border-white/[0.08] mb-6">
-            <span class="font-cinzel text-xs text-brand-cyan uppercase tracking-wider font-semibold">// ALLOCATION SPECIFICATION</span>
-            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-brand-emerald/10 border border-brand-emerald/30 text-brand-emerald text-[10px] font-mono">
+            <span class="font-cinzel text-xs text-brand-cyan uppercase tracking-[0.24em] font-semibold">// ALLOCATION SPECIFICATION</span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-brand-emerald/10 border border-brand-emerald/30 text-brand-emerald text-[10px] font-mono font-features-tabular tracking-[0.16em]">
               <span class="w-1.5 h-1.5 rounded-full bg-brand-emerald"></span>
               АУДИТ АКТИВЕН
             </span>
@@ -787,9 +795,9 @@
             <div>
               <div class="text-xs font-mono text-zinc-400 mb-1 flex items-center justify-between">
                 <span>Аллокация капитала фонда:</span>
-                <span class="text-brand-cyan text-[10px]">100% средства фонда</span>
+                <span class="text-brand-cyan text-[10px] font-mono font-features-tabular">100% средства фонда</span>
               </div>
-              <div class="text-2xl sm:text-3xl font-mono font-bold text-white tracking-tight" id="res-bankroll">
+              <div class="text-2xl sm:text-3xl font-mono font-features-tabular font-bold text-white tracking-tight" id="res-bankroll">
                 $50,000 USDT
               </div>
             </div>
@@ -798,9 +806,9 @@
             <div>
               <div class="text-xs font-mono text-zinc-400 mb-1 flex items-center justify-between">
                 <span>Чистый профит за 60-мин сессию:</span>
-                <span class="text-zinc-500 text-[10px]">Оценка риск-деска</span>
+                <span class="text-zinc-400 text-[10px] font-mono">Оценка риск-деска</span>
               </div>
-              <div class="text-xl font-mono font-bold text-white tracking-tight" id="res-session-profit">
+              <div class="text-xl font-mono font-features-tabular font-bold text-white tracking-tight" id="res-session-profit">
                 ~$5,000 USDT
               </div>
             </div>
@@ -809,9 +817,9 @@
             <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.08]">
               <div class="text-xs font-mono text-zinc-400 mb-1 flex items-center justify-between">
                 <span>Личный финансовый риск:</span>
-                <span class="text-brand-emerald text-[10px] font-bold">ГАРАНТИЯ</span>
+                <span class="text-brand-emerald text-[10px] font-bold tracking-wider">ГАРАНТИЯ</span>
               </div>
-              <div class="text-xl font-mono font-bold text-brand-emerald tracking-tight flex items-center gap-2">
+              <div class="text-xl font-mono font-features-tabular font-bold text-brand-emerald tracking-tight flex items-center gap-2">
                 <span>$0.00</span>
                 <span class="text-xs font-normal text-zinc-400 font-sans">(Вывод баланса в 0 до старта)</span>
               </div>
@@ -820,13 +828,13 @@
             <!-- Whale Dividend Split Highlight -->
             <div class="p-4 rounded-xl bg-gradient-to-b from-brand-cyan/15 to-transparent border border-brand-cyan/40">
               <div class="text-xs font-mono text-brand-cyan mb-1 flex items-center justify-between">
-                <span class="font-bold font-cinzel">ВАША ДОЛЯ ПРИБЫЛИ (30% SPLIT):</span>
-                <span class="text-white text-[10px] font-mono">ВЫПЛАТА НА МЕСТЕ</span>
+                <span class="font-bold font-cinzel tracking-[0.20em]">ВАША ДОЛЯ ПРИБЫЛИ (30% SPLIT):</span>
+                <span class="text-white text-[10px] font-mono font-features-tabular">ВЫПЛАТА НА МЕСТЕ</span>
               </div>
-              <div class="text-3xl sm:text-4xl font-mono font-bold text-brand-cyan tracking-tight mb-1" id="res-whale-dividend">
+              <div class="text-3xl sm:text-4xl font-mono font-features-tabular font-bold text-brand-cyan tracking-tight mb-1" id="res-whale-dividend">
                 $6,000 USDT
               </div>
-              <div class="text-xs font-mono text-zinc-300 flex items-center justify-between pt-2 border-t border-brand-cyan/20">
+              <div class="text-xs font-mono font-features-tabular text-zinc-300 flex items-center justify-between pt-2 border-t border-brand-cyan/20">
                 <span>В месяц (4 сессии)</span>
                 <span class="text-brand-cyan font-semibold" id="res-session-dividend">+$1,500 USDT / сессия</span>
               </div>
@@ -835,12 +843,12 @@
           </div>
 
           <!-- Direct Trigger Button -->
-          <button onclick="transferCalculatorToModal()" class="magnetic-btn w-full py-4 rounded-xl bg-brand-cyan hover:bg-[#33f3ff] text-black font-cinzel font-bold text-sm tracking-widest uppercase flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(0,240,255,0.4)] transition-all active:scale-95">
+          <button onclick="transferCalculatorToModal()" class="magnetic-btn w-full py-4 rounded-xl bg-brand-cyan hover:bg-[#33f3ff] text-black font-cinzel font-bold text-xs sm:text-sm tracking-[0.22em] uppercase flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(0,240,255,0.4)] transition-all active:scale-95">
             <i data-lucide="shield-check" class="w-4 h-4"></i>
             <span>Забронировать слот аллокации</span>
           </button>
 
-          <p class="text-[11px] text-zinc-500 text-center mt-3 font-mono">
+          <p class="text-[11px] text-zinc-400 text-center mt-3 font-mono">
             🔒 Без передачи паролей • Личный баланс выводится в 0 • Регламент NDA
           </p>
 
@@ -857,14 +865,14 @@
   <section class="py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full border-t border-white/[0.08] bg-[#030406]">
     
     <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
-      <div class="chapter-badge-roman mx-auto mb-2">
+      <div class="chapter-badge-roman mx-auto mb-2 tracking-[0.26em]">
         <span class="w-1.5 h-1.5 rounded-full bg-brand-amber"></span>
         <span class="font-cinzel">COMPARATIVE RISK ARCHITECTURE</span>
       </div>
-      <h2 class="editorial-display-headline text-3xl sm:text-5xl lg:text-6xl text-white">
-        Кустарные посредники vs <span class="italic font-light gold-foil-text">Институциональный синдикат</span>
+      <h2 class="editorial-display-headline text-3xl sm:text-5xl lg:text-6xl text-white tracking-[-0.038em] leading-[0.94]">
+        Кустарные посредники vs <span class="font-serif italic font-light gold-foil-text">Институциональный синдикат</span>
       </h2>
-      <p class="text-sm sm:text-base text-zinc-400 font-light max-w-2xl mx-auto leading-relaxed">
+      <p class="text-sm sm:text-base text-zinc-400 font-sans font-light max-w-2xl mx-auto leading-relaxed">
         Почему передача смартфона третьим лицам или работа с неинституциональными скупщиками несет 100% юридический и финансовый риск.
       </p>
     </div>
@@ -872,7 +880,7 @@
     <div class="overflow-x-auto">
       <table class="w-full text-left border-collapse font-sans">
         <thead>
-          <tr class="border-b border-white/[0.12] text-xs font-cinzel uppercase tracking-wider text-zinc-400">
+          <tr class="border-b border-white/[0.12] text-xs font-cinzel uppercase tracking-[0.22em] text-zinc-400">
             <th class="py-4 px-6">Параметр протокола</th>
             <th class="py-4 px-6 text-red-400">Кустарные посредники (Серая розница)</th>
             <th class="py-4 px-6 text-brand-cyan bg-brand-cyan/[0.03] border-x border-brand-cyan/20">Private Liquidity Syndicate</th>
@@ -924,31 +932,31 @@
   <!-- SECTION 7: FINAL EXECUTIVE OFFER BLOCK                                    -->
   <!-- ========================================================================= -->
   <section class="py-28 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full text-center space-y-8">
-    <div class="chapter-badge-roman mx-auto mb-2">
+    <div class="chapter-badge-roman mx-auto mb-2 tracking-[0.26em]">
       <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan animate-pulse"></span>
       <span class="font-cinzel">ALLOCATION DESK // PRIVATE ACCESS</span>
     </div>
     
-    <h2 class="editorial-display-headline text-4xl sm:text-6xl lg:text-7xl text-white">
-      Превратите простаивающие лимиты в <span class="italic font-light gold-foil-text">еженедельный поток</span> ликвидности.
+    <h2 class="editorial-display-headline text-4xl sm:text-6xl lg:text-7xl text-white tracking-[-0.038em] leading-[0.94]">
+      Превратите простаивающие лимиты в <span class="font-serif italic font-light gold-foil-text">еженедельный поток</span> ликвидности.
     </h2>
 
-    <p class="text-sm sm:text-base text-zinc-300 font-light max-w-2xl mx-auto leading-relaxed">
+    <p class="text-sm sm:text-base text-zinc-300 font-sans font-light max-w-2xl mx-auto leading-relaxed">
       Мы открываем закрытую аллокационную квоту: выделение от $10,000 до $50,000+ синдикатного банкролла на очную сессию. Вы приходите с нулевым балансом, лично нажимаете кнопки в приложении и забираете 30% прибыли на месте.
     </p>
 
     <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-      <button onclick="VIPConcierge.open()" class="magnetic-btn w-full sm:w-auto px-10 py-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-cinzel font-bold text-xs tracking-widest uppercase shadow-[0_0_35px_rgba(212,175,55,0.45)] transition-all active:scale-95">
+      <button onclick="VIPConcierge.open()" class="magnetic-btn w-full sm:w-auto px-10 py-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-cinzel font-bold text-xs tracking-[0.24em] uppercase shadow-[0_0_35px_rgba(212,175,55,0.45)] transition-all active:scale-95">
         Согласовать время закрытой сессии ->
       </button>
-      <a href="portal.html" class="w-full sm:w-auto px-6 py-4 rounded-xl border border-white/[0.12] hover:border-white/30 text-white font-cinzel text-xs tracking-wider transition-colors">
+      <a href="portal.html" class="w-full sm:w-auto px-6 py-4 rounded-xl border border-white/[0.12] hover:border-white/30 text-white font-cinzel text-xs tracking-[0.22em] uppercase transition-colors">
         Изучить полный портал синдиката
       </a>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer class="py-14 px-4 sm:px-8 border-t border-white/[0.08] bg-[#020305] text-center font-mono text-xs text-white/40">
+  <footer class="py-14 px-4 sm:px-8 border-t border-white/[0.08] bg-[#020305] text-center font-mono font-features-tabular text-xs text-white/40 tracking-[0.16em]">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
       <span>© 2026 VIP Liquidity Syndicate. Non-Custodial Physical Session Protocol.</span>
       <div class="flex items-center gap-4 text-white/60">
@@ -963,7 +971,7 @@
   <!-- SCRIPTS & ENGINE BINDINGS                                                 -->
   <!-- ========================================================================= -->
   <!-- Audio Procedural Engine -->
-  <script src="sound-engine.js"></script>
+  <script src="sound-engine.js?v=qa2"></script>
 
   <!-- VIP Concierge Modal Engine -->
   <script src="vip-concierge-modal.js"></script>
@@ -1056,9 +1064,9 @@
           const pill = document.getElementById(`scene-nav-${i}`);
           if (pill) {
             if (i === sceneIndex) {
-              pill.className = 'scene-pill px-3 py-1 rounded-full text-[10px] font-mono tracking-wider transition-all bg-brand-cyan/20 border border-brand-cyan/40 text-brand-cyan font-bold shadow-[0_0_10px_rgba(0,240,255,0.25)]';
+              pill.className = 'scene-pill px-3.5 py-1 rounded-full text-[10px] font-cinzel tracking-[0.22em] transition-all bg-amber-500/20 border border-amber-500/40 text-amber-200 font-bold shadow-[0_0_14px_rgba(212,175,55,0.3)]';
             } else {
-              pill.className = 'scene-pill px-3 py-1 rounded-full text-[10px] font-mono tracking-wider transition-all text-white/50 hover:text-white border border-transparent';
+              pill.className = 'scene-pill px-3.5 py-1 rounded-full text-[10px] font-cinzel tracking-[0.22em] transition-all text-white/50 hover:text-white border border-transparent';
             }
           }
         }
@@ -1105,10 +1113,10 @@
     // 2. INTERACTIVE CALCULATOR LOGIC
     // -----------------------------------------------------------------------
     const BOOKMAKERS = {
-      'Stake': { name: 'Stake.com', tier: 'Platinum IV', multiplier: 2.0, basePool: 50000 },
-      'Sportsbet': { name: 'Sportsbet.io', tier: 'Clubhouse Legend', multiplier: 2.2, basePool: 65000 },
-      'BCGame': { name: 'BC.Game', tier: 'SVIP 55+', multiplier: 2.4, basePool: 80000 },
-      'Roobet': { name: 'Roobet', tier: 'King Whale', multiplier: 1.8, basePool: 40000 }
+      'Stake': { name: 'Stake.com', tier: 'Platinum IV – Diamond', multiplier: 2.0, basePool: 50000, poolRange: '$20k – $50k+' },
+      'Sportsbet': { name: 'Sportsbet.io', tier: 'Clubhouse Legend', multiplier: 2.2, basePool: 55000, poolRange: '$30k – $70k+' },
+      'BCGame': { name: 'BC.Game', tier: 'SVIP 55+', multiplier: 2.4, basePool: 60000, poolRange: '$50k – $120k+' },
+      'Roobet': { name: 'Roobet', tier: 'King Whale', multiplier: 1.8, basePool: 45000, poolRange: '$20k – $45k+' }
     };
 
     let selectedBK = 'Stake';
@@ -1210,25 +1218,25 @@
     const audioLabel = document.getElementById('audio-status-label');
 
     if (audioBtn) {
-      audioBtn.addEventListener('click', () => {
+      audioBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         if (!window.SyndicateAudio) return;
-        const isMuted = window.SyndicateAudio.toggleMute();
-        
-        if (isMuted) {
-          eqBars.classList.add('hidden');
-          eqBars.classList.remove('flex');
-          muteIcon.classList.remove('hidden');
-          audioLabel.innerText = '[AUDIO: OFF]';
-          audioBtn.classList.remove('border-brand-cyan', 'text-brand-cyan');
-        } else {
-          eqBars.classList.remove('hidden');
-          eqBars.classList.add('flex');
-          muteIcon.classList.add('hidden');
-          audioLabel.innerText = '[AUDIO: ON]';
-          audioBtn.classList.add('border-brand-cyan', 'text-brand-cyan');
-        }
+        window.SyndicateAudio.toggle();
       });
     }
+
+    // Soft-start unlock on first click anywhere
+    let hasUserInteracted = false;
+    document.addEventListener('click', function onFirstDocumentClick(e) {
+      if (hasUserInteracted) return;
+      hasUserInteracted = true;
+      if (window.SyndicateAudio) {
+        window.SyndicateAudio.init();
+        if (window.SyndicateAudio.ctx && window.SyndicateAudio.ctx.state === 'suspended') {
+          window.SyndicateAudio.ctx.resume();
+        }
+      }
+    }, { once: true, passive: true });
 
     // Initial calculation run
     updateCalculator();

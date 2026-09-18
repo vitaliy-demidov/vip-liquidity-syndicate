@@ -100,30 +100,30 @@
     {
       id: 'dubai_lounge',
       name: 'VIP Lounge Dubai (DIFC / Downtown)',
-      badge: '📍 DUBAI DIFC • ОЧНАЯ СЕССИЯ',
+      badge: '📍 DUBAI DIFC • НЕКАСТОДИАЛЬНЫЙ ПРОТОКОЛ',
       icon: 'map-pin',
-      desc: 'Закрытый переговорный офис в Дубае. Очное присутствие аналитика фонда, согласование торговой сетки и моментальный расчет доли прибыли в USDT на месте.'
+      desc: 'Закрытый переговорный офис в Дубае (DIFC). Некастодиальный протокол: телефон за 60 минут ни разу не касается чужих рук. Институциональный пул $10,000–$50,000+, фиксация сплита 70/30 на месте.'
     },
     {
       id: 'moscow_lounge',
       name: 'VIP Lounge Москва (Москва-Сити)',
       badge: '📍 МОСКВА-СИТИ • ЗАКРЫТЫЙ ЛАУНЖ',
       icon: 'building-2',
-      desc: 'Закрытый офис синдиката в башне Москва-Сити. Персональное сопровождение риск-менеджера, конфиденциальная очная торговая сессия с комфортным размещением.'
+      desc: 'Закрытый VIP-лаундж в Москва-Сити. Некастодиальный протокол: устройство строго в ваших руках, 0% персонального риска. Институциональный пул $10,000–$50,000+, фиксация сплита 70/30 на месте.'
     },
     {
       id: 'secure_browser',
-      name: 'Удаленная сессия (Non-Custodial Screen Share)',
-      badge: '💻 100% КОНТРОЛЬ • БЕЗ ПЕРЕДАЧИ ПАРОЛЕЙ',
-      icon: 'monitor',
-      desc: 'Сессия через AnyDesk / TeamViewer под вашим 100% личным контролем на вашем экране. Вы видите каждое действие в реальном времени. Логины, пароли и 2FA остаются у вас.'
+      name: 'Аппаратная сессия (Hardware Enclave / Clean-Room)',
+      badge: '🛡 SECURE ENCLAVE • СТРОГИЙ ЗАПРЕТ ANYDESK',
+      icon: 'shield-check',
+      desc: 'Аппаратная изоляция: сессия без AnyDesk/TeamViewer. Исключен риск троянов и кейлоггеров. Полный визуальный контроль, авторизация только по FaceID/TouchID владельца и моментальный вывод на Ledger/Trust Wallet.'
     },
     {
       id: 'isolated_profile',
       name: 'Изолированный сессионный профиль',
       badge: '🛡 НУЛЕВОЙ БАЛАНС • РЕЗИДЕНТСКИЙ IP',
       icon: 'shield-check',
-      desc: 'Выделенный чистый антидетект-профиль с резидентским IP и нулевым балансом ваших средств. Вы контролируете статус баланса со смартфона.'
+      desc: 'Выделенный чистый профиль с резидентским IP и нулевым балансом ваших средств. Вы контролируете баланс со смартфона.'
     }
   ];
 
@@ -144,7 +144,7 @@
         noHoldsConfirmed: true,
         antiInspectAcknowledged: true,
         attachedFileName: null,
-        sessionFormatId: 'secure_browser',
+        sessionFormatId: 'dubai_lounge',
         telegram: '',
         wallet: '',
         targetPool: '$25,000 – $50,000',
@@ -239,6 +239,22 @@
         }
         .vip-mono {
           font-family: 'JetBrains Mono', monospace, ui-monospace;
+        }
+        .vip-input-error {
+          border-color: #EF4444 !important;
+          box-shadow: 0 0 15px rgba(239, 68, 68, 0.35) !important;
+        }
+        .vip-input-success {
+          border-color: #10B981 !important;
+          box-shadow: 0 0 15px rgba(16, 185, 129, 0.25) !important;
+        }
+        @keyframes vipShake {
+          0%, 100% { transform: translateX(0); }
+          20%, 60% { transform: translateX(-6px); }
+          40%, 80% { transform: translateX(6px); }
+        }
+        .vip-shake {
+          animation: vipShake 0.4s ease-in-out;
         }
         .vip-modal-body::-webkit-scrollbar {
           width: 6px;
@@ -348,12 +364,128 @@
       return SESSION_FORMATS.find(f => f.id === this.state.sessionFormatId) || SESSION_FORMATS[0];
     }
 
+    validateTelegram(raw) {
+      const clean = (raw || '').trim().replace(/^@+/, '').replace(/^https?:\/\/(t\.me|telegram\.me)\//i, '').replace(/\/+$/, '');
+      if (!clean) {
+        return {
+          valid: false,
+          message: 'Укажите ваш Telegram username (@username) для связи со старшим риск-консьержем.'
+        };
+      }
+      if (clean.length < 5) {
+        return {
+          valid: false,
+          message: `Telegram username слишком короткий (минимум 5 символов, сейчас: ${clean.length}).`
+        };
+      }
+      if (clean.length > 32) {
+        return {
+          valid: false,
+          message: `Telegram username не может превышать 32 символа (сейчас: ${clean.length}).`
+        };
+      }
+      if (!/^[a-zA-Z0-9_]+$/.test(clean)) {
+        return {
+          valid: false,
+          message: 'Username может содержать только латинские буквы (a-z), цифры и символ _ (дефис не поддерживается Telegram).'
+        };
+      }
+      return {
+        valid: true,
+        clean: clean
+      };
+    }
+
+    validateWallet(raw, allowEmpty = true) {
+      const w = (raw || '').trim();
+      if (!w) {
+        if (allowEmpty) {
+          return {
+            valid: true,
+            type: 'deferred',
+            display: 'Будет согласован в закрытом чате',
+            message: 'Кошелек не указан (согласование в личном диалоге)'
+          };
+        }
+        return {
+          valid: false,
+          message: 'Укажите кошелек USDT в сети TRC-20 или ERC-20.'
+        };
+      }
+
+      // TRC-20 Check (Starts with T, 34 chars, Base58)
+      if (w.startsWith('T')) {
+        if (w.length === 34 && /^T[1-9A-HJ-NP-za-km-z]{33}$/.test(w)) {
+          return {
+            valid: true,
+            type: 'TRC-20',
+            display: w,
+            message: '✓ Валидный некастодиальный адрес USDT TRC-20 (Tron Network)'
+          };
+        }
+        if (w.length === 34 && /^T[a-zA-Z0-9]{33}$/.test(w)) {
+          return {
+            valid: true,
+            type: 'TRC-20',
+            display: w,
+            message: '✓ Валидный некастодиальный адрес USDT TRC-20 (Tron Network)'
+          };
+        }
+        if (w.length !== 34) {
+          return {
+            valid: false,
+            type: 'TRC-20',
+            message: `Адрес TRC-20 должен содержать ровно 34 символа (сейчас: ${w.length}).`
+          };
+        }
+        return {
+          valid: false,
+          type: 'TRC-20',
+          message: 'Адрес TRC-20 содержит недопустимые Base58 символы.'
+        };
+      }
+
+      // ERC-20 Check (Starts with 0x, 42 chars, Hex)
+      if (w.toLowerCase().startsWith('0x')) {
+        if (w.length === 42 && /^0x[a-fA-F0-9]{40}$/i.test(w)) {
+          return {
+            valid: true,
+            type: 'ERC-20',
+            display: w,
+            message: '✓ Валидный некастодиальный адрес USDT ERC-20 (Ethereum / EVM)'
+          };
+        }
+        if (w.length !== 42) {
+          return {
+            valid: false,
+            type: 'ERC-20',
+            message: `Адрес ERC-20 должен содержать ровно 42 hex-символа (сейчас: ${w.length}).`
+          };
+        }
+        return {
+          valid: false,
+          type: 'ERC-20',
+          message: 'Адрес ERC-20 содержит недопустимые символы (только hex: 0-9, a-f).'
+        };
+      }
+
+      return {
+        valid: false,
+        message: 'Неверный формат адреса. Адрес TRC-20 начинается с "T" (34 симв.), ERC-20 — с "0x" (42 симв.).'
+      };
+    }
+
     buildTicketText() {
       const bk = this.getSelectedBk();
       const bkName = this.state.bkKey === 'Other' && this.state.customBkName ? this.state.customBkName : bk.name;
       const tier = this.getSelectedTier();
       const format = this.getSelectedFormat();
-      const cleanTg = (this.state.telegram || '').trim().replace(/^@+/, '');
+      const cleanTg = (this.state.telegram || '').trim().replace(/^@+/, '').replace(/^https?:\/\/(t\.me|telegram\.me)\//i, '');
+      const walletVal = (this.state.wallet || '').trim();
+      const walletCheck = this.validateWallet(walletVal, true);
+      const walletDisplay = (walletVal && walletCheck.valid && walletCheck.type !== 'deferred')
+        ? `${walletVal} [${walletCheck.type}]`
+        : (walletVal || 'Укажу лично в чате с консьержем');
 
       return `🏛 VIP CONCIERGE ALLOCATION TICKET [${this.state.ticketId}]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -361,9 +493,9 @@
 🏛 Букмекер: ${bkName}
 👑 VIP Ранг: ${tier.name}
 📉 Статус счета: ${this.state.pnlConfirmed ? 'High-Roller (Отрицательный PnL подтвержден)' : 'Стандартный'}
-⚽️ Лимит 1X2 (АПЛ/ЛЧ): ${this.state.limitAmount} (Проверен)
+⚽️ Лимит 1X2 (АПЛ/ЛЧ): ${this.state.limitAmount} (Подтвержден)
 📍 Формат сессии: ${format.name}
-💎 USDT Кошелек: ${this.state.wallet || 'Укажу в личном чате'}
+💎 USDT Кошелек: ${walletDisplay}
 💰 Запрос пула: ${this.state.targetPool}
 🔒 Non-Custodial: Баланс выведен в 0 • 0 паролей
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -372,7 +504,7 @@
 
     getTelegramDeepLink() {
       const text = this.buildTicketText();
-      const desk = this.config.tgDeskUsername || 'syndicate_vip_desk';
+      const desk = (this.config.tgDeskUsername || 'syndicate_vip_desk').replace(/^@+/, '');
       return `https://t.me/${desk}?text=${encodeURIComponent(text)}`;
     }
 
@@ -386,6 +518,9 @@
       const bkName = this.state.bkKey === 'Other' && this.state.customBkName ? this.state.customBkName : bk.name;
       const tier = this.getSelectedTier();
       const format = this.getSelectedFormat();
+      const cleanTg = (this.state.telegram || '').trim().replace(/^@+/, '').replace(/^https?:\/\/(t\.me|telegram\.me)\//i, '');
+      const walletVal = (this.state.wallet || '').trim();
+      const walletCheck = this.validateWallet(walletVal, true);
 
       const payload = {
         ticketId: this.state.ticketId,
@@ -396,8 +531,9 @@
         fixture: this.state.limitFixture,
         noHolds: this.state.noHoldsConfirmed,
         sessionFormat: format.name,
-        telegram: this.state.telegram,
-        wallet: this.state.wallet,
+        telegram: cleanTg ? `@${cleanTg}` : '',
+        wallet: walletVal,
+        walletType: walletCheck.valid && walletCheck.type !== 'deferred' ? walletCheck.type : null,
         targetPool: this.state.targetPool,
         zeroBalanceAgreed: this.state.zeroBalanceAgreed,
         fileName: this.state.attachedFileName,
@@ -411,10 +547,14 @@
           body: JSON.stringify(payload)
         });
 
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
         
         this.state.webhookSent = true;
         this.state.webhookSending = false;
+        if (data.directTelegramLink) {
+          this.state.serverDirectTelegramLink = data.directTelegramLink;
+        }
         this.render();
       } catch (err) {
         console.warn('[VIP Concierge] Webhook dispatch warning (server might be offline):', err.message);
@@ -810,6 +950,11 @@
 
     renderStep4() {
       const pools = ['$10,000', '$25,000', '$50,000', '$100,000+'];
+      const rawTg = (this.state.telegram || '').replace(/^@+/, '').replace(/^https?:\/\/(t\.me|telegram\.me)\//i, '');
+      const rawWallet = this.state.wallet || '';
+      const walletCheck = this.validateWallet(rawWallet, true);
+      const isWalletValid = rawWallet ? walletCheck.valid : false;
+      const isWalletError = rawWallet ? !walletCheck.valid : false;
 
       return `
         <div class="space-y-6">
@@ -837,9 +982,11 @@
               </div>
               <div class="relative">
                 <span class="absolute left-3.5 top-2.5 text-[#00F0FF] font-mono text-xs font-bold">@</span>
-                <input type="text" id="vip-telegram-input" value="${this.escapeHtml(this.state.telegram.replace(/^@+/, ''))}" placeholder="highroller_vip" class="w-full bg-black/40 border border-white/15 rounded-xl pl-8 pr-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-[#00F0FF]">
+                <input type="text" id="vip-telegram-input" value="${this.escapeHtml(rawTg)}" placeholder="whale_boss" class="w-full bg-black/40 border border-white/15 rounded-xl pl-8 pr-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-[#00F0FF] transition-all">
               </div>
-              <p class="text-[10px] text-zinc-500 mt-1 font-mono">Консьерж напишет вам в Telegram с верифицированного деска синдиката.</p>
+              <div id="vip-telegram-msg" class="text-[11px] mt-1.5 font-mono text-zinc-500">
+                Консьерж напишет вам в Telegram с верифицированного деска синдиката.
+              </div>
             </div>
 
             <!-- Non-Custodial USDT Wallet -->
@@ -848,10 +995,18 @@
                 <label class="block text-xs font-semibold text-zinc-300">Некастодиальный USDT кошелек (TRC20 / ERC20):</label>
                 <span class="vip-mono text-[10px] text-[#10B981]">ДЛЯ ВЫПЛАТ ДИВИДЕНДОВ</span>
               </div>
-              <input type="text" id="vip-wallet-input" value="${this.escapeHtml(this.state.wallet)}" placeholder="T... (TRC-20) или 0x... (ERC-20)" class="w-full bg-black/40 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-[#00F0FF]">
-              <p class="text-[10px] text-zinc-500 mt-1 font-mono">
-                🔒 Мы никогда не запрашиваем seed-фразы. Средства поступают НА этот кошелек (30–40% от чистой прибыли).
-              </p>
+              <div class="relative">
+                <input type="text" id="vip-wallet-input" value="${this.escapeHtml(rawWallet)}" placeholder="T... (TRC-20, 34 симв.) или 0x... (ERC-20, 42 симв.)" class="w-full bg-black/40 border ${isWalletError ? 'vip-input-error' : (isWalletValid ? 'vip-input-success' : 'border-white/15')} rounded-xl px-3.5 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-[#00F0FF] transition-all">
+              </div>
+              <div id="vip-wallet-msg" class="text-[11px] mt-1.5 font-mono text-zinc-500">
+                ${rawWallet && walletCheck.valid ? `<span class="text-emerald-400">${walletCheck.message}</span>` : (rawWallet && !walletCheck.valid ? `<span class="text-rose-400">✕ ${walletCheck.message}</span>` : '🔒 30–40% чистой прибыли начисляются НА этот кошелек (или согласуйте лично в чате).')}
+              </div>
+              <div class="pt-1 flex items-center justify-between text-[10px] font-mono text-zinc-400">
+                <span>Форматы: <b>TRC-20</b> (T..., 34 симв.) или <b>ERC-20</b> (0x..., 42 симв.)</span>
+                <button type="button" id="vip-defer-wallet-btn" class="text-[#00F0FF] hover:underline cursor-pointer">
+                  Указать в личном чате
+                </button>
+              </div>
             </div>
 
             <!-- Target Pool Size -->
@@ -870,7 +1025,7 @@
             </div>
 
             <!-- Safety Zero Balance Agreement -->
-            <div class="p-3.5 rounded-xl border border-white/10 bg-black/30 flex items-start gap-3">
+            <div id="vip-zero-balance-container" class="p-3.5 rounded-xl border border-white/10 bg-black/30 flex items-start gap-3 transition-colors">
               <input type="checkbox" id="vip-zero-balance-check" ${this.state.zeroBalanceAgreed ? 'checked' : ''} class="mt-1 w-4 h-4 rounded border-white/20 bg-white/5 text-[#00F0FF] cursor-pointer">
               <div>
                 <label for="vip-zero-balance-check" class="text-xs font-medium text-white cursor-pointer select-none">
@@ -879,6 +1034,7 @@
                 <p class="text-[11px] text-zinc-400 mt-0.5 leading-snug">
                   100% средств на сессии — это капитал синдиката. Возможные просадки на 100% компенсируются фондом.
                 </p>
+                <div id="vip-zero-msg" class="text-[11px] mt-1 font-mono text-rose-400 hidden"></div>
               </div>
             </div>
 
@@ -906,8 +1062,13 @@
       const bkName = this.state.bkKey === 'Other' && this.state.customBkName ? this.state.customBkName : bk.name;
       const tier = this.getSelectedTier();
       const format = this.getSelectedFormat();
-      const tgDeepLink = this.getTelegramDeepLink();
-      const cleanTg = (this.state.telegram || '').replace(/^@+/, '');
+      const tgDeepLink = this.state.serverDirectTelegramLink || this.getTelegramDeepLink();
+      const cleanTg = (this.state.telegram || '').replace(/^@+/, '').replace(/^https?:\/\/(t\.me|telegram\.me)\//i, '');
+      const walletVal = (this.state.wallet || '').trim();
+      const walletCheck = this.validateWallet(walletVal, true);
+      const walletBadge = walletVal && walletCheck.valid && walletCheck.type !== 'deferred'
+        ? `<span class="text-zinc-200 truncate block">${walletVal.slice(0, 8)}...${walletVal.slice(-6)} <span class="text-[#00F0FF] text-[10px]">(${walletCheck.type})</span></span>`
+        : `<span class="text-zinc-400 italic">Согласование лично в Telegram</span>`;
 
       return `
         <div class="space-y-6 text-center">
@@ -959,7 +1120,7 @@
               </div>
               <div>
                 <span class="text-zinc-500 block">Кошелек дивидендов:</span>
-                <span class="text-zinc-300 truncate block">${this.state.wallet ? this.state.wallet.slice(0, 8) + '...' + this.state.wallet.slice(-6) : 'Будет согласован лично'}</span>
+                ${walletBadge}
               </div>
             </div>
 
@@ -973,7 +1134,7 @@
           <div class="space-y-3 pt-1">
             
             <!-- Primary CTA: Direct Telegram Link with pre-filled text -->
-            <a href="${tgDeepLink}" target="_blank" rel="noopener noreferrer" class="w-full py-4 px-4 rounded-xl bg-[#00F0FF] hover:bg-[#33f3ff] text-black font-bold text-xs vip-mono tracking-wide flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(0,240,255,0.4)] transition-all active:scale-[0.98]">
+            <a href="${tgDeepLink}" id="vip-open-tg-btn" target="_blank" rel="noopener noreferrer" class="w-full py-4 px-4 rounded-xl bg-[#00F0FF] hover:bg-[#33f3ff] text-black font-bold text-xs vip-mono tracking-wide flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(0,240,255,0.4)] transition-all active:scale-[0.98]">
               <i data-lucide="send" class="w-4 h-4"></i>
               <span>Открыть в Telegram с готовым тикетом</span>
             </a>

@@ -5,49 +5,143 @@
  * Pure JavaScript, 100% offline, zero external audio asset dependencies.
  * 
  * Aesthetic: Institutional Bloomberg / Hedge-Fund / High-End Cybernetic Fintech
- * Features:
- * 1. Ambient Cinematic Drone / Lounge Frequency (Multi-oscillator, breathing LFO,
- *    analog warmth floor, binaural phasing, low volume, muted by default).
- * 2. High-End Haptic Click / Mechanical Switch (Precision tactile transient for
- *    sliders, rotary detents, and scene buttons).
- * 3. Crisp Metallic Chime / Sub-Bass Thud (Seismic sub impact paired with
- *    multi-partial shimmering crystal chime for payout / allocation confirmations).
- * 4. Header Luxury Audio Toggle ('[AUDIO: ON/OFF]' with animated equalizer).
+ * Soundtrack: Hans Zimmer / Interstellar / Succession / Neo-Classical Ambient
+ * 
+ * Architecture & Features:
+ * 1. Procedural Motivational Background Music Generator (Cinematic Ambient):
+ *    - Evolving 4-chord progression: C minor -> Ab major -> Eb major -> Bb major (32s cycle)
+ *    - Soft polyphonic analog pad (dual-oscillator warmth, low-pass filter 600-900 Hz,
+ *      breathing 0.08Hz LFO modulation, dual-bank seamless equal-power crossfading)
+ *    - Delicate crystalline high-register arpeggio (sine + octave overtone, fast attack,
+ *      bell-like decay, procedural ping-pong delay & 2.4s algorithmic scoring stage reverb)
+ *    - Deep velvet sub-bass (32.7 - 58.3 Hz) with portamento glide and steep 85Hz lowpass
+ *    - Analog scoring stage tape air / brownian noise floor (-42dB)
+ * 2. Delicate Volume Balancing:
+ *    - Music Master Gain calibrated at 0.14 - 0.15 (14-15%), delicate & non-intrusive
+ *    - Smooth 2.5s fade-in upon activation, zero audio clicks or pops
+ *    - Smooth 1.2s fade-out upon muting
+ *    - Intelligent sidechain ducking during payout confirmations
+ * 3. Interactive UI Sound Effects:
+ *    - High-End Haptic Click / Swiss dial detent (for sliders, presets, buttons)
+ *    - Precision Mechanical Switch (CNC relay click for tabs and modals)
+ *    - Scene Transition Swoosh (aerodynamic sweep harmonized to narrative scenes)
+ *    - Seismic Payout Confirmation (38Hz sub thud + 6-partial crystal bell chime)
+ * 4. Header UI Synchronization & Soft-Start:
+ *    - Animated equalizer bars and '[AUDIO: MOTIVATION ON/OFF]' status
+ *    - Synchronized across cinematic-story.html and index.html
+ *    - Seamless unlock on first user interaction with keyboard shortcut 'M'
  * ============================================================================
  */
 
 (function(window) {
   'use strict';
 
+  // --------------------------------------------------------------------------
+  // HARMONIC PROGRESSION DEFINITIONS (C minor -> Ab major -> Eb major -> Bb major)
+  // --------------------------------------------------------------------------
+  const CHORD_PROGRESSION = [
+    {
+      name: 'C minor (Introspection & Focus)',
+      rootFreq: 32.703, // C1 Velvet Sub-Bass
+      subFreq2: 65.406, // C2 Sub-Octave
+      padNotes: [130.81, 155.56, 196.00, 261.63, 311.13], // C3, Eb3, G3, C4, Eb4
+      arpNotes: [261.63, 311.13, 392.00, 466.16, 523.25, 622.25, 783.99, 1046.50] // C4, Eb4, G4, Bb4, C5, Eb5, G5, C6
+    },
+    {
+      name: 'Ab major (Emotional Horizon & Inspiration)',
+      rootFreq: 51.913, // Ab1 Velvet Sub-Bass
+      subFreq2: 103.83, // Ab2 Sub-Octave
+      padNotes: [103.83, 130.81, 155.56, 207.65, 261.63], // Ab2, C3, Eb3, Ab3, C4
+      arpNotes: [261.63, 311.13, 415.30, 523.25, 622.25, 830.61, 1046.50, 1244.51] // C4, Eb4, Ab4, C5, Eb5, Ab5, C6, Eb6
+    },
+    {
+      name: 'Eb major (Breakthrough & Nobility)',
+      rootFreq: 38.891, // Eb1 Velvet Sub-Bass
+      subFreq2: 77.782, // Eb2 Sub-Octave
+      padNotes: [116.54, 155.56, 196.00, 233.08, 311.13], // Bb2, Eb3, G3, Bb3, Eb4
+      arpNotes: [233.08, 311.13, 392.00, 466.16, 622.25, 783.99, 932.33, 1244.51] // Bb3, Eb4, G4, Bb4, Eb5, G5, Bb5, Eb6
+    },
+    {
+      name: 'Bb major (Forward Momentum & Resolution)',
+      rootFreq: 58.270, // Bb1 Velvet Sub-Bass
+      subFreq2: 116.54, // Bb2 Sub-Octave
+      padNotes: [116.54, 146.83, 174.61, 233.08, 293.66], // Bb2, D3, F3, Bb3, D4
+      arpNotes: [233.08, 293.66, 349.23, 466.16, 587.33, 698.46, 932.33, 1174.66] // Bb3, D4, F4, Bb4, D5, F5, Bb5, D6
+    }
+  ];
+
+  // Hans Zimmer / Interstellar minimalist 16-step undulating arpeggio motif
+  const ARP_MOTIF_PATTERN = [0, 2, 4, 7, 5, 4, 2, 3, 1, 3, 5, 6, 7, 5, 4, 2];
+
   class SoundEngine {
     constructor() {
       this.ctx = null;
-      this.isMuted = true; // Muted by default as specified
+      this.isMuted = true; // Muted by default for respectful browser UX
       this.isInitialized = false;
 
       // Master audio nodes
       this.masterGain = null;
       this.compressor = null;
+      this.sfxGain = null;
 
-      // Drone audio graph
-      this.droneGain = null;
-      this.droneNodes = [];
-      this.isDronePlaying = false;
+      // Motivation music bus & parameters
+      this.musicGain = null;
+      this.musicMasterVolume = 0.15; // Delicate & non-intrusive (~15%)
+      this.isMusicPlaying = false;
+      
+      // Pad synthesis & dual-bank crossfader
+      this.padFilter = null;
+      this.padLfo = null;
+      this.padLfoGain = null;
+      this.activePadBank = null;
+      this.padBankA = null;
+      this.padBankB = null;
 
-      // Slider throttling & state
+      // Velvet Sub-Bass
+      this.subOsc = null;
+      this.subOscWarmth = null;
+      this.subFilter = null;
+      this.subGain = null;
+
+      // Spatial FX (Procedural Reverb & Stereo Ping-Pong Delay)
+      this.reverbNode = null;
+      this.reverbGain = null;
+      this.delayL = null;
+      this.delayR = null;
+      this.delayFeedback = null;
+      this.delayFilter = null;
+      this.delayDryGain = null;
+      this.delayWetGain = null;
+
+      // Procedural Tape Air Buffer
+      this.noiseBuffer = null;
+      this.tapeNoiseSource = null;
+
+      // Musical Sequencer & Clock State
+      this.currentChordIndex = 0;
+      this.chordStartTime = 0;
+      this.chordDuration = 8.0; // 8.0s per chord = 32s full cycle
+      this.arpStepInterval = 0.235; // 16th note pulse (~64 BPM)
+      this.currentArpStep = 0;
+      this.nextArpTime = 0;
+      this.schedulerTimer = null;
+
+      // Haptic Slider Throttling & State
       this.lastSliderTickTime = 0;
       this.lastSliderValue = 25000;
+      this.toastTimeout = null;
 
-      // Noise buffer cache
-      this.noiseBuffer = null;
-
-      // Auto-bind methods
-      this.toggle = this.toggle.bind(this);
+      // Bind methods
       this.init = this.init.bind(this);
+      this.toggle = this.toggle.bind(this);
+      this.toggleMute = this.toggleMute.bind(this);
+      this.startMotivationMusic = this.startMotivationMusic.bind(this);
+      this.stopMotivationMusic = this.stopMotivationMusic.bind(this);
+      this.musicScheduleTick = this.musicScheduleTick.bind(this);
     }
 
     /**
-     * Lazy-initialize the Web Audio Context upon first user interaction
+     * Lazy-initialize the Web Audio Context upon user interaction
      */
     init() {
       if (this.isInitialized && this.ctx) {
@@ -66,11 +160,11 @@
 
         this.ctx = new AudioContextClass();
 
-        // 1. Master Dynamics Compressor (Gives high-end mastered limiter & prevents digital clipping)
+        // 1. Master Limiter / Dynamics Compressor (Prevents digital clipping & glues the mix)
         this.compressor = this.ctx.createDynamicsCompressor();
         this.compressor.threshold.setValueAtTime(-14, this.ctx.currentTime); // dB
         this.compressor.knee.setValueAtTime(10, this.ctx.currentTime);        // dB
-        this.compressor.ratio.setValueAtTime(5, this.ctx.currentTime);        // 5:1 compression
+        this.compressor.ratio.setValueAtTime(4.5, this.ctx.currentTime);     // 4.5:1 ratio
         this.compressor.attack.setValueAtTime(0.003, this.ctx.currentTime);   // 3ms attack
         this.compressor.release.setValueAtTime(0.25, this.ctx.currentTime);   // 250ms release
 
@@ -78,180 +172,494 @@
         this.masterGain = this.ctx.createGain();
         this.masterGain.gain.setValueAtTime(1.0, this.ctx.currentTime);
 
-        // Connect graph: masterGain -> compressor -> destination
         this.masterGain.connect(this.compressor);
         this.compressor.connect(this.ctx.destination);
 
-        // Pre-generate procedural analog tape/air floor noise buffer (3 seconds mono loop)
-        this.generateNoiseBuffer();
+        // 3. UI SFX Bus (Clicks, Switches, Payouts)
+        this.sfxGain = this.ctx.createGain();
+        this.sfxGain.gain.setValueAtTime(1.0, this.ctx.currentTime);
+        this.sfxGain.connect(this.masterGain);
 
-        // Initialize Ambient Drone Graph (starts in muted state)
-        this.buildAmbientDroneGraph();
+        // 4. Procedural Buffers & Impulse Responses
+        this.generateNoiseBuffer();
+        this.buildSpatialFxGraph();
+
+        // 5. Procedural Motivational Music Bus
+        this.buildMotivationMusicGraph();
 
         this.isInitialized = true;
         this.updateToggleUI();
 
-        // Check if browser suspended audio context
-        if (this.ctx.state === 'suspended') {
-          const unlock = () => {
-            if (this.ctx && this.ctx.state === 'suspended') {
-              this.ctx.resume();
-            }
-            window.removeEventListener('click', unlock);
-            window.removeEventListener('keydown', unlock);
-            window.removeEventListener('touchstart', unlock);
-          };
-          window.addEventListener('click', unlock, { once: true });
-          window.addEventListener('keydown', unlock, { once: true });
-          window.addEventListener('touchstart', unlock, { once: true });
-        }
+        // Safe unlock listener for mobile & autoplay policies
+        const unlock = () => {
+          if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume();
+          }
+          window.removeEventListener('click', unlock);
+          window.removeEventListener('keydown', unlock);
+          window.removeEventListener('touchstart', unlock);
+        };
+        window.addEventListener('click', unlock, { once: true });
+        window.addEventListener('keydown', unlock, { once: true });
+        window.addEventListener('touchstart', unlock, { once: true });
+
+        // Global 'M' hotkey listener for audio toggle
+        window.addEventListener('keydown', (e) => {
+          const isInput = e.target && typeof e.target.matches === 'function' && e.target.matches('input, textarea, select, [contenteditable="true"]');
+          if ((e.key === 'm' || e.key === 'M') && !isInput) {
+            this.toggle();
+          }
+        });
+
       } catch (err) {
         console.error('[SyndicateAudio] Initialization failed:', err);
       }
     }
 
     /**
-     * Generate procedural warm analog floor noise
+     * Generate procedural warm analog floor noise buffer (3 seconds)
      */
     generateNoiseBuffer() {
       if (!this.ctx) return;
       const sampleRate = this.ctx.sampleRate;
-      const bufferSize = sampleRate * 3; // 3 seconds
+      const bufferSize = sampleRate * 3;
       const buffer = this.ctx.createBuffer(1, bufferSize, sampleRate);
       const data = buffer.getChannelData(0);
       let lastOut = 0.0;
 
-      // Pink / brown filtered random walk for organic analog floor
       for (let i = 0; i < bufferSize; i++) {
         const white = Math.random() * 2 - 1;
         lastOut = (lastOut + (0.02 * white)) / 1.02;
-        data[i] = lastOut * 2.8;
+        data[i] = lastOut * 2.5;
       }
       this.noiseBuffer = buffer;
     }
 
     /**
-     * Builds the procedural multi-oscillator cinematic drone & lounge frequency
+     * Generate procedural acoustic scoring-stage convolution reverb
+     * Creates a natural 2.4s cinematic decay with warm high-frequency damping
      */
-    buildAmbientDroneGraph() {
-      if (!this.ctx) return;
+    generateImpulseResponse(duration = 2.4, decay = 2.5) {
+      if (!this.ctx) return null;
+      const sampleRate = this.ctx.sampleRate;
+      const length = Math.floor(sampleRate * duration);
+      const impulse = this.ctx.createBuffer(2, length, sampleRate);
+      const left = impulse.getChannelData(0);
+      const right = impulse.getChannelData(1);
 
+      for (let i = 0; i < length; i++) {
+        const t = i / sampleRate;
+        const env = Math.exp(-t * decay);
+        const damping = Math.exp(-t * 1.8);
+        left[i] = (Math.random() * 2 - 1) * env * damping * 0.6;
+        right[i] = (Math.random() * 2 - 1) * env * damping * 0.6;
+      }
+      return impulse;
+    }
+
+    /**
+     * Builds the Spatial FX network:
+     * - Procedural Stereo Ping-Pong Delay
+     * - Algorithmic Scoring Stage Reverb
+     */
+    buildSpatialFxGraph() {
+      if (!this.ctx) return;
       const t = this.ctx.currentTime;
 
-      // Master gain for the ambient drone layer (very low volume as requested)
-      this.droneGain = this.ctx.createGain();
-      this.droneGain.gain.setValueAtTime(0.00001, t); // Starts muted
+      // --- Algorithmic Reverb Convolver ---
+      this.reverbNode = this.ctx.createConvolver();
+      const irBuffer = this.generateImpulseResponse(2.4, 2.6);
+      if (irBuffer) {
+        this.reverbNode.buffer = irBuffer;
+      }
 
-      // Main Drone Filter: Low-pass filter modulated by LFO
-      const droneFilter = this.ctx.createBiquadFilter();
-      droneFilter.type = 'lowpass';
-      droneFilter.frequency.setValueAtTime(260, t);
-      droneFilter.Q.setValueAtTime(1.8, t);
+      this.reverbGain = this.ctx.createGain();
+      this.reverbGain.gain.setValueAtTime(0.35, t);
+      this.reverbNode.connect(this.reverbGain);
 
-      // Layer 1: Sub-bass fundamental (A1 = 55 Hz / Warm Sine)
-      const subOsc = this.ctx.createOscillator();
-      subOsc.type = 'sine';
-      subOsc.frequency.setValueAtTime(55.0, t);
-      const subGain = this.ctx.createGain();
-      subGain.gain.setValueAtTime(0.032, t);
-      subOsc.connect(subGain);
-      subGain.connect(droneFilter);
-      subOsc.start(t);
-      this.droneNodes.push(subOsc);
+      // --- Stereo Ping-Pong Delay Network ---
+      this.delayL = this.ctx.createDelay(1.0);
+      this.delayL.delayTime.setValueAtTime(0.24, t);
 
-      // Layer 2: Warm 5th harmonic (82.5 Hz + slight detune +3 cents for binaural shimmer)
-      const fifthOsc = this.ctx.createOscillator();
-      fifthOsc.type = 'sine';
-      fifthOsc.frequency.setValueAtTime(82.5, t);
-      fifthOsc.detune.setValueAtTime(3.2, t);
-      const fifthGain = this.ctx.createGain();
-      fifthGain.gain.setValueAtTime(0.022, t);
-      fifthOsc.connect(fifthGain);
-      fifthGain.connect(droneFilter);
-      fifthOsc.start(t);
-      this.droneNodes.push(fifthOsc);
+      this.delayR = this.ctx.createDelay(1.0);
+      this.delayR.delayTime.setValueAtTime(0.36, t);
 
-      // Layer 3: Warm Octave Triangle (110 Hz - slight detune -3 cents)
-      const octOsc = this.ctx.createOscillator();
-      octOsc.type = 'triangle';
-      octOsc.frequency.setValueAtTime(110.0, t);
-      octOsc.detune.setValueAtTime(-2.8, t);
-      const octGain = this.ctx.createGain();
-      octGain.gain.setValueAtTime(0.012, t);
-      octOsc.connect(octGain);
-      octGain.connect(droneFilter);
-      octOsc.start(t);
-      this.droneNodes.push(octOsc);
+      this.delayFeedback = this.ctx.createGain();
+      this.delayFeedback.gain.setValueAtTime(0.32, t);
 
-      // Layer 4: Analog Air / Tape Floor Texture
+      this.delayFilter = this.ctx.createBiquadFilter();
+      this.delayFilter.type = 'lowpass';
+      this.delayFilter.frequency.setValueAtTime(3200, t); // Tape damping
+
+      this.delayDryGain = this.ctx.createGain();
+      this.delayDryGain.gain.setValueAtTime(0.85, t);
+
+      this.delayWetGain = this.ctx.createGain();
+      this.delayWetGain.gain.setValueAtTime(0.28, t);
+
+      // Ping-pong cross-wiring
+      this.delayL.connect(this.delayFilter);
+      this.delayFilter.connect(this.delayFeedback);
+      this.delayFeedback.connect(this.delayR);
+      this.delayR.connect(this.delayFeedback);
+
+      this.delayL.connect(this.delayWetGain);
+      this.delayR.connect(this.delayWetGain);
+    }
+
+    /**
+     * Builds the complete procedural motivational music synthesis graph:
+     * - Music Master Gain (0.15 level with smooth 2.5s fade-in)
+     * - Polyphonic Analog Pad Filter + 0.08Hz Breathing LFO
+     * - Velvet Sub-Bass Unit
+     * - Tape Air Floor
+     */
+    buildMotivationMusicGraph() {
+      if (!this.ctx) return;
+      const t = this.ctx.currentTime;
+
+      // Master Music Bus (Starts at 0.00001 for zero-click fade-in)
+      this.musicGain = this.ctx.createGain();
+      this.musicGain.gain.setValueAtTime(0.00001, t);
+      this.musicGain.connect(this.masterGain);
+
+      // Connect spatial returns into the music bus
+      if (this.reverbGain) this.reverbGain.connect(this.musicGain);
+      if (this.delayWetGain) this.delayWetGain.connect(this.musicGain);
+
+      // --- WARM ANALOG PAD FILTER & LFO ---
+      // Lowpass filter centered at 750 Hz with slow breathing LFO modulation (600-900 Hz)
+      this.padFilter = this.ctx.createBiquadFilter();
+      this.padFilter.type = 'lowpass';
+      this.padFilter.frequency.setValueAtTime(750, t);
+      this.padFilter.Q.setValueAtTime(1.2, t);
+
+      this.padLfo = this.ctx.createOscillator();
+      this.padLfo.type = 'sine';
+      this.padLfo.frequency.setValueAtTime(0.083, t); // ~12 second slow breath
+
+      this.padLfoGain = this.ctx.createGain();
+      this.padLfoGain.gain.setValueAtTime(150, t); // Sweeps cutoff between 600 Hz and 900 Hz
+
+      this.padLfo.connect(this.padLfoGain);
+      this.padLfoGain.connect(this.padFilter.frequency);
+      this.padLfo.start(t);
+
+      // Pad filter feeds both direct music bus and reverb send
+      this.padFilter.connect(this.musicGain);
+      if (this.reverbNode) {
+        const padReverbSend = this.ctx.createGain();
+        padReverbSend.gain.setValueAtTime(0.28, t);
+        this.padFilter.connect(padReverbSend);
+        padReverbSend.connect(this.reverbNode);
+      }
+
+      // Initialize dual voice banks for seamless pad crossfading
+      this.padBankA = this.createPadBank();
+      this.padBankB = this.createPadBank();
+      this.activePadBank = 'A';
+
+      // --- VELVET SUB-BASS UNIT (32.7 - 58.3 Hz) ---
+      this.subFilter = this.ctx.createBiquadFilter();
+      this.subFilter.type = 'lowpass';
+      this.subFilter.frequency.setValueAtTime(85, t); // Steep clean cutoff
+      this.subFilter.Q.setValueAtTime(1.1, t);
+
+      this.subGain = this.ctx.createGain();
+      this.subGain.gain.setValueAtTime(0.085, t); // Solid, velvety weight
+
+      this.subOsc = this.ctx.createOscillator();
+      this.subOsc.type = 'sine';
+      this.subOsc.frequency.setValueAtTime(CHORD_PROGRESSION[0].rootFreq, t);
+
+      this.subOscWarmth = this.ctx.createOscillator();
+      this.subOscWarmth.type = 'triangle';
+      this.subOscWarmth.frequency.setValueAtTime(CHORD_PROGRESSION[0].rootFreq, t);
+      const subWarmthGain = this.ctx.createGain();
+      subWarmthGain.gain.setValueAtTime(0.12, t);
+
+      this.subOsc.connect(this.subFilter);
+      this.subOscWarmth.connect(subWarmthGain);
+      subWarmthGain.connect(this.subFilter);
+
+      this.subFilter.connect(this.subGain);
+      this.subGain.connect(this.musicGain);
+
+      this.subOsc.start(t);
+      this.subOscWarmth.start(t);
+
+      // --- ANALOG TAPE AIR / SCORING STAGE FLOOR ---
       if (this.noiseBuffer) {
-        const noiseSource = this.ctx.createBufferSource();
-        noiseSource.buffer = this.noiseBuffer;
-        noiseSource.loop = true;
+        this.tapeNoiseSource = this.ctx.createBufferSource();
+        this.tapeNoiseSource.buffer = this.noiseBuffer;
+        this.tapeNoiseSource.loop = true;
 
         const noiseFilter = this.ctx.createBiquadFilter();
         noiseFilter.type = 'bandpass';
         noiseFilter.frequency.setValueAtTime(340, t);
-        noiseFilter.Q.setValueAtTime(2.2, t);
+        noiseFilter.Q.setValueAtTime(2.0, t);
 
         const noiseGain = this.ctx.createGain();
-        noiseGain.gain.setValueAtTime(0.005, t);
+        noiseGain.gain.setValueAtTime(0.0035, t); // -49dB subtle tape air
 
-        noiseSource.connect(noiseFilter);
+        this.tapeNoiseSource.connect(noiseFilter);
         noiseFilter.connect(noiseGain);
-        noiseGain.connect(droneFilter);
+        noiseGain.connect(this.musicGain);
 
-        noiseSource.start(t);
-        this.droneNodes.push(noiseSource);
+        this.tapeNoiseSource.start(t);
+      }
+    }
+
+    /**
+     * Helper to instantiate a polyphonic voice bank with dual-oscillator warmth
+     */
+    createPadBank() {
+      if (!this.ctx) return null;
+      const bankGain = this.ctx.createGain();
+      bankGain.gain.setValueAtTime(0.00001, this.ctx.currentTime);
+      bankGain.connect(this.padFilter);
+
+      return {
+        bankGain,
+        voices: [] // Populated dynamically on chord triggers
+      };
+    }
+
+    /**
+     * Start / Fade in the Procedural Motivational Background Music
+     * Smooth 2.5-second luxury ramp with zero audio clicks
+     */
+    startMotivationMusic() {
+      if (!this.ctx) this.init();
+      if (!this.ctx) return;
+      if (this.ctx.state === 'suspended') this.ctx.resume();
+
+      const t = this.ctx.currentTime;
+      this.musicGain.gain.cancelScheduledValues(t);
+      const startVal = Math.max(this.musicGain.gain.value, 0.00001);
+      this.musicGain.gain.setValueAtTime(startVal, t);
+      
+      // Smooth 2.5s luxury bloom to target master volume (0.15)
+      this.musicGain.gain.linearRampToValueAtTime(this.musicMasterVolume, t + 2.5);
+      this.isMusicPlaying = true;
+
+      // Start chord and arpeggio clock
+      this.chordStartTime = t;
+      this.nextArpTime = t + 0.1;
+      this.triggerPadChord(this.currentChordIndex, t);
+
+      // Launch lookahead scheduler
+      if (!this.schedulerTimer) {
+        this.schedulerTimer = setInterval(this.musicScheduleTick, 50);
+      }
+    }
+
+    /**
+     * Fade out / Stop the Procedural Motivational Background Music
+     * Smooth 1.2-second fade-out
+     */
+    stopMotivationMusic() {
+      if (!this.ctx || !this.musicGain) return;
+      const t = this.ctx.currentTime;
+      this.musicGain.gain.cancelScheduledValues(t);
+      const startVal = Math.max(this.musicGain.gain.value, 0.00001);
+      this.musicGain.gain.setValueAtTime(startVal, t);
+
+      // Smooth 1.2s fade-out to silence
+      this.musicGain.gain.exponentialRampToValueAtTime(0.00001, t + 1.2);
+      this.isMusicPlaying = false;
+
+      // Clear sequencer timer after fade-out
+      setTimeout(() => {
+        if (!this.isMusicPlaying && this.schedulerTimer) {
+          clearInterval(this.schedulerTimer);
+          this.schedulerTimer = null;
+        }
+      }, 1300);
+    }
+
+    /**
+     * High-precision lookahead scheduler tick
+     * Schedules chord transitions and arpeggiator notes accurately
+     */
+    musicScheduleTick() {
+      if (!this.ctx || !this.isMusicPlaying) return;
+      const now = this.ctx.currentTime;
+      const lookahead = 0.18; // 180ms scheduling window
+
+      // 1. Check Chord Progression Lifecycle (32-second continuous harmonic cycle)
+      if (now >= this.chordStartTime + this.chordDuration) {
+        this.currentChordIndex = (this.currentChordIndex + 1) % CHORD_PROGRESSION.length;
+        this.chordStartTime = now;
+        this.triggerPadChord(this.currentChordIndex, now);
       }
 
-      // Layer 5: Slow Breathing LFO (0.075 Hz = ~13.3 sec period)
-      // Gently breathes the filter cutoff between 180Hz and 360Hz
-      const lfo = this.ctx.createOscillator();
-      lfo.type = 'sine';
-      lfo.frequency.setValueAtTime(0.075, t);
-
-      const lfoGain = this.ctx.createGain();
-      lfoGain.gain.setValueAtTime(90, t); // +/- 90Hz sweep
-
-      lfo.connect(lfoGain);
-      lfoGain.connect(droneFilter.frequency);
-      lfo.start(t);
-      this.droneNodes.push(lfo);
-
-      // Connect drone filter to drone master gain, then to engine master gain
-      droneFilter.connect(this.droneGain);
-      this.droneGain.connect(this.masterGain);
+      // 2. Schedule Crystalline Arpeggio Notes
+      while (this.nextArpTime < now + lookahead) {
+        this.scheduleArpNote(this.nextArpTime);
+        this.nextArpTime += this.arpStepInterval;
+        this.currentArpStep++;
+      }
     }
 
     /**
-     * Start/Fade in the ambient lounge drone
+     * Triggers the warm polyphonic analog pad with dual-bank crossfading
+     * and glides the velvet sub-bass
      */
-    startAmbientDrone() {
-      if (!this.ctx || !this.droneGain) return;
-      const t = this.ctx.currentTime;
-      this.droneGain.gain.cancelScheduledValues(t);
-      this.droneGain.gain.setValueAtTime(Math.max(this.droneGain.gain.value, 0.00001), t);
-      // Smooth luxury bloom (1.6s fade-in to ultra-low ambient volume 0.04)
-      this.droneGain.gain.exponentialRampToValueAtTime(0.042, t + 1.6);
-      this.isDronePlaying = true;
+    triggerPadChord(chordIdx, time) {
+      if (!this.ctx) return;
+      const chord = CHORD_PROGRESSION[chordIdx];
+      const crossfadeTime = 2.4;
+
+      // Glide velvet sub-bass smoothly into the new chord root
+      if (this.subOsc) {
+        this.subOsc.frequency.cancelScheduledValues(time);
+        this.subOsc.frequency.setValueAtTime(this.subOsc.frequency.value, time);
+        this.subOsc.frequency.exponentialRampToValueAtTime(chord.rootFreq, time + 0.85);
+
+        this.subOscWarmth.frequency.cancelScheduledValues(time);
+        this.subOscWarmth.frequency.setValueAtTime(this.subOscWarmth.frequency.value, time);
+        this.subOscWarmth.frequency.exponentialRampToValueAtTime(chord.rootFreq, time + 0.85);
+      }
+
+      // Determine incoming vs outgoing bank
+      const incomingBank = this.activePadBank === 'A' ? this.padBankB : this.padBankA;
+      const outgoingBank = this.activePadBank === 'A' ? this.padBankA : this.padBankB;
+      this.activePadBank = this.activePadBank === 'A' ? 'B' : 'A';
+
+      // 1. Fade out outgoing bank over crossfadeTime
+      if (outgoingBank && outgoingBank.bankGain) {
+        outgoingBank.bankGain.gain.cancelScheduledValues(time);
+        const currOut = Math.max(outgoingBank.bankGain.gain.value, 0.0001);
+        outgoingBank.bankGain.gain.setValueAtTime(currOut, time);
+        outgoingBank.bankGain.gain.exponentialRampToValueAtTime(0.0001, time + crossfadeTime);
+
+        // Stop and clean up previous oscillators after fade
+        const oldVoices = outgoingBank.voices;
+        outgoingBank.voices = [];
+        setTimeout(() => {
+          oldVoices.forEach(v => {
+            try {
+              v.triOsc.stop();
+              v.sawOsc.stop();
+              v.triOsc.disconnect();
+              v.sawOsc.disconnect();
+            } catch (e) {}
+          });
+        }, (crossfadeTime + 0.2) * 1000);
+      }
+
+      // 2. Populate and fade in incoming bank
+      if (incomingBank && incomingBank.bankGain) {
+        incomingBank.voices = [];
+        const perVoiceGain = 0.042 / chord.padNotes.length;
+
+        chord.padNotes.forEach((freq, idx) => {
+          // Primary warm triangle wave
+          const triOsc = this.ctx.createOscillator();
+          triOsc.type = 'triangle';
+          triOsc.frequency.setValueAtTime(freq, time);
+
+          // Secondary detuned saw wave for lush analog ensemble string sheen
+          const sawOsc = this.ctx.createOscillator();
+          sawOsc.type = 'sawtooth';
+          sawOsc.frequency.setValueAtTime(freq, time);
+          const detune = (idx % 2 === 0 ? 4.5 : -4.5);
+          sawOsc.detune.setValueAtTime(detune, time);
+
+          const voiceGain = this.ctx.createGain();
+          voiceGain.gain.setValueAtTime(perVoiceGain, time);
+
+          const sawAtten = this.ctx.createGain();
+          sawAtten.gain.setValueAtTime(0.32, time); // Keep saw soft & warm
+
+          triOsc.connect(voiceGain);
+          sawOsc.connect(sawAtten);
+          sawAtten.connect(voiceGain);
+          voiceGain.connect(incomingBank.bankGain);
+
+          triOsc.start(time);
+          sawOsc.start(time);
+
+          incomingBank.voices.push({ triOsc, sawOsc, voiceGain });
+        });
+
+        // Bloom in the new bank
+        incomingBank.bankGain.gain.cancelScheduledValues(time);
+        incomingBank.bankGain.gain.setValueAtTime(0.0001, time);
+        incomingBank.bankGain.gain.linearRampToValueAtTime(0.048, time + 2.2);
+      }
     }
 
     /**
-     * Fade out the ambient lounge drone
+     * Schedules a single crystalline high-register arpeggio note
+     * Creates an ethereal, motivating Interstellar-inspired sparkle
      */
-    stopAmbientDrone() {
-      if (!this.ctx || !this.droneGain) return;
-      const t = this.ctx.currentTime;
-      this.droneGain.gain.cancelScheduledValues(t);
-      this.droneGain.gain.setValueAtTime(Math.max(this.droneGain.gain.value, 0.00001), t);
-      // Smooth fade-out in 0.8s
-      this.droneGain.gain.exponentialRampToValueAtTime(0.00001, t + 0.8);
-      this.isDronePlaying = false;
+    scheduleArpNote(time) {
+      if (!this.ctx) return;
+      const chord = CHORD_PROGRESSION[this.currentChordIndex];
+      const motifIdx = ARP_MOTIF_PATTERN[this.currentArpStep % ARP_MOTIF_PATTERN.length];
+      const freq = chord.arpNotes[motifIdx % chord.arpNotes.length];
+
+      // Pure Sine fundamental
+      const sineOsc = this.ctx.createOscillator();
+      sineOsc.type = 'sine';
+      sineOsc.frequency.setValueAtTime(freq, time);
+
+      // Subtle Octave overtone (+12 semitones) for crystal bell glass timbre
+      const overtoneOsc = this.ctx.createOscillator();
+      overtoneOsc.type = 'sine';
+      overtoneOsc.frequency.setValueAtTime(freq * 2, time);
+
+      const overtoneGain = this.ctx.createGain();
+      overtoneGain.gain.setValueAtTime(0.14, time);
+      overtoneOsc.connect(overtoneGain);
+
+      // Envelope: Fast 8ms attack, gentle 450ms exponential decay
+      const noteGain = this.ctx.createGain();
+      noteGain.gain.setValueAtTime(0.0001, time);
+      noteGain.gain.linearRampToValueAtTime(0.036, time + 0.008);
+      noteGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.46);
+
+      // Air High-Shelf Sparkle Filter
+      const sparkFilter = this.ctx.createBiquadFilter();
+      sparkFilter.type = 'highpass';
+      sparkFilter.frequency.setValueAtTime(320, time);
+
+      sineOsc.connect(noteGain);
+      overtoneGain.connect(noteGain);
+      noteGain.connect(sparkFilter);
+
+      // Stereo alternating pan
+      if (this.ctx.createStereoPanner) {
+        const panner = this.ctx.createStereoPanner();
+        const panValue = (this.currentArpStep % 2 === 0 ? -0.32 : 0.32);
+        panner.pan.setValueAtTime(panValue, time);
+        sparkFilter.connect(panner);
+        
+        panner.connect(this.musicGain);
+        if (this.delayL) panner.connect(this.delayL);
+        if (this.reverbNode) {
+          const arpReverbSend = this.ctx.createGain();
+          arpReverbSend.gain.setValueAtTime(0.38, time);
+          panner.connect(arpReverbSend);
+          arpReverbSend.connect(this.reverbNode);
+        }
+      } else {
+        sparkFilter.connect(this.musicGain);
+        if (this.delayL) sparkFilter.connect(this.delayL);
+        if (this.reverbNode) sparkFilter.connect(this.reverbNode);
+      }
+
+      sineOsc.start(time);
+      overtoneOsc.start(time);
+      sineOsc.stop(time + 0.5);
+      overtoneOsc.stop(time + 0.5);
     }
 
     /**
-     * Toggle audio on/off from the header '[AUDIO: ON/OFF]' button
+     * Toggle audio on/off from any header button or keybinding
+     * Synchronizes across both cinematic-story.html and index.html
      */
     toggle() {
       if (!this.isInitialized) {
@@ -265,13 +673,11 @@
       this.isMuted = !this.isMuted;
 
       if (!this.isMuted) {
-        // Unmuting: start ambient drone + mechanical switch confirmation
-        this.startAmbientDrone();
+        this.startMotivationMusic();
         this.playMechanicalSwitch({ pitch: 1.15, direction: 'up' });
-        this.showToast('АУДИО ВКЛЮЧЕНО • 48kHz ПРОЦЕДУРНЫЙ СИНТЕЗАТОР');
+        this.showToast('МОТИВИРУЮЩИЙ САУНДТРЕК ВКЛЮЧЕН • HANS ZIMMER STYLE');
       } else {
-        // Muting: stop ambient drone
-        this.stopAmbientDrone();
+        this.stopMotivationMusic();
         this.playMechanicalSwitch({ pitch: 0.85, direction: 'down' });
         this.showToast('АУДИО ВЫКЛЮЧЕНО');
       }
@@ -281,8 +687,7 @@
     }
 
     /**
-     * Alias for toggleMute to support cinematic-story audio button
-     * Returns true if muted, false if unmuted
+     * Compatibility alias for toggleMute() - returns isMuted (true when muted)
      */
     toggleMute() {
       this.toggle();
@@ -290,28 +695,75 @@
     }
 
     /**
-     * Update header button UI state
+     * Check if background music is active
      */
-    updateToggleUI() {
-      const toggleBtn = document.getElementById('syndicate-audio-toggle');
-      const toggleText = document.getElementById('audio-toggle-text');
-      if (!toggleBtn || !toggleText) return;
+    isAudioPlaying() {
+      return !this.isMuted && this.isMusicPlaying;
+    }
 
-      if (this.isMuted) {
-        toggleBtn.classList.remove('audio-active', 'border-brand-cyan/60', 'text-brand-cyan', 'shadow-[0_0_15px_rgba(0,240,255,0.25)]');
-        toggleBtn.classList.add('border-brand-surfaceBorder', 'text-brand-muted');
-        toggleText.innerText = '[AUDIO: OFF]';
-        toggleBtn.setAttribute('aria-pressed', 'false');
-      } else {
-        toggleBtn.classList.add('audio-active', 'border-brand-cyan/60', 'text-brand-cyan', 'shadow-[0_0_15px_rgba(0,240,255,0.25)]');
-        toggleBtn.classList.remove('border-brand-surfaceBorder', 'text-brand-muted');
-        toggleText.innerText = '[AUDIO: ON]';
-        toggleBtn.setAttribute('aria-pressed', 'true');
+    /**
+     * Set music master volume level safely (0.12 - 0.18 range)
+     */
+    setMusicVolume(vol) {
+      this.musicMasterVolume = Math.min(Math.max(vol, 0.05), 0.35);
+      if (this.isMusicPlaying && this.ctx && this.musicGain) {
+        const t = this.ctx.currentTime;
+        this.musicGain.gain.cancelScheduledValues(t);
+        this.musicGain.gain.linearRampToValueAtTime(this.musicMasterVolume, t + 0.3);
       }
     }
 
     /**
-     * Helper to show a sleek terminal toast notification
+     * Synchronize header UI across both pages:
+     * - cinematic-story.html (#audio-toggle-btn, #audio-eq-bars, #audio-mute-icon, #audio-status-label)
+     * - index.html / portal.html (#syndicate-audio-toggle, #audio-toggle-text)
+     */
+    updateToggleUI() {
+      const isPlaying = !this.isMuted;
+
+      // 1. cinematic-story.html Controls
+      const storyBtn = document.getElementById('audio-toggle-btn');
+      const eqBars = document.getElementById('audio-eq-bars');
+      const muteIcon = document.getElementById('audio-mute-icon');
+      const storyLabel = document.getElementById('audio-status-label');
+
+      if (storyBtn) {
+        if (isPlaying) {
+          if (eqBars) { eqBars.classList.remove('hidden'); eqBars.classList.add('flex'); }
+          if (muteIcon) { muteIcon.classList.add('hidden'); }
+          if (storyLabel) { storyLabel.innerText = '[AUDIO: MOTIVATION ON]'; }
+          storyBtn.classList.add('border-brand-cyan', 'text-brand-cyan', 'shadow-[0_0_15px_rgba(0,240,255,0.25)]');
+          storyBtn.classList.remove('border-white/[0.1]', 'text-white/70');
+        } else {
+          if (eqBars) { eqBars.classList.add('hidden'); eqBars.classList.remove('flex'); }
+          if (muteIcon) { muteIcon.classList.remove('hidden'); }
+          if (storyLabel) { storyLabel.innerText = '[AUDIO: MOTIVATION OFF]'; }
+          storyBtn.classList.remove('border-brand-cyan', 'text-brand-cyan', 'shadow-[0_0_15px_rgba(0,240,255,0.25)]');
+          storyBtn.classList.add('border-white/[0.1]', 'text-white/70');
+        }
+      }
+
+      // 2. index.html / portal.html Controls
+      const indexBtn = document.getElementById('syndicate-audio-toggle');
+      const indexLabel = document.getElementById('audio-toggle-text');
+
+      if (indexBtn) {
+        if (isPlaying) {
+          indexBtn.classList.add('audio-active', 'border-brand-cyan/60', 'text-brand-cyan', 'shadow-[0_0_15px_rgba(0,240,255,0.25)]');
+          indexBtn.classList.remove('border-brand-surfaceBorder', 'text-brand-muted');
+          if (indexLabel) { indexLabel.innerText = '[AUDIO: MOTIVATION ON]'; }
+          indexBtn.setAttribute('aria-pressed', 'true');
+        } else {
+          indexBtn.classList.remove('audio-active', 'border-brand-cyan/60', 'text-brand-cyan', 'shadow-[0_0_15px_rgba(0,240,255,0.25)]');
+          indexBtn.classList.add('border-brand-surfaceBorder', 'text-brand-muted');
+          if (indexLabel) { indexLabel.innerText = '[AUDIO: MOTIVATION OFF]'; }
+          indexBtn.setAttribute('aria-pressed', 'false');
+        }
+      }
+    }
+
+    /**
+     * Sleek terminal HUD notification toast
      */
     showToast(message) {
       let toast = document.getElementById('syndicate-audio-toast');
@@ -332,12 +784,12 @@
           toast.classList.add('translate-y-3', 'opacity-0');
           toast.classList.remove('translate-y-0', 'opacity-100');
         }
-      }, 2200);
+      }, 2400);
     }
 
     /**
      * ========================================================================
-     * HIGH-END HAPTIC CLICK (Slider moves, detents, knurled dial ticks)
+     * HIGH-END HAPTIC CLICK (Slider ticks, detents, knurled dial steps)
      * ========================================================================
      */
     playHapticClick({ pitch = 1.0, volume = 1.0 } = {}) {
@@ -346,7 +798,7 @@
 
       const t = this.ctx.currentTime;
 
-      // Layer 1: High crisp micro-transient (Apple haptic / Swiss dial feel)
+      // Layer 1: High crisp micro-transient (Apple haptic feel)
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
 
@@ -359,12 +811,12 @@
       gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.012);
 
       osc.connect(gain);
-      gain.connect(this.masterGain);
+      gain.connect(this.sfxGain);
 
       osc.start(t);
       osc.stop(t + 0.014);
 
-      // Layer 2: Subtle low-mid body thud (190 Hz damped resonance)
+      // Layer 2: Low-mid body resonance (190 Hz damped thud)
       const bodyOsc = this.ctx.createOscillator();
       const bodyGain = this.ctx.createGain();
       bodyOsc.type = 'sine';
@@ -373,7 +825,7 @@
       bodyGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.014);
 
       bodyOsc.connect(bodyGain);
-      bodyGain.connect(this.masterGain);
+      bodyGain.connect(this.sfxGain);
 
       bodyOsc.start(t);
       bodyOsc.stop(t + 0.016);
@@ -386,13 +838,11 @@
       if (this.isMuted) return;
 
       const now = performance.now();
-      // Throttle to 32ms so dragging fast produces a smooth mechanical purr
       if (now - this.lastSliderTickTime < 32) return;
       this.lastSliderTickTime = now;
 
-      // Pitch slightly rises as limit reaches SVIP levels ($1,000 -> $100,000)
       const ratio = Math.min(Math.max((currentVal - 1000) / 99000, 0), 1);
-      const pitch = 0.88 + (ratio * 0.45); // 0.88x to 1.33x
+      const pitch = 0.88 + (ratio * 0.45);
 
       this.playHapticClick({ pitch, volume: 0.95 });
       this.lastSliderValue = currentVal;
@@ -400,7 +850,7 @@
 
     /**
      * ========================================================================
-     * MECHANICAL SWITCH SOUND (Buttons, tabs, modal open/close)
+     * MECHANICAL SWITCH SOUND (Buttons, tabs, modal triggers)
      * ========================================================================
      */
     playMechanicalSwitch({ pitch = 1.0, direction = 'down' } = {}) {
@@ -409,7 +859,7 @@
 
       const t = this.ctx.currentTime;
 
-      // Layer 1: Sharp contact click (snap)
+      // Layer 1: Sharp contact click
       const snapOsc = this.ctx.createOscillator();
       const snapGain = this.ctx.createGain();
       snapOsc.type = 'triangle';
@@ -421,11 +871,11 @@
       snapGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.02);
 
       snapOsc.connect(snapGain);
-      snapGain.connect(this.masterGain);
+      snapGain.connect(this.sfxGain);
       snapOsc.start(t);
       snapOsc.stop(t + 0.022);
 
-      // Layer 2: Resonant switch body latch (CNC-milled relay sensation)
+      // Layer 2: CNC-milled relay sensation
       const latchOsc = this.ctx.createOscillator();
       const latchGain = this.ctx.createGain();
       latchOsc.type = 'sine';
@@ -437,34 +887,45 @@
       latchGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.045);
 
       latchOsc.connect(latchGain);
-      latchGain.connect(this.masterGain);
+      latchGain.connect(this.sfxGain);
       latchOsc.start(t + 0.003);
       latchOsc.stop(t + 0.05);
     }
 
     /**
      * ========================================================================
-     * SCENE TRANSITION (Smooth aerodynamic swoosh / zone navigation)
+     * SCENE TRANSITION (Harmonized Aerodynamic Swoosh & Scene Progression)
      * ========================================================================
      */
-    playSceneTransition() {
+    playSceneTransition(sceneIndex) {
+      // If a valid scene index (0-3) is passed and music is playing, harmonize progression
+      if (typeof sceneIndex === 'number' && this.isMusicPlaying && this.ctx) {
+        const targetChord = sceneIndex % CHORD_PROGRESSION.length;
+        if (targetChord !== this.currentChordIndex) {
+          this.currentChordIndex = targetChord;
+          this.chordStartTime = this.ctx.currentTime;
+          this.triggerPadChord(this.currentChordIndex, this.ctx.currentTime);
+        }
+      }
+
       if (this.isMuted || !this.ctx) return;
       if (this.ctx.state === 'suspended') this.ctx.resume();
 
       const t = this.ctx.currentTime;
+      const pitchMod = (typeof sceneIndex === 'number' ? 1.0 + sceneIndex * 0.12 : 1.0);
 
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
       const filter = this.ctx.createBiquadFilter();
 
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(220, t);
-      osc.frequency.exponentialRampToValueAtTime(460, t + 0.08);
+      osc.frequency.setValueAtTime(220 * pitchMod, t);
+      osc.frequency.exponentialRampToValueAtTime(460 * pitchMod, t + 0.08);
       osc.frequency.exponentialRampToValueAtTime(130, t + 0.22);
 
       filter.type = 'lowpass';
       filter.frequency.setValueAtTime(280, t);
-      filter.frequency.linearRampToValueAtTime(850, t + 0.09);
+      filter.frequency.linearRampToValueAtTime(850 * pitchMod, t + 0.09);
       filter.frequency.linearRampToValueAtTime(180, t + 0.22);
 
       gain.gain.setValueAtTime(0.0001, t);
@@ -473,7 +934,7 @@
 
       osc.connect(filter);
       filter.connect(gain);
-      gain.connect(this.masterGain);
+      gain.connect(this.sfxGain);
 
       osc.start(t);
       osc.stop(t + 0.26);
@@ -483,21 +944,17 @@
      * ========================================================================
      * PAYOUT CONFIRMATION TRIGGER (Crisp Metallic Chime + Sub-Bass Thud)
      * ========================================================================
-     * Designed for high-roller wire confirmations:
-     * - Seismic Sub-Bass Thud (38Hz weight that anchors the transaction)
-     * - Multi-Harmonic Crystal Bell Chime (D6/A6/D7/G7/C8 physical model)
+     * With intelligent sidechain ducking of background music
      */
     playPayoutConfirmation() {
-      // Auto-initialize if user clicked trigger while uninitialized
       if (!this.isInitialized) {
         this.init();
       }
 
-      // If audio is muted, give them a momentary unlock experience with notification
       const wasMuted = this.isMuted;
       if (wasMuted) {
         this.isMuted = false;
-        this.startAmbientDrone();
+        this.startMotivationMusic();
         this.updateToggleUI();
         this.showToast('ВЫПЛАТА ПОДТВЕРЖДЕНА • СИМУЛЯЦИЯ ЗВУКА [AUDIO ON]');
       }
@@ -508,8 +965,16 @@
 
       const t = this.ctx.currentTime;
 
+      // Gentle sidechain ducking of music to spotlight the transaction confirmation
+      if (this.musicGain && this.isMusicPlaying) {
+        this.musicGain.gain.cancelScheduledValues(t);
+        this.musicGain.gain.setValueAtTime(this.musicMasterVolume, t);
+        this.musicGain.gain.linearRampToValueAtTime(0.05, t + 0.05);
+        this.musicGain.gain.exponentialRampToValueAtTime(this.musicMasterVolume, t + 2.2);
+      }
+
       // ----------------------------------------------------------------------
-      // PART A: SUB-BASS THUD (Deep institutional capital impact)
+      // PART A: SEISMIC SUB-BASS THUD (Deep institutional capital impact)
       // ----------------------------------------------------------------------
       const subOsc = this.ctx.createOscillator();
       const subGain = this.ctx.createGain();
@@ -526,11 +991,11 @@
       subGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.78);
 
       subOsc.connect(subGain);
-      subGain.connect(this.masterGain);
+      subGain.connect(this.sfxGain);
       subOsc.start(t);
       subOsc.stop(t + 0.80);
 
-      // Sub Punch Mid-Bass Transient (Ensures impact is felt on mobile/laptop speakers)
+      // Sub Punch Mid-Bass Transient
       const punchOsc = this.ctx.createOscillator();
       const punchGain = this.ctx.createGain();
       punchOsc.type = 'triangle';
@@ -541,7 +1006,7 @@
       punchGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.09);
 
       punchOsc.connect(punchGain);
-      punchGain.connect(this.masterGain);
+      punchGain.connect(this.sfxGain);
       punchOsc.start(t);
       punchOsc.stop(t + 0.10);
 
@@ -563,17 +1028,15 @@
 
         osc.type = 'sine';
         osc.frequency.setValueAtTime(p.freq, t);
-        // Stereo shimmer detuning
         const detuneCents = (idx % 2 === 0 ? 3.5 : -3.5) * (idx + 1);
         osc.detune.setValueAtTime(detuneCents, t);
 
-        // Immediate crisp strike + exponential metallic sustain
         gain.gain.setValueAtTime(0.0001, t);
         gain.gain.linearRampToValueAtTime(p.gain, t + 0.002);
         gain.gain.exponentialRampToValueAtTime(0.0001, t + p.decay);
 
         osc.connect(gain);
-        gain.connect(this.masterGain);
+        gain.connect(this.sfxGain);
 
         osc.start(t);
         osc.stop(t + p.decay + 0.05);
@@ -581,7 +1044,7 @@
     }
   }
 
-  // Instantiate singleton and attach to window
+  // Instantiate singleton & attach globally
   const syndicateAudio = new SoundEngine();
   window.SyndicateAudio = syndicateAudio;
 

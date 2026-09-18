@@ -17,41 +17,45 @@
   const BOOKMAKERS = {
     'Stake': {
       name: 'Stake',
-      tag: 'Tier 1 Liquidity',
-      tier: 'Plat IV – Diamond',
+      tag: 'Platinum IV – Diamond',
+      tier: 'Platinum IV – Diamond',
       badge: 'MAX LIMITS',
-      bankrollMultiplier: 2.5,
-      evMargin: 0.12, // 12% EV margin per session
+      bankrollMultiplier: 2.0,
+      poolRange: '$20k – $50k+',
+      roiPerSession: 0.10, // Консервативный ROI ~10% от пула аллокации за 60-мин сессию
       accentColor: '#00F0FF',
       liquidityFocus: 'Soft Football / NBA'
     },
     'Sportsbet.io': {
       name: 'Sportsbet.io',
-      tag: 'Clubhouse VIP',
-      tier: 'Whale Clubhouse',
-      badge: 'CLUBHOUSE',
-      bankrollMultiplier: 2.4,
-      evMargin: 0.115, // 11.5% EV margin per session
+      tag: 'Clubhouse Legend',
+      tier: 'Clubhouse Legend',
+      badge: 'CLUBHOUSE LEGEND',
+      bankrollMultiplier: 2.2,
+      poolRange: '$30k – $70k+',
+      roiPerSession: 0.10, // Консервативный ROI ~10% от пула аллокации за 60-мин сессию
       accentColor: '#10B981',
       liquidityFocus: 'EPL & Champions League'
     },
     'BC.Game': {
       name: 'BC.Game',
-      tag: 'SVIP 50+ Elite',
-      tier: 'SVIP Whale Elite',
-      badge: 'SVIP 50+',
-      bankrollMultiplier: 2.3,
-      evMargin: 0.11, // 11% EV margin per session
+      tag: 'SVIP 55+ Elite',
+      tier: 'SVIP 55+',
+      badge: 'SVIP 55+',
+      bankrollMultiplier: 2.4,
+      poolRange: '$50k – $120k+',
+      roiPerSession: 0.10, // Консервативный ROI ~10% от пула аллокации за 60-мин сессию
       accentColor: '#A855F7',
       liquidityFocus: 'Высокий Crypto Turnover'
     },
     'Roobet': {
       name: 'Roobet',
-      tag: 'Obsidian Desk',
-      tier: 'Obsidian / High Roller',
-      badge: 'OBSIDIAN',
-      bankrollMultiplier: 2.2,
-      evMargin: 0.105, // 10.5% EV margin per session
+      tag: 'King Whale Desk',
+      tier: 'King Whale',
+      badge: 'KING WHALE',
+      bankrollMultiplier: 1.8,
+      poolRange: '$20k – $45k+',
+      roiPerSession: 0.10, // Консервативный ROI ~10% от пула аллокации за 60-мин сессию
       accentColor: '#F59E0B',
       liquidityFocus: 'Private Sports Lounge'
     }
@@ -62,13 +66,14 @@
     selectedBK: 'Stake',
     confirmedLimit: 25000,
     monthlySessions: 8,
-    whaleSplitRate: 0.30, // Fixed 30% Whale Dividend
+    whaleSplitRate: 0.30, // Strict 30% Whale Dividend
+    sessionDurationMin: 60, // 60-минутная сессия
     computed: {
-      bankroll: 62500,
-      sessionNetProfit: 3000,
-      sessionWhaleDividend: 900,
-      monthlyWhaleDividend: 7200,
-      downsideRisk: 0
+      bankroll: 50000,
+      sessionNetProfit: 5000,
+      sessionWhaleDividend: 1500,
+      monthlyWhaleDividend: 12000,
+      downsideRisk: 0.00
     }
   };
 
@@ -85,19 +90,21 @@
 
   /**
    * Smooth number counter animator
-   * Uses cubic ease-out to smoothly glide from current rendered number to target value
+   * Uses cubic ease-out to smoothly glide from current rendered number to target value.
+   * Adaptive duration: instant/low-latency (45ms) during continuous dragging, smooth 380ms on release/presets.
    */
   function animateNumber(elementId, targetValue, options = {}) {
     const el = document.getElementById(elementId);
     if (!el) return;
 
-    const duration = options.duration || 450;
+    const duration = options.duration !== undefined ? options.duration : 380;
     const prefix = options.prefix !== undefined ? options.prefix : '$';
     const suffix = options.suffix !== undefined ? options.suffix : '';
     const decimals = options.decimals || 0;
 
     if (activeRafs[elementId]) {
       caf(activeRafs[elementId]);
+      delete activeRafs[elementId];
     }
 
     // Determine start value from dataset or text
@@ -109,7 +116,7 @@
       startValue = parseFloat(cleaned) || 0;
     }
 
-    if (startValue === targetValue) {
+    if (duration <= 0 || Math.abs(startValue - targetValue) < 0.001) {
       const formatted = decimals > 0 
         ? targetValue.toFixed(decimals) 
         : targetValue.toLocaleString('en-US');
@@ -123,7 +130,7 @@
     function step(now) {
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      // Cubic ease-out: fast start, soft landing
+      // Cubic ease-out: snappy start with soft deceleration
       const ease = 1 - Math.pow(1 - progress, 3);
       const current = startValue + (targetValue - startValue) * ease;
 
@@ -166,8 +173,9 @@
 
   /**
    * Recalculates all dependent financial outputs
+   * @param {boolean} isScrubbing - true when called during continuous slider drag
    */
-  function recalculate() {
+  function recalculate(isScrubbing = false) {
     const bk = BOOKMAKERS[state.selectedBK] || BOOKMAKERS['Stake'];
     const limit = state.confirmedLimit;
     const sessions = state.monthlySessions;
@@ -176,28 +184,31 @@
     const rawBankroll = limit * bk.bankrollMultiplier;
     state.computed.bankroll = Math.round(rawBankroll / 500) * 500;
 
-    // 2. Expected Net Profit per Session = limit * EV margin (rounded to $50)
-    const rawSessionProfit = limit * bk.evMargin;
+    // 2. Expected Net Profit per 60-min Session = Bankroll * conservative 10% ROI (rounded to $50)
+    const rawSessionProfit = state.computed.bankroll * (bk.roiPerSession || 0.10);
     state.computed.sessionNetProfit = Math.round(rawSessionProfit / 50) * 50;
 
-    // 3. Whale Dividend (30% Split in USDT)
+    // 3. Whale Dividend (Strict 30% Split in USDT)
     state.computed.sessionWhaleDividend = Math.round(state.computed.sessionNetProfit * state.whaleSplitRate);
     state.computed.monthlyWhaleDividend = state.computed.sessionWhaleDividend * sessions;
 
     // 4. Downside Risk to Whale is strictly $0.00
+    // Mathematical Proof: Balance is zeroed before start; Syndicate deposits 100% of trading bankroll
     state.computed.downsideRisk = 0.00;
 
-    renderOutputs();
+    renderOutputs(isScrubbing);
   }
 
   /**
-   * Renders calculated outputs with animated counters
+   * Renders calculated outputs with animated counters and contextual badges
+   * @param {boolean} isScrubbing - true when called during continuous slider drag
    */
-  function renderOutputs() {
+  function renderOutputs(isScrubbing = false) {
     const bk = BOOKMAKERS[state.selectedBK] || BOOKMAKERS['Stake'];
+    const animDuration = isScrubbing ? 45 : 380;
 
     // Limit ceiling display
-    animateNumber('limit-val-display', state.confirmedLimit, { prefix: '$', suffix: '' });
+    animateNumber('limit-val-display', state.confirmedLimit, { prefix: '$', suffix: '', duration: animDuration });
     
     // Tier badge update
     const tierBadge = document.getElementById('tier-badge-display');
@@ -226,31 +237,31 @@
       sessionsCadence.innerText = `~${timesPerWeek}x в неделю`;
     }
 
-    // Bankroll ratio badge
+    // Bankroll ratio badge: Multiplier & Pool Range
     const ratioBadge = document.getElementById('bankroll-ratio-badge');
     if (ratioBadge) {
-      ratioBadge.innerText = `${bk.bankrollMultiplier.toFixed(1)}x лимита`;
+      ratioBadge.innerText = `x${bk.bankrollMultiplier.toFixed(1)} лимита (${bk.poolRange})`;
     }
 
-    // EV Edge badge
+    // Session Yield ROI badge
     const evBadge = document.getElementById('ev-edge-badge');
     if (evBadge) {
-      evBadge.innerText = `EV edge ~${(bk.evMargin * 100).toFixed(1)}%`;
+      evBadge.innerText = `ROI ~${((bk.roiPerSession || 0.10) * 100).toFixed(0)}% от пула`;
     }
 
     // 1. Syndicate Bankroll Output
-    animateNumber('res-bankroll', state.computed.bankroll, { prefix: '$', suffix: ' USDT' });
+    animateNumber('res-bankroll', state.computed.bankroll, { prefix: '$', suffix: ' USDT', duration: animDuration });
 
-    // 2. Expected Net Profit per Session
-    animateNumber('res-session-profit', state.computed.sessionNetProfit, { prefix: '$', suffix: ' USDT' });
+    // 2. Expected Net Profit per 60-min Session
+    animateNumber('res-session-profit', state.computed.sessionNetProfit, { prefix: '$', suffix: ' USDT', duration: animDuration });
 
-    // 3. Whale Dividend (30% Split) - Hero Monthly
-    animateNumber('res-whale-dividend', state.computed.monthlyWhaleDividend, { prefix: '$', suffix: ' USDT' });
+    // 3. Whale Dividend (30% Split) - Hero Monthly Output
+    animateNumber('res-whale-dividend', state.computed.monthlyWhaleDividend, { prefix: '$', suffix: ' USDT', duration: animDuration });
 
-    // Whale Dividend Breakdown - Per Session
-    animateNumber('res-session-dividend', state.computed.sessionWhaleDividend, { prefix: '+$', suffix: ' USDT' });
+    // Whale Dividend Breakdown - Per 60-min Session
+    animateNumber('res-session-dividend', state.computed.sessionWhaleDividend, { prefix: '+$', suffix: ' USDT', duration: animDuration });
 
-    // 4. Downside Risk to Whale ($0.00)
+    // 4. Downside Risk to Whale ($0.00 Guaranteed Zero Exposure)
     const riskEl = document.getElementById('res-downside-risk');
     if (riskEl) {
       riskEl.innerText = '$0.00';
@@ -302,13 +313,20 @@
   }
 
   /**
-   * Action: Handle Limit Slider Input
+   * Action: Handle Limit Slider Input (Continuous drag)
    */
   function handleLimitSlider(val) {
     state.confirmedLimit = parseInt(val, 10);
     updateSliderGlow('limit-slider');
     updatePresetHighlight();
-    recalculate();
+    recalculate(true);
+  }
+
+  /**
+   * Action: Handle Limit Slider Change (Release of slider thumb)
+   */
+  function handleLimitSliderChange() {
+    recalculate(false);
   }
 
   /**
@@ -322,7 +340,7 @@
     }
     updateSliderGlow('limit-slider');
     updatePresetHighlight();
-    recalculate();
+    recalculate(false);
   }
 
   function updatePresetHighlight() {
@@ -338,13 +356,20 @@
   }
 
   /**
-   * Action: Handle Sessions Slider Input
+   * Action: Handle Sessions Slider Input (Continuous drag)
    */
   function handleSessionsSlider(val) {
     state.monthlySessions = parseInt(val, 10);
     updateSliderGlow('sessions-slider');
     updateSessionPresetHighlight();
-    recalculate();
+    recalculate(true);
+  }
+
+  /**
+   * Action: Handle Sessions Slider Change (Release)
+   */
+  function handleSessionsSliderChange() {
+    recalculate(false);
   }
 
   /**
@@ -358,7 +383,7 @@
     }
     updateSliderGlow('sessions-slider');
     updateSessionPresetHighlight();
-    recalculate();
+    recalculate(false);
   }
 
   /**
@@ -409,7 +434,9 @@
       VIPConcierge.open({
         bk: state.selectedBK,
         tier: bk.tier,
-        limit: limitFormatted
+        limit: limitFormatted,
+        pool: bankrollFormatted,
+        dividend: dividendFormatted
       });
       return;
     }
@@ -447,7 +474,7 @@
 
     const summaryRisk = document.getElementById('modal-summary-risk');
     if (summaryRisk) {
-      summaryRisk.innerText = '$0.00 (Zero Exposure)';
+      summaryRisk.innerText = '$0.00 (Zero Exposure: 100% депозит синдиката)';
     }
 
     // 3. Open Fallback Modal
@@ -471,7 +498,7 @@
     selectBookmaker(state.selectedBK);
     updatePresetHighlight();
     updateSessionPresetHighlight();
-    recalculate();
+    recalculate(false);
   }
 
   // Export public API to window
@@ -480,8 +507,10 @@
     getState: () => ({ ...state, computed: { ...state.computed } }),
     selectBookmaker,
     handleLimitSlider,
+    handleLimitSliderChange,
     setLimitPreset,
     handleSessionsSlider,
+    handleSessionsSliderChange,
     setSessionsPreset,
     adjustSessions,
     transferCalculatorToModal,
@@ -495,8 +524,10 @@
   // Make globally available for inline onclick handlers
   window.selectBookmaker = selectBookmaker;
   window.handleLimitSlider = handleLimitSlider;
+  window.handleLimitSliderChange = handleLimitSliderChange;
   window.setLimitPreset = setLimitPreset;
   window.handleSessionsSlider = handleSessionsSlider;
+  window.handleSessionsSliderChange = handleSessionsSliderChange;
   window.setSessionsPreset = setSessionsPreset;
   window.adjustSessions = adjustSessions;
   window.transferCalculatorToModal = transferCalculatorToModal;
