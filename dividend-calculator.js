@@ -23,7 +23,7 @@
       bankrollMultiplier: 2.0,
       poolRange: '$20k – $50k+',
       roiPerSession: 0.10, // Консервативный ROI ~10% от пула аллокации за 60-мин сессию
-      accentColor: '#00F0FF',
+      accentColor: '#D4AF37',
       liquidityFocus: 'Soft Football / NBA'
     },
     'Sportsbet.io': {
@@ -45,7 +45,7 @@
       bankrollMultiplier: 2.4,
       poolRange: '$50k – $120k+',
       roiPerSession: 0.10, // Консервативный ROI ~10% от пула аллокации за 60-мин сессию
-      accentColor: '#A855F7',
+      accentColor: '#D4AF37',
       liquidityFocus: 'Высокий Crypto Turnover'
     },
     'Roobet': {
@@ -520,6 +520,7 @@
   };
 
   window.DividendCalculator = DividendCalculator;
+  window.DIVIDEND_CALCULATOR = DividendCalculator;
 
   // Make globally available for inline onclick handlers
   window.selectBookmaker = selectBookmaker;

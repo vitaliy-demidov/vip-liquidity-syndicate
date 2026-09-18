@@ -519,7 +519,7 @@
       const bkName = this.state.bkKey === 'Other' && this.state.customBkName ? this.state.customBkName : bk.name;
       const tier = this.getSelectedTier();
       const format = this.getSelectedFormat();
-      const cleanTg = (this.state.telegram || '').trim().replace(/^@+/, '').replace(/^https?:\/\/(t\.me|telegram\.me)\//i, '');
+      const cleanTg = (this.state.telegram || '').trim().replace(/^@+/, '').replace(/^(https?:\/\/)?(t\.me|telegram\.me)\//i, '').replace(/\/+$/, '');
       const walletVal = (this.state.wallet || '').trim();
       const walletCheck = this.validateWallet(walletVal, true);
 
@@ -1064,7 +1064,7 @@
       const tier = this.getSelectedTier();
       const format = this.getSelectedFormat();
       const tgDeepLink = this.state.serverDirectTelegramLink || this.getTelegramDeepLink();
-      const cleanTg = (this.state.telegram || '').replace(/^@+/, '').replace(/^https?:\/\/(t\.me|telegram\.me)\//i, '');
+      const cleanTg = (this.state.telegram || '').replace(/^@+/, '').replace(/^(https?:\/\/)?(t\.me|telegram\.me)\//i, '').replace(/\/+$/, '');
       const walletVal = (this.state.wallet || '').trim();
       const walletCheck = this.validateWallet(walletVal, true);
       const walletBadge = walletVal && walletCheck.valid && walletCheck.type !== 'deferred'

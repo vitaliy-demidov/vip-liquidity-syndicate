@@ -316,7 +316,7 @@
 
     // Generator tester
     function testGenerateLink() {
-      const desk = document.getElementById('test-desk-input').value.trim() || 'syndicate_vip_desk';
+      const desk = (document.getElementById('test-desk-input').value.trim() || 'syndicate_vip_desk').replace(/^@+/, '');
       const limit = document.getElementById('test-limit-input').value.trim() || '$50,000';
       const ticketId = 'SYND-VIP-' + Math.floor(1000 + Math.random() * 9000);
 
@@ -325,9 +325,9 @@
 👤 Партнер: @whale_vip
 🏛 Букмекер: Stake.com (Platinum IV)
 📉 Статус: High-Roller (-$50k+ PnL)
-⚽️ Лимит 1X2 (АПЛ/ЛЧ): ${limit}
+⚽️ Лимит 1X2 (АПЛ/ЛЧ): ${limit} (Подтвержден)
 📍 Формат: VIP Lounge Dubai (DIFC)
-💎 USDT Кошелек: T9yD...4x82
+💎 USDT Кошелек: TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t [TRC-20]
 💰 Запрос пула: $50,000
 🔒 Non-Custodial: Баланс выведен в 0 • 0 паролей
 ━━━━━━━━━━━━━━━━━━━━━━━━━━

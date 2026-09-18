@@ -1604,8 +1604,8 @@
       const area = document.getElementById('chart-area-fill');
 
       if (currentChartMode === 'depth') {
-        // Bankroll Depth Mode: Y ranges from 210 (,000) to 40 (,000)
-        const normBankroll = Math.max(0, Math.min(1, (bankroll - 22000) / (250000 - 22000)));
+        // Bankroll Depth Mode: Y ranges from 210 ($20,000) to 40 ($250,000)
+        const normBankroll = Math.max(0, Math.min(1, (bankroll - 20000) / (250000 - 20000)));
         const targetY = 210 - normBankroll * 170;
 
         if (spline) {
@@ -1617,14 +1617,14 @@
           area.setAttribute('fill', 'url(#gold-curve-grad)');
         }
         if (markerGroup) {
-          markerGroup.setAttribute('transform', );
+          markerGroup.setAttribute('transform', `translate(${targetX}, ${targetY})`);
         }
         if (markerText) {
           markerText.textContent = '$' + Math.round(bankroll).toLocaleString('en-US');
           markerText.setAttribute('fill', '#F4DC9B');
         }
       } else {
-        // Trajectory Mode (4 Weeks Cumulative): Y ranges from 210 (0) to 40 (,000+)
+        // Trajectory Mode (4 Weeks Cumulative): Y ranges from 210 ($0) to 40 ($30,000+)
         const normDiv = Math.max(0, Math.min(1, monthDividend / 30000));
         const targetY = 210 - normDiv * 170;
 
@@ -1637,7 +1637,7 @@
           area.setAttribute('fill', 'url(#cyan-curve-grad)');
         }
         if (markerGroup) {
-          markerGroup.setAttribute('transform', );
+          markerGroup.setAttribute('transform', `translate(${targetX}, ${targetY})`);
         }
         if (markerText) {
           markerText.textContent = '+$' + Math.round(monthDividend).toLocaleString('en-US');
