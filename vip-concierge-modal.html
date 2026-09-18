@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIP Concierge Application & Audit Modal | Institutional Syndicate</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              black: '#08090C',
+              surface: '#0E1118',
+              surfaceLight: '#151A24',
+              surfaceBorder: 'rgba(255, 255, 255, 0.08)',
+              cyan: '#00F0FF',
+              cyanGlow: 'rgba(0, 240, 255, 0.15)',
+              emerald: '#10B981',
+              emeraldGlow: 'rgba(16, 185, 129, 0.15)',
+              amber: '#F59E0B',
+              muted: '#8E9AA8',
+              mutedDark: '#4A5568',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      background-color: #08090C;
+      color: #E2E8F0;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.05) 0%, transparent 60%),
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 100% 100%, 32px 32px, 32px 32px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .fintech-card {
+      background: linear-gradient(180deg, rgba(21, 26, 36, 0.8) 0%, rgba(14, 17, 24, 0.96) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+    }
+    .code-box {
+      background: rgba(5, 7, 11, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-cyan/20 selection:text-brand-cyan">
+
+  <!-- Top Status Bar -->
+  <header class="border-b border-brand-surfaceBorder bg-brand-surface/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2 text-white font-bold text-sm tracking-tight hover:text-brand-cyan transition-colors">
+          <span class="w-2.5 h-2.5 rounded-full bg-brand-cyan shadow-[0_0_10px_#00f0ff] animate-pulse"></span>
+          <span>VIP LIQUIDITY SYNDICATE</span>
+        </a>
+        <div class="h-4 w-[1px] bg-brand-surfaceBorder hidden sm:block"></div>
+        <span class="hidden sm:inline-block font-mono text-xs text-brand-muted uppercase">
+          Concierge Application & Qualification Modal
+        </span>
+      </div>
+
+      <div class="flex items-center gap-2.5">
+        <a href="index.html" class="px-3 py-1.5 rounded-lg border border-brand-surfaceBorder text-xs text-brand-muted hover:text-white hover:border-brand-cyan/40 transition-all">
+          ← Вернуться на платформу
+        </a>
+        <button onclick="launchModal()" class="px-4 py-1.5 rounded-lg bg-brand-cyan hover:bg-[#33f3ff] text-brand-black font-semibold text-xs font-mono tracking-wide flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,240,255,0.3)] transition-all active:scale-95">
+          <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+          <span>Открыть модальное окно</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-10 w-full flex-1">
+    
+    <!-- Hero Header -->
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-surfaceLight border border-brand-cyan/30 text-brand-cyan font-mono text-xs uppercase tracking-wider mb-4">
+        <span class="w-2 h-2 rounded-full bg-brand-cyan animate-ping"></span>
+        INSTITUTIONAL WHALE QUALIFICATION SUITE
+      </div>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight mb-4 leading-tight">
+        VIP Concierge Application & Audit Modal
+      </h1>
+      <p class="text-sm sm:text-base text-brand-muted leading-relaxed">
+        Интерактивный 4-шаговый шлюз квалификации хайроллеров (Whales) с отрицательным балансом в крипто-букмекерах. Включает прямую генерацию глубоких ссылок в Telegram и резервный Webhook в деск синдиката.
+      </p>
+
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <button onclick="launchModal('Stake', 'Platinum IV', '$25,000')" class="px-5 py-3 rounded-xl bg-brand-cyan hover:bg-[#33f3ff] text-black font-bold text-xs font-mono flex items-center gap-2 shadow-[0_0_20px_rgba(0,240,255,0.35)] transition-all active:scale-95">
+          <i data-lucide="external-link" class="w-4 h-4"></i>
+          <span>Тест: Stake Platinum IV ($25k)</span>
+        </button>
+        <button onclick="launchModal('Sportsbet', 'Clubhouse Legend', '$50,000')" class="px-5 py-3 rounded-xl bg-brand-surfaceLight border border-brand-surfaceBorder hover:border-brand-cyan/40 text-white font-mono text-xs flex items-center gap-2 transition-all active:scale-95">
+          <span>Тест: Sportsbet Clubhouse ($50k)</span>
+        </button>
+        <button onclick="launchModal('BCGame', 'SVIP 55+', '$100,000')" class="px-5 py-3 rounded-xl bg-brand-surfaceLight border border-brand-surfaceBorder hover:border-brand-cyan/40 text-white font-mono text-xs flex items-center gap-2 transition-all active:scale-95">
+          <span>Тест: BC.Game SVIP ($100k)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 4-Step Architecture Showcase -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+      
+      <!-- Step 1 Card -->
+      <div class="fintech-card rounded-xl p-5 border-t-2 border-t-brand-cyan/60">
+        <div class="flex items-center justify-between mb-3">
+          <span class="font-mono text-xs text-brand-cyan font-bold">01 // BOOKMAKER</span>
+          <span class="p-1 rounded bg-brand-cyan/10 text-brand-cyan"><i data-lucide="award" class="w-4 h-4"></i></span>
+        </div>
+        <h3 class="text-sm font-bold text-white mb-2">Букмекер & VIP-Ранг</h3>
+        <p class="text-xs text-brand-muted leading-relaxed mb-3">
+          Выбор платформы (Stake Platinum, Clubhouse, BC.Game SVIP, Roobet, Cloudbet) и подтверждение отрицательного баланса (Ego-affirmation).
+        </p>
+        <div class="font-mono text-[10px] text-zinc-400 bg-black/40 p-2 rounded border border-white/5">
+          Банкролл: $10k – $150k+<br>Сплит: 30% – 40%
+        </div>
+      </div>
+
+      <!-- Step 2 Card -->
+      <div class="fintech-card rounded-xl p-5 border-t-2 border-t-brand-emerald/60">
+        <div class="flex items-center justify-between mb-3">
+          <span class="font-mono text-xs text-brand-emerald font-bold">02 // 1X2 LIMIT</span>
+          <span class="p-1 rounded bg-brand-emerald/10 text-brand-emerald"><i data-lucide="shield-check" class="w-4 h-4"></i></span>
+        </div>
+        <h3 class="text-sm font-bold text-white mb-2">Аудит потолка (АПЛ / ЛЧ)</h3>
+        <p class="text-xs text-brand-muted leading-relaxed mb-3">
+          Инструкция по проверке Max Bet в купоне на топ-матч исхода 1X2. Anti-Inspect Element протокол защиты от редактирования страницы (F12).
+        </p>
+        <div class="font-mono text-[10px] text-zinc-400 bg-black/40 p-2 rounded border border-white/5">
+          Чек: Исход 1X2 топ-лиги<br>Видео: F5 / Созвон
+        </div>
+      </div>
+
+      <!-- Step 3 Card -->
+      <div class="fintech-card rounded-xl p-5 border-t-2 border-t-brand-amber/60">
+        <div class="flex items-center justify-between mb-3">
+          <span class="font-mono text-xs text-brand-amber font-bold">03 // VENUE</span>
+          <span class="p-1 rounded bg-brand-amber/10 text-brand-amber"><i data-lucide="map-pin" class="w-4 h-4"></i></span>
+        </div>
+        <h3 class="text-sm font-bold text-white mb-2">Формат сессии</h3>
+        <p class="text-xs text-brand-muted leading-relaxed mb-3">
+          Выбор формата: очная сессия в лаунже (VIP Lounge Dubai DIFC или Москва-Сити) либо удаленная сессия Non-Custodial через AnyDesk под контролем кита.
+        </p>
+        <div class="font-mono text-[10px] text-zinc-400 bg-black/40 p-2 rounded border border-white/5">
+          Локации: Dubai / Москва<br>0 передачи паролей
+        </div>
+      </div>
+
+      <!-- Step 4 Card -->
+      <div class="fintech-card rounded-xl p-5 border-t-2 border-t-purple-500/60">
+        <div class="flex items-center justify-between mb-3">
+          <span class="font-mono text-xs text-purple-400 font-bold">04 // DISPATCH</span>
+          <span class="p-1 rounded bg-purple-500/10 text-purple-400"><i data-lucide="send" class="w-4 h-4"></i></span>
+        </div>
+        <h3 class="text-sm font-bold text-white mb-2">Telegram & Кошелек</h3>
+        <p class="text-xs text-brand-muted leading-relaxed mb-3">
+          Telegram @username для связи со старшим риск-консьержем и некастодиальный USDT-кошелек для автоматического начисления доли чистой прибыли.
+        </p>
+        <div class="font-mono text-[10px] text-zinc-400 bg-black/40 p-2 rounded border border-white/5">
+          USDT: TRC-20 / ERC-20<br>Шлюз: Direct TG + Webhook
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Live Integration & Code Box -->
+    <div class="fintech-card rounded-2xl p-6 sm:p-8 mb-12">
+      <div class="flex items-center justify-between mb-6 pb-4 border-b border-brand-surfaceBorder">
+        <div>
+          <span class="font-mono text-xs text-brand-cyan uppercase tracking-wider font-semibold">// DEVELOPER QUICKSTART</span>
+          <h2 class="text-lg font-bold text-white">Как подключить модальное окно на любую страницу</h2>
+        </div>
+        <button onclick="copyCodeSnippet()" class="px-3 py-1.5 rounded bg-brand-surfaceLight border border-brand-surfaceBorder hover:border-brand-cyan text-xs font-mono text-white flex items-center gap-1.5 transition-all">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          <span>Скопировать код</span>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <p class="text-xs text-brand-muted leading-relaxed">
+          Модуль <code class="text-brand-cyan">vip-concierge-modal.js</code> написан на чистом нативном JavaScript (Zero external framework dependencies) и адаптирован под институциональный стиль. Достаточно подключить один скрипт:
+        </p>
+
+        <pre id="code-snippet" class="code-box rounded-xl p-4 text-xs text-zinc-300 overflow-x-auto leading-relaxed"><code>&lt;!-- 1. Подключение скрипта движка --&gt;
+&lt;script src="vip-concierge-modal.js"&gt;&lt;/script&gt;
+
+&lt;!-- 2. Вызов модального окна по клику на любую кнопку --&gt;
+&lt;button onclick="VIPConcierge.open()"&gt;
+  Подать лимит на аудит
+&lt;/button&gt;
+
+&lt;!-- 3. Передача предварительно выбранных данных (из калькулятора) --&gt;
+&lt;script&gt;
+  function openAuditWithParams() {
+    VIPConcierge.open({
+      bk: 'Stake',                       // Букмекер
+      tier: 'Platinum IV',               // VIP Ранг
+      limit: '$25,000',                  // Лимит 1X2 на АПЛ/ЛЧ
+      telegram: '@my_vip_handle'         // Опциональный контакт
+    }, {
+      tgDeskUsername: 'syndicate_vip_desk', // Telegram деск команды
+      webhookUrl: '/api/audit-request'      // Эндпоинт отправки
+    });
+  }
+&lt;/script&gt;</code></pre>
+      </div>
+    </div>
+
+    <!-- Live Telegram Deep Link Tester -->
+    <div class="fintech-card rounded-2xl p-6 sm:p-8">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="p-2 rounded-lg bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20">
+          <i data-lucide="send" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-white">Прямой Telegram Deep-Link Generator</h3>
+          <p class="text-xs text-brand-muted">Форматирует заявку в структурированное сообщение для немедленного старта диалога с китом в Telegram.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-mono text-zinc-400 mb-1">Telegram username консьерж-деска:</label>
+            <input type="text" id="test-desk-input" value="syndicate_vip_desk" class="w-full bg-black/40 border border-brand-surfaceBorder rounded-lg p-2.5 text-xs font-mono text-white focus:outline-none focus:border-brand-cyan">
+          </div>
+          <div>
+            <label class="block text-xs font-mono text-zinc-400 mb-1">Тестовый лимит:</label>
+            <input type="text" id="test-limit-input" value="$50,000 (АПЛ 1X2)" class="w-full bg-black/40 border border-brand-surfaceBorder rounded-lg p-2.5 text-xs font-mono text-white focus:outline-none focus:border-brand-cyan">
+          </div>
+          <button onclick="testGenerateLink()" class="w-full py-3 rounded-lg bg-brand-surfaceLight border border-brand-cyan/40 hover:bg-brand-surface text-brand-cyan font-mono text-xs font-semibold flex items-center justify-center gap-2 transition-all">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            <span>Сгенерировать ссылку Telegram</span>
+          </button>
+        </div>
+
+        <div>
+          <label class="block text-xs font-mono text-zinc-400 mb-1">Предпросмотр ссылки (t.me):</label>
+          <div id="test-link-output" class="code-box rounded-lg p-3 text-[11px] text-brand-cyan break-all select-all min-h-[95px] flex items-center">
+            Нажмите кнопку для генерации ссылки
+          </div>
+          <div class="mt-2 flex justify-end">
+            <a id="test-open-tg-btn" href="#" target="_blank" class="hidden text-xs font-mono text-white hover:text-brand-cyan underline flex items-center gap-1">
+              <span>Открыть в Telegram</span>
+              <i data-lucide="external-link" class="w-3 h-3"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-brand-surfaceBorder bg-black/60 py-6 text-center text-xs font-mono text-brand-muted">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <span>VIP LIQUIDITY SYNDICATE • NON-CUSTODIAL ALLOCATION DESK</span>
+      <div class="flex items-center gap-4 text-[11px]">
+        <span>0 ПАРОЛЕЙ</span>
+        <span>•</span>
+        <span>0% РИСКА КИТА</span>
+        <span>•</span>
+        <span>ВЫПЛАТЫ В USDT</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Include VIP Concierge Modal Engine -->
+  <script src="vip-concierge-modal.js"></script>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Launch Modal with optional pre-filled parameters
+    function launchModal(bk, tier, limit) {
+      if (typeof VIPConcierge !== 'undefined') {
+        VIPConcierge.open({
+          bk: bk || 'Stake',
+          tier: tier || 'Platinum IV',
+          limit: limit || '$25,000'
+        }, {
+          tgDeskUsername: document.getElementById('test-desk-input')?.value || 'syndicate_vip_desk',
+          webhookUrl: '/api/audit-request'
+        });
+      } else {
+        alert('VIPConcierge script not loaded yet.');
+      }
+    }
+
+    // Generator tester
+    function testGenerateLink() {
+      const desk = document.getElementById('test-desk-input').value.trim() || 'syndicate_vip_desk';
+      const limit = document.getElementById('test-limit-input').value.trim() || '$50,000';
+      const ticketId = 'SYND-VIP-' + Math.floor(1000 + Math.random() * 9000);
+
+      const text = `🏛 VIP CONCIERGE ALLOCATION TICKET [${ticketId}]
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 Партнер: @whale_vip
+🏛 Букмекер: Stake.com (Platinum IV)
+📉 Статус: High-Roller (-$50k+ PnL)
+⚽️ Лимит 1X2 (АПЛ/ЛЧ): ${limit}
+📍 Формат: VIP Lounge Dubai (DIFC)
+💎 USDT Кошелек: T9yD...4x82
+💰 Запрос пула: $50,000
+🔒 Non-Custodial: Баланс выведен в 0 • 0 паролей
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+Прошу согласовать время сессии и аллокацию пула ликвидности.`;
+
+      const url = `https://t.me/${desk}?text=${encodeURIComponent(text)}`;
+      document.getElementById('test-link-output').innerText = url;
+      
+      const openBtn = document.getElementById('test-open-tg-btn');
+      openBtn.href = url;
+      openBtn.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function copyCodeSnippet() {
+      const text = document.getElementById('code-snippet').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Код скопирован в буфер обмена!');
+      });
+    }
+
+    // Generate initial sample link on page load
+    testGenerateLink();
+  </script>
+</body>
+</html>

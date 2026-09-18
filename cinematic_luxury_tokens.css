@@ -1,0 +1,1006 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Prata&family=Manrope:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap&subset=cyrillic,cyrillic-ext,latin,latin-ext');
+
+/**
+ * CINEMATIC LUXURY DESIGN SYSTEM (CSS SPECIFICATION)
+ * Inspired by:
+ * - 'Succession' (35mm Kodak Vision3 film grain, chiaroscuro tungsten/amber rim lighting, boardroom intimacy)
+ * - 'Amex Centurion' (Laser-engraved matte black titanium, chamfered micro-bevels, obsidian minimalism)
+ * - 'Apple Watch Ultra' (Grade 5 aerospace titanium, tactile knurling, high-performance International Orange)
+ * - 'Patek Philippe & Audemars Piguet' (Haute Horlogerie typography, roman capitals, tabular numerals, 24K gold foil)
+ */
+
+:root {
+  /* ==========================================================================
+     0. HAUTE HORLOGERIE TYPOGRAPHY & FONT STACKS
+     ========================================================================== */
+  --font-cinzel: "Cinzel", "Times New Roman", Georgia, serif;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-playfair: "Playfair Display", Georgia, serif;
+  --font-prata: "Prata", Georgia, serif;
+  --font-sans: "Manrope", -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+
+  /* Micro-Typographic Tracking (Haute Horlogerie Standard) */
+  --tracking-hero-tight: -0.04em;
+  --tracking-hero: -0.038em;
+  --tracking-subhead: -0.025em;
+  --tracking-body: -0.01em;
+  --tracking-label: 0.18em;
+  --tracking-hud: 0.22em;
+  --tracking-hud-wide: 0.28em;
+
+  /* Executive Interlinear Spacing (Leading) */
+  --leading-hero-tight: 0.92;
+  --leading-hero: 0.94;
+  --leading-hero-snug: 0.96;
+  --leading-subhead: 1.05;
+  --leading-body: 1.65;
+
+  /* Fluid Responsive Typography Clamps (Mobile 390px to 4K Displays) */
+  --type-display-hero: clamp(2.35rem, 5.5vw + 0.8rem, 6.75rem);
+  --type-display-h1: clamp(1.95rem, 4.2vw + 0.6rem, 5.25rem);
+  --type-display-h2: clamp(1.55rem, 3.2vw + 0.5rem, 3.85rem);
+  --type-body-lead: clamp(0.95rem, 0.8vw + 0.4rem, 1.25rem);
+  --type-body: clamp(0.85rem, 0.6vw + 0.3rem, 1.05rem);
+  --type-ticker: clamp(0.68rem, 0.3vw + 0.45rem, 0.85rem);
+
+  /* OpenType Feature Settings Defaults */
+  --font-features-editorial: "liga" 1, "dlig" 1, "kern" 1, "cv01" 1, "cv02" 1, "ss01" 1;
+  --font-features-tabular: "tnum" 1, "zero" 1, "ss01" 1, "kern" 1;
+  --font-features-cinzel: "cpsp" 1, "titl" 1, "kern" 1, "liga" 1;
+
+  /* ==========================================================================
+     1. COLOR ARCHITECTURE & PHYSICAL MATERIAL PALETTES
+     ========================================================================== */
+  
+  /* Amex Centurion: Deep obsidian, basalt, and matte carbon surfaces */
+  --surface-void: #040507;
+  --surface-obsidian: #08090C;
+  --surface-carbon: #0E1015;
+  --surface-titanium-dark: #151820;
+  --surface-titanium-matte: #1E222B;
+  --surface-titanium-sheen: #2C323E;
+
+  /* Aerospace Grade 5 Titanium Monochromes */
+  --titanium-100: #F5F7FA;
+  --titanium-200: #E4E7ED;
+  --titanium-300: #CBD0DA;
+  --titanium-400: #9BA3B2;
+  --titanium-500: #6B7280;
+  --titanium-600: #4B5260;
+  --titanium-700: #2F343F;
+
+  /* Succession: 35mm Warm Tungsten, Aged Brass & Single-Malt Amber */
+  --amber-whiskey-50: rgba(212, 146, 59, 0.04);
+  --amber-whiskey-100: rgba(212, 146, 59, 0.10);
+  --amber-whiskey-200: rgba(212, 146, 59, 0.22);
+  --amber-whiskey-400: #D4923B;
+  --amber-whiskey-500: #E5A34C;
+  --amber-whiskey-glow: 0 0 35px rgba(212, 146, 59, 0.28);
+
+  /* Apple Watch Ultra: International Orange (Tactile Action Button) */
+  --ultra-orange-50: rgba(255, 90, 31, 0.06);
+  --ultra-orange-200: rgba(255, 90, 31, 0.20);
+  --ultra-orange-500: #FF5A1F;
+  --ultra-orange-600: #E04B14;
+  --ultra-orange-glow: 0 0 30px rgba(255, 90, 31, 0.35);
+
+  /* Liquid Mercury Metallic Fluid Tones */
+  --mercury-highlight: rgba(255, 255, 255, 0.85);
+  --mercury-mid: rgba(198, 208, 224, 0.45);
+  --mercury-shadow: rgba(18, 22, 30, 0.8);
+
+  /* Hairline Specular Edges & Bevels */
+  --border-hairline: rgba(255, 255, 255, 0.07);
+  --border-specular: rgba(255, 255, 255, 0.16);
+  --border-highlight-top: inset 0 1px 0 0 rgba(255, 255, 255, 0.18);
+  --border-shadow-bottom: inset 0 -1px 0 0 rgba(0, 0, 0, 0.45);
+
+  /* ==========================================================================
+     2. MOTION & PHYSICAL INERTIA TOKENS
+     ========================================================================== */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);       /* Emil Kowalski Apple-snappy */
+  --ease-mercury: cubic-bezier(0.25, 1, 0.5, 1);      /* Viscous metallic fluid flow */
+  --ease-settle: cubic-bezier(0.32, 0.72, 0, 1);      /* Heavy titanium damping */
+  --duration-snap: 180ms;
+  --duration-fluid: 340ms;
+  --duration-cinematic: 700ms;
+}
+
+/* ==========================================================================
+   3. 35MM ANALOGUE FILM GRAIN (SILVER HALIDE NOISE)
+   ========================================================================== */
+
+/**
+ * Pure SVG fractal noise filter mapped to a GPU-accelerated overlay.
+ * Recreates the subtle silver halide organic texture of 35mm Kodak 500T.
+ */
+.film-grain-layer {
+  position: fixed;
+  inset: -100px;
+  width: calc(100% + 200px);
+  height: calc(100% + 200px);
+  pointer-events: none;
+  z-index: 9990;
+  opacity: 0.048; /* Exact threshold: felt subliminally, never dirtying text */
+  mix-blend-mode: overlay;
+  background-repeat: repeat;
+  background-size: 180px 180px;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain35mm'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain35mm)'/%3E%3C/svg%3E");
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Optional 35mm Celluloid Shutter Jitter (24fps micro-flutter) */
+@keyframes filmJitter {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-1px, 1px); }
+  20% { transform: translate(1px, -1px); }
+  30% { transform: translate(-2px, 0); }
+  40% { transform: translate(1px, 2px); }
+  50% { transform: translate(-1px, -1px); }
+  60% { transform: translate(2px, 1px); }
+  70% { transform: translate(0, -2px); }
+  80% { transform: translate(-1px, 1px); }
+  90% { transform: translate(1px, 0); }
+  100% { transform: translate(0, 0); }
+}
+
+.film-grain-animated {
+  animation: filmJitter 0.5s steps(6) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .film-grain-animated {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   4. CHIAROSCURO LIGHTING & VIGNETTE STAGE
+   ========================================================================== */
+
+/**
+ * Succession / Rembrandt lighting stage:
+ * Combines high-falloff chiaroscuro darkness with a discreet warm tungsten/whiskey keylight
+ * and an opposing cold aerospace titanium ambient reflection.
+ */
+.chiaroscuro-viewport {
+  position: relative;
+  background-color: var(--surface-obsidian);
+  background-image:
+    /* Keylight: Succession Private Jet Amber / Whiskey pool from upper right */
+    radial-gradient(ellipse 70% 50% at 85% 10%, var(--amber-whiskey-200) 0%, transparent 70%),
+    /* Fill light: Apple Ultra Grade 5 Titanium reflection from lower left */
+    radial-gradient(ellipse 55% 45% at 15% 90%, rgba(155, 163, 178, 0.08) 0%, transparent 65%),
+    /* Ambient Falloff: Deep Centurion edge compression vignette */
+    radial-gradient(circle at 50% 50%, transparent 35%, rgba(4, 5, 7, 0.92) 100%);
+  background-attachment: fixed;
+  color: var(--titanium-100);
+}
+
+/* Edge-falloff spotlight wrapper for featured hero modules */
+.chiaroscuro-spotlight {
+  position: relative;
+}
+.chiaroscuro-spotlight::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(circle at center, rgba(212, 146, 59, 0.07) 0%, rgba(8, 9, 12, 0) 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ==========================================================================
+   5. LUXURY GLASSMORPHIC SURFACES (CENTURION TITANIUM & SAPPHIRE)
+   ========================================================================== */
+
+/**
+ * Luxury Dark Matte Glass:
+ * Eliminates cheap neon gradients in favor of an anodized titanium substrate,
+ * sub-pixel top edge specular refraction, and deep physical drop shadow.
+ */
+.glass-centurion {
+  position: relative;
+  background: linear-gradient(
+    145deg,
+    rgba(30, 34, 43, 0.55) 0%,
+    rgba(14, 16, 21, 0.85) 100%
+  );
+  backdrop-filter: blur(28px) saturate(135%);
+  -webkit-backdrop-filter: blur(28px) saturate(135%);
+  border: 1px solid var(--border-hairline);
+  border-radius: 18px;
+  box-shadow:
+    /* Beveled top edge light catcher */
+    var(--border-highlight-top),
+    /* Chamfered bottom shadow anchor */
+    var(--border-shadow-bottom),
+    /* Deep cinematic occlusion shadow */
+    0 30px 60px -15px rgba(0, 0, 0, 0.85),
+    0 4px 12px 0 rgba(0, 0, 0, 0.5);
+  transition: border-color var(--duration-fluid) var(--ease-spring),
+              box-shadow var(--duration-fluid) var(--ease-spring),
+              transform var(--duration-fluid) var(--ease-spring);
+}
+
+.glass-centurion:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.28),
+    var(--border-shadow-bottom),
+    0 36px 72px -16px rgba(0, 0, 0, 0.95),
+    0 0 40px -10px var(--amber-whiskey-100);
+}
+
+/* Apple Watch Ultra Rugged Bezel Accent (Satin Knurled Titanium Border) */
+.glass-ultra-frame {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background-color: rgba(14, 16, 21, 0.78);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  position: relative;
+}
+
+.glass-ultra-frame::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   6. MICRO-INTERACTIONS: MERCURY HOVER GLOW & MAGNETIC FEEL
+   ========================================================================== */
+
+/**
+ * Mercury Hover Button (Tactile Luxury Standard):
+ * - Fluid molten chrome specular highlight that reacts to cursor position.
+ * - Magnetic haptic compression on press.
+ * - Subtle perimeter light piping.
+ */
+.btn-mercury {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 26px;
+  background: linear-gradient(180deg, #1C2029 0%, #101217 100%);
+  color: var(--titanium-100);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.5),
+    0 8px 20px -4px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
+  user-select: none;
+  transition: transform var(--duration-snap) var(--ease-spring),
+              border-color var(--duration-fluid) var(--ease-spring),
+              box-shadow var(--duration-fluid) var(--ease-spring);
+}
+
+/* Fluid Mercury Specular Sweep */
+.btn-mercury::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.04) 28%,
+    transparent 60%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-fluid) ease;
+}
+
+.btn-mercury:hover::before {
+  opacity: 1;
+}
+
+.btn-mercury:hover {
+  border-color: rgba(255, 255, 255, 0.24);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.6),
+    0 14px 28px -6px rgba(0, 0, 0, 0.8),
+    0 0 24px -4px rgba(255, 255, 255, 0.12);
+  transform: translateY(-1.5px);
+}
+
+/* Haptic Depression (Physical Mechanical Spring Resistance) */
+.btn-mercury:active {
+  transform: translateY(1px) scale(0.978);
+  box-shadow:
+    inset 0 2px 4px 0 rgba(0, 0, 0, 0.75),
+    inset 0 -1px 0 0 rgba(255, 255, 255, 0.1),
+    0 4px 8px -2px rgba(0, 0, 0, 0.5);
+  transition-duration: 80ms;
+}
+
+/**
+ * Succession "Executive Amber" Button:
+ * Subdued gold/amber perimeter reflection for principal transactions.
+ */
+.btn-succession {
+  background: linear-gradient(180deg, #241D15 0%, #15120E 100%);
+  border: 1px solid rgba(212, 146, 59, 0.32);
+  color: #F8E7D0;
+  box-shadow:
+    inset 0 1px 0 0 rgba(212, 146, 59, 0.45),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.6),
+    0 10px 24px -5px rgba(0, 0, 0, 0.7);
+}
+
+.btn-succession:hover {
+  border-color: rgba(212, 146, 59, 0.65);
+  box-shadow:
+    inset 0 1px 0 0 rgba(212, 146, 59, 0.65),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.6),
+    0 16px 32px -6px rgba(0, 0, 0, 0.85),
+    0 0 28px -2px rgba(212, 146, 59, 0.32);
+  transform: translateY(-1.5px);
+}
+
+/**
+ * Apple Watch Ultra "Action Button":
+ * High-visibility international orange paired with satin titanium housing.
+ */
+.btn-ultra-action {
+  background: linear-gradient(180deg, var(--ultra-orange-500) 0%, var(--ultra-orange-600) 100%);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 13px;
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.45),
+    inset 0 -2px 0 0 rgba(0, 0, 0, 0.35),
+    0 8px 24px -4px rgba(255, 90, 31, 0.45);
+}
+
+.btn-ultra-action:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow:
+    inset 0 1px 0 0 #FFFFFF,
+    inset 0 -2px 0 0 rgba(0, 0, 0, 0.45),
+    0 14px 34px -4px rgba(255, 90, 31, 0.6);
+  transform: translateY(-1.5px);
+}
+
+.btn-ultra-action:active {
+  transform: translateY(1px) scale(0.975);
+}
+
+/* ==========================================================================
+   7. CENTURION TYPOGRAPHY & EMBOSSED BADGES
+   ========================================================================== */
+
+.type-centurion-title {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+  color: var(--titanium-100);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+}
+
+.type-amber-serif {
+  font-family: "Editorial Old", "Baskerville", "Georgia", serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--amber-whiskey-400);
+}
+
+.badge-centurion-metal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--titanium-300);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+}
+
+/* ==========================================================================
+   8. HAUTE HORLOGERIE & SWISS PRIVATE WEALTH TYPOGRAPHY
+   ========================================================================== */
+
+/* Universal OpenType Optimization */
+body, .font-features-global {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "liga" 1, "dlig" 1, "kern" 1, "cv01" 1, "cv02" 1, "ss01" 1, "tnum" 1;
+}
+
+/* Master Font Stacks */
+.font-cinzel {
+  font-family: var(--font-cinzel);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  font-feature-settings: "cpsp" 1, "titl" 1, "kern" 1, "liga" 1;
+}
+
+.font-serif,
+.font-display {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+}
+
+.font-playfair {
+  font-family: var(--font-playfair);
+}
+
+.font-prata {
+  font-family: var(--font-prata);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Specialized OpenType Feature Subsets */
+.font-features-editorial {
+  font-feature-settings: "liga" 1, "dlig" 1, "kern" 1, "cv01" 1, "cv02" 1, "ss01" 1;
+  text-rendering: optimizeLegibility;
+}
+
+.font-features-tabular {
+  font-feature-settings: "tnum" 1, "zero" 1, "ss01" 1, "kern" 1;
+  font-variant-numeric: tabular-nums lining-nums slashed-zero;
+}
+
+.font-features-cinzel {
+  font-feature-settings: "cpsp" 1, "titl" 1, "kern" 1, "liga" 1;
+}
+
+/* Haute Horlogerie Micro-Tracking Utilities */
+.tracking-hero-tight { letter-spacing: -0.04em !important; }
+.tracking-hero       { letter-spacing: -0.038em !important; }
+.tracking-subhead    { letter-spacing: -0.025em !important; }
+.tracking-label      { letter-spacing: 0.18em !important; }
+.tracking-hud        { letter-spacing: 0.22em !important; }
+.tracking-hud-wide   { letter-spacing: 0.28em !important; }
+.tracking-roman      { letter-spacing: 0.26em !important; }
+
+/* Micro-Leading (Interlinear Tightness) */
+.leading-hero-tight  { line-height: 0.92 !important; }
+.leading-hero        { line-height: 0.94 !important; }
+.leading-hero-snug   { line-height: 0.96 !important; }
+.leading-subhead     { line-height: 1.05 !important; }
+
+/* Master Editorial Display Headlines (Audemars Piguet / The Row standard) */
+.editorial-display-headline {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  letter-spacing: -0.038em;
+  line-height: 0.94;
+  color: #FFFFFF;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "liga" 1, "dlig" 1, "kern" 1, "cv01" 1, "cv02" 1, "ss01" 1;
+  font-optical-sizing: auto;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.85);
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.editorial-h1 {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  letter-spacing: -0.038em;
+  line-height: 0.94;
+  color: #FFFFFF;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "liga" 1, "dlig" 1, "kern" 1, "cv01" 1, "cv02" 1, "ss01" 1;
+  text-shadow: 0 4px 25px rgba(0, 0, 0, 0.85);
+}
+
+.editorial-h2 {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  letter-spacing: -0.035em;
+  line-height: 0.96;
+  color: #FFFFFF;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "liga" 1, "dlig" 1, "kern" 1, "cv01" 1;
+  text-shadow: 0 3px 20px rgba(0, 0, 0, 0.8);
+}
+
+/* Editorial Lead & Paragraph Typography */
+.editorial-lead {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1.68;
+  color: var(--titanium-200);
+}
+
+/* Accent Italics with Flourishes (Cormorant & Playfair) */
+.accent-cormorant-italic {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 300;
+  font-feature-settings: "liga" 1, "dlig" 1, "kern" 1, "cv01" 1, "cv02" 1, "swsh" 1;
+}
+
+.accent-playfair-italic {
+  font-family: var(--font-playfair);
+  font-style: italic;
+  font-weight: 400;
+  font-feature-settings: "liga" 1, "kern" 1;
+}
+
+.accent-prata {
+  font-family: var(--font-prata);
+  font-weight: 400;
+}
+
+/* ==========================================================================
+   9. PRECIOUS METAL FOIL TEXT & LUMINESCENT GLOWS
+   ========================================================================== */
+
+/* 24K Bullion Gold Specular Gradient (Patek Philippe Yellow Gold) */
+.gold-foil-text,
+.gold-gradient-text {
+  background: linear-gradient(135deg, #FFFDF5 0%, #FBE8C5 18%, #D4AF37 42%, #9E7728 72%, #FBF0D9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 22px rgba(212, 175, 55, 0.38));
+  display: inline-block;
+  will-change: filter;
+}
+
+/* Frosted Liquid Platinum Gradient (Audemars Piguet Frosted White Gold) */
+.platinum-foil-text,
+.platinum-gradient-text {
+  background: linear-gradient(135deg, #FFFFFF 0%, #EFF4F9 24%, #BAC7D5 55%, #7D8E9F 82%, #EBF1F7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 20px rgba(186, 199, 213, 0.32));
+  display: inline-block;
+  will-change: filter;
+}
+
+/* Sovereign Private Wealth Emerald Gradient (Swiss Private Banking Green) */
+.emerald-foil-text,
+.emerald-gradient-text {
+  background: linear-gradient(135deg, #F0FDF4 0%, #6EE7B7 26%, #10B981 56%, #047857 85%, #A7F3D0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 22px rgba(16, 185, 129, 0.40));
+  display: inline-block;
+  will-change: filter;
+}
+
+/* Succession Amber / Single-Malt Whiskey Foil Gradient */
+.amber-whiskey-foil-text {
+  background: linear-gradient(135deg, #FFF6E9 0%, #F5CE93 25%, #D4923B 55%, #8A5412 85%, #FDEED8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 22px rgba(212, 146, 59, 0.38));
+  display: inline-block;
+  will-change: filter;
+}
+
+/* Fallback for browsers without background-clip: text support */
+@supports not (-webkit-background-clip: text) {
+  .gold-foil-text     { color: #D4AF37; }
+  .platinum-foil-text { color: #EFF4F9; }
+  .emerald-foil-text  { color: #10B981; }
+  .amber-whiskey-foil-text { color: #D4923B; }
+}
+
+/* ==========================================================================
+   10. HAUTE HORLOGERIE BADGES, BUTTONS & TICKERS
+   ========================================================================== */
+
+/* Imperial Roman Chapter Badge */
+.chapter-badge-roman {
+  font-family: var(--font-cinzel);
+  font-size: 10px;
+  letter-spacing: var(--tracking-roman);
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 18px;
+  border-radius: 9999px;
+  background: rgba(7, 8, 12, 0.90);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.20),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.6),
+    0 8px 28px rgba(0, 0, 0, 0.8);
+  color: #EBD4A7;
+  font-feature-settings: "cpsp" 1, "titl" 1;
+}
+
+/* Haute Horlogerie Ticker & Status Labels */
+.ticker-label {
+  font-family: var(--font-cinzel);
+  letter-spacing: var(--tracking-hud);
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.hud-telemetry {
+  font-family: var(--font-mono);
+  letter-spacing: var(--tracking-hud);
+  font-feature-settings: "tnum" 1, "zero" 1, "ss01" 1;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
+/* Specular Hairline Card Border */
+.luxury-border-specular {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  position: relative;
+}
+
+.luxury-border-specular::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.45), transparent);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   11. RESPONSIVE OPTIMIZATIONS (IPHONE 14/15/16 & 4K SCREENS)
+   ========================================================================== */
+
+/* Mobile Ergonimics & Safe Area (iPhone 14 / 15 / 16 & Dynamic Island) */
+@media (max-width: 640px) {
+  .editorial-display-headline {
+    letter-spacing: -0.035em;
+    line-height: 0.98;
+    hyphens: manual;
+  }
+  
+  .chapter-badge-roman {
+    letter-spacing: 0.20em;
+    font-size: 9px;
+    padding: 5px 12px;
+  }
+
+  /* Safe Area Inset Support */
+  header {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 0.6rem) !important;
+  }
+}
+
+/* High-Density 4K Monitors (3840px / Ultra-Wide Displays) */
+@media (min-width: 2560px) {
+  :root {
+    --type-display-hero: clamp(4.5rem, 5.5vw, 9.5rem);
+    --type-display-h1: clamp(3.5rem, 4.2vw, 7.5rem);
+    --type-display-h2: clamp(2.8rem, 3.2vw, 5.5rem);
+  }
+
+  .editorial-display-headline {
+    letter-spacing: -0.04em;
+    line-height: 0.92;
+  }
+
+  .gold-foil-text {
+    filter: drop-shadow(0 3px 35px rgba(212, 175, 55, 0.48));
+  }
+
+  .platinum-foil-text {
+    filter: drop-shadow(0 3px 30px rgba(186, 199, 213, 0.42));
+  }
+
+/* ==========================================================================
+   12. STEALTH WEALTH PHYSICAL ARCHITECTURE:
+       AMBIENT SPOTLIGHT, CENTURION CHAMFERS, KNURLED SLIDERS & COMPARISON MATRIX
+   ========================================================================== */
+
+/* 1. Ambient Mouse Spotlight (Haute Horlogerie 24K Gold Specular Halo) */
+:root {
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+  --spotlight-opacity: 0.85;
+}
+
+.ambient-mouse-spotlight {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 30;
+  opacity: var(--spotlight-opacity);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  background: radial-gradient(
+    700px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(212, 175, 55, 0.065) 0%,
+    rgba(212, 146, 59, 0.03) 30%,
+    rgba(16, 18, 24, 0.01) 55%,
+    transparent 70%
+  );
+  will-change: background;
+}
+
+@media (hover: none) {
+  .ambient-mouse-spotlight {
+    opacity: 0.35;
+    background: radial-gradient(
+      600px circle at 50% 30%,
+      rgba(212, 175, 55, 0.04) 0%,
+      transparent 60%
+    );
+  }
+}
+
+/* 2. Amex Centurion Matte Titanium & Chamfered Borders (Фаски) */
+.glass-centurion-matte,
+.titanium-card {
+  position: relative;
+  background: linear-gradient(
+    145deg,
+    rgba(26, 31, 41, 0.82) 0%,
+    rgba(14, 17, 23, 0.94) 50%,
+    rgba(8, 10, 14, 0.98) 100%
+  );
+  backdrop-filter: blur(28px) saturate(140%);
+  -webkit-backdrop-filter: blur(28px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 18px;
+  box-shadow:
+    /* Top-left specular micro-bevel (hairline light catcher) */
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+    inset 1px 0 0 0 rgba(255, 255, 255, 0.08),
+    /* Bottom-right obsidian shadow anchor */
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.8),
+    inset -1px 0 0 0 rgba(0, 0, 0, 0.6),
+    /* Deep cinematic occlusion shadow */
+    0 30px 60px -15px rgba(0, 0, 0, 0.92),
+    0 4px 16px rgba(0, 0, 0, 0.7);
+  transition: border-color var(--duration-fluid) var(--ease-spring),
+              box-shadow var(--duration-fluid) var(--ease-spring),
+              transform var(--duration-fluid) var(--ease-spring);
+}
+
+.glass-centurion-matte:hover,
+.titanium-card:hover {
+  border-color: rgba(212, 175, 55, 0.35);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.32),
+    inset 1px 0 0 0 rgba(212, 175, 55, 0.18),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.9),
+    0 38px 76px -16px rgba(0, 0, 0, 0.96),
+    0 0 35px -8px rgba(212, 175, 55, 0.18);
+  transform: translateY(-2px);
+}
+
+/* Precision 45-degree Chamfered Corner Bevel (Centurion Laser-Etch) */
+.card-chamfer {
+  position: relative;
+  background: linear-gradient(
+    145deg,
+    rgba(24, 28, 38, 0.90) 0%,
+    rgba(12, 15, 21, 0.96) 55%,
+    rgba(7, 9, 13, 0.99) 100%
+  );
+  clip-path: polygon(
+    14px 0,
+    calc(100% - 14px) 0,
+    100% 14px,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    14px 100%,
+    0 calc(100% - 14px),
+    0 14px
+  );
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.24),
+    0 25px 50px -12px rgba(0, 0, 0, 0.9);
+}
+
+/* 3. Luxury Range Slider (Knurled Centurion Thumb & Gradient Track) */
+.luxury-range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 28px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.luxury-range-slider:focus {
+  outline: none;
+}
+
+/* Webkit Track */
+.luxury-range-slider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 6px;
+  cursor: pointer;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    #D4AF37 0%,
+    #F59E0B var(--slider-pct, 20%),
+    #141822 var(--slider-pct, 20%),
+    #141822 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.8);
+  transition: background 0.08s ease;
+}
+
+/* Emerald Track Variant for Frequency / Cashout */
+.luxury-range-slider-emerald::-webkit-slider-runnable-track {
+  background: linear-gradient(
+    to right,
+    #D4AF37 0%,
+    #10B981 var(--slider-pct, 25%),
+    #141822 var(--slider-pct, 25%),
+    #141822 100%
+  );
+}
+
+/* Webkit Knurled Titanium Thumb */
+.luxury-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 24px;
+  width: 24px;
+  border-radius: 6px;
+  margin-top: -9px;
+  background: radial-gradient(circle at 35% 35%, #2F3646 0%, #151922 70%, #0A0C11 100%);
+  border: 2px solid #D4AF37;
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.8),
+    0 0 14px rgba(212, 175, 55, 0.45),
+    0 4px 10px rgba(0, 0, 0, 0.75);
+  cursor: grab;
+  transition: transform var(--duration-snap) var(--ease-spring),
+              box-shadow var(--duration-snap) var(--ease-spring),
+              border-color var(--duration-snap) var(--ease-spring);
+}
+
+.luxury-range-slider:active::-webkit-slider-thumb {
+  cursor: grabbing;
+  transform: scale(1.18);
+  border-color: #FFFDF5;
+  box-shadow:
+    inset 0 1px 2px 0 #FFFFFF,
+    0 0 24px rgba(212, 175, 55, 0.75),
+    0 6px 14px rgba(0, 0, 0, 0.9);
+}
+
+.luxury-range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.12);
+}
+
+/* Firefox Track & Thumb */
+.luxury-range-slider::-moz-range-track {
+  width: 100%;
+  height: 6px;
+  cursor: pointer;
+  border-radius: 999px;
+  background: #141822;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.luxury-range-slider::-moz-range-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(to right, #D4AF37, #F59E0B);
+}
+
+.luxury-range-slider-emerald::-moz-range-progress {
+  background: linear-gradient(to right, #D4AF37, #10B981);
+}
+
+.luxury-range-slider::-moz-range-thumb {
+  height: 24px;
+  width: 24px;
+  border-radius: 6px;
+  background: radial-gradient(circle at 35% 35%, #2F3646 0%, #151922 70%, #0A0C11 100%);
+  border: 2px solid #D4AF37;
+  box-shadow: 0 0 14px rgba(212, 175, 55, 0.45);
+  cursor: grab;
+}
+
+/* 4. Comparison Status Markers (Anti-AI Slop Precision) */
+.badge-hazard-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.32);
+  color: #FCA5A5;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.12);
+}
+
+.badge-sovereign-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-family: var(--font-cinzel);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  color: #34D399;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.22);
+}
+
+/* Mobile Comparison Card Architecture */
+.comparison-card-mobile {
+  background: linear-gradient(145deg, rgba(20, 24, 32, 0.88) 0%, rgba(10, 12, 17, 0.96) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
+    0 16px 32px -8px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+}
+
+/* 5. Mobile Ergonomics & Tap Zones */
+.mobile-tap-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+/* Safe Area Inset Support for Modals and Fixed Headers */
+.safe-area-bottom {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem);
+}

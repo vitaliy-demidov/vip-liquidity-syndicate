@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>VIP Liquidity Syndicate // Non-Custodial Physical Session Protocol</title>
+
+  <!-- Google Fonts: Cinzel (Haute Horlogerie Roman), Cormorant Garamond (High-Luxury Editorial Serif), Playfair Display, Manrope, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Manrope:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            cinzel: ['"Cinzel"', 'Georgia', 'serif'],
+            serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            playfair: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Manrope"', '-apple-system', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+          colors: {
+            void: '#030406',
+            obsidian: '#07080B',
+            carbon: '#0D0F14',
+            brand: {
+              cyan: '#00F0FF',
+              emerald: '#10B981',
+              amber: '#F59E0B',
+              whiskey: '#D4923B',
+              orange: '#FF5A1F',
+              muted: '#8E9AA8',
+              surfaceBorder: 'rgba(255, 255, 255, 0.08)',
+            }
+          },
+          letterSpacing: {
+            hero: '-0.038em',
+            hud: '0.14em',
+            'hud-wide': '0.24em',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Luxury Design Tokens & Film Styles -->
+  <link rel="stylesheet" href="cinematic_luxury_tokens.css">
+
+  <style>
+    :root {
+      --font-serif: "Cormorant Garamond", Georgia, serif;
+      --font-sans: "Manrope", -apple-system, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    }
+
+    body {
+      background-color: #030406;
+      color: #E2E8F0;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: "liga" 1, "dlig" 1, "cv01" 1, "tnum" 1;
+    }
+
+    /* 35mm Celluloid Film Grain Overlay */
+    .film-grain {
+      position: fixed;
+      inset: -100px;
+      width: calc(100% + 200px);
+      height: calc(100% + 200px);
+      pointer-events: none;
+      z-index: 40;
+      opacity: 0.045;
+      mix-blend-mode: overlay;
+      background-repeat: repeat;
+      background-size: 180px 180px;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain35mm'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain35mm)'/%3E%3C/svg%3E");
+    }
+
+    /* Fixed Viewport Video Canvas Layer */
+    .video-viewport-fixed {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .video-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: opacity, transform;
+    }
+
+    /* Chiaroscuro Atmospheric Vignette */
+    .chiaroscuro-overlay {
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse 75% 60% at 85% 15%, rgba(212, 146, 59, 0.18) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 50% at 15% 85%, rgba(0, 240, 255, 0.07) 0%, transparent 60%),
+        radial-gradient(circle at 50% 50%, rgba(3, 4, 6, 0.25) 20%, rgba(3, 4, 6, 0.94) 100%),
+        linear-gradient(180deg, rgba(3, 4, 6, 0.85) 0%, rgba(3, 4, 6, 0.15) 30%, rgba(3, 4, 6, 0.25) 70%, rgba(3, 4, 6, 0.98) 100%);
+      pointer-events: none;
+    }
+
+    /* HUD Corner Crosshairs */
+    .hud-crosshair {
+      position: absolute;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1;
+      color: rgba(255, 255, 255, 0.35);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Luxury Glassmorphism Surface (Centurion Matte Titanium) */
+    .glass-card {
+      background: linear-gradient(145deg, rgba(22, 26, 35, 0.7) 0%, rgba(10, 12, 18, 0.92) 100%);
+      backdrop-filter: blur(28px) saturate(140%);
+      -webkit-backdrop-filter: blur(28px) saturate(140%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+        inset 0 -1px 0 0 rgba(0, 0, 0, 0.5),
+        0 30px 60px -15px rgba(0, 0, 0, 0.9);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.16);
+      box-shadow: 
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.25),
+        0 36px 72px -16px rgba(0, 0, 0, 0.95),
+        0 0 30px -8px rgba(0, 240, 255, 0.12);
+    }
+
+    /* Luxury Haute Horlogerie & Editorial Typography Styling */
+    .font-cinzel {
+      font-family: var(--font-cinzel), "Cinzel", Georgia, serif;
+      letter-spacing: 0.18em;
+    }
+
+    .editorial-display-headline {
+      font-family: var(--font-serif);
+      font-weight: 300;
+      letter-spacing: -0.038em;
+      line-height: 0.94;
+      color: #FFFFFF;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "liga" 1, "dlig" 1, "kern" 1, "cv01" 1, "cv02" 1;
+      font-optical-sizing: auto;
+      text-shadow: 0 4px 30px rgba(0, 0, 0, 0.85);
+    }
+
+    .editorial-h1 {
+      font-family: var(--font-serif);
+      font-weight: 300;
+      letter-spacing: -0.035em;
+      line-height: 0.96;
+      color: #FFFFFF;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "liga" 1, "dlig" 1, "cv01" 1;
+      text-shadow: 0 4px 25px rgba(0, 0, 0, 0.85);
+    }
+
+    .editorial-h2 {
+      font-family: var(--font-serif);
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      line-height: 1.0;
+      color: #FFFFFF;
+      font-feature-settings: "liga" 1, "dlig" 1;
+      text-shadow: 0 3px 20px rgba(0, 0, 0, 0.8);
+    }
+
+    /* 24K Bullion Gold Specular Gradient */
+    .gold-foil-text, .gold-gradient-text {
+      background: linear-gradient(135deg, #FFFDF5 0%, #F5E5C9 20%, #D4AF37 45%, #9E7728 75%, #F8E8CD 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 2px 18px rgba(212, 175, 55, 0.35));
+    }
+
+    /* Frosted Liquid Platinum Gradient */
+    .platinum-foil-text, .platinum-gradient-text {
+      background: linear-gradient(135deg, #FFFFFF 0%, #EFF3F8 30%, #A8B5C8 70%, #E2E8F0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 2px 16px rgba(168, 181, 200, 0.25));
+    }
+
+    /* Sovereign Emerald Gradient */
+    .emerald-foil-text {
+      background: linear-gradient(135deg, #ECFDF5 0%, #34D399 45%, #059669 90%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 2px 16px rgba(16, 185, 129, 0.35));
+    }
+
+    /* Haute Horlogerie Roman Chapter Badge */
+    .chapter-badge-roman {
+      font-family: var(--font-cinzel), "Cinzel", serif;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      background: rgba(8, 10, 15, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      box-shadow: 
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.18),
+        0 6px 24px rgba(0, 0, 0, 0.7);
+      color: #EBD4A7;
+    }
+
+    /* Range slider custom styling */
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      background: transparent;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 22px;
+      width: 22px;
+      border-radius: 6px;
+      background: #00F0FF;
+      cursor: pointer;
+      margin-top: -9px;
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.65);
+      border: 2px solid #08090C;
+      transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 4px;
+      cursor: pointer;
+      background: #181E2B;
+      border-radius: 2px;
+    }
+
+    /* Audio Equalizer animation */
+    @keyframes barWave {
+      0%, 100% { height: 4px; }
+      50% { height: 14px; }
+    }
+    .eq-bar-1 { animation: barWave 0.9s ease-in-out infinite; }
+    .eq-bar-2 { animation: barWave 0.7s ease-in-out infinite 0.2s; }
+    .eq-bar-3 { animation: barWave 1.1s ease-in-out infinite 0.4s; }
+
+    /* Magnetic interactive button hover */
+    .magnetic-btn {
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  </style>
+</head>
+<body class="selection:bg-brand-cyan/20 selection:text-brand-cyan">
+
+  <!-- 35mm Film Grain Layer -->
+  <div class="film-grain"></div>
+
+  <!-- Interactive Mouse-Tracking Ambient Spotlight (Haute Horlogerie Specular Sheen) -->
+  <div id="ambient-spotlight" class="pointer-events-none fixed inset-0 z-30 opacity-70 transition-opacity duration-300" style="background: radial-gradient(750px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(212, 175, 55, 0.045), transparent 50%);"></div>
+
+  <!-- FIXED TOP HUD STATUS BAR -->
+  <header class="fixed top-0 left-0 w-full z-50 py-3.5 px-4 sm:px-8 border-b border-white/[0.08] bg-[#05070A]/85 backdrop-blur-2xl transition-all">
+    <div class="max-w-7xl mx-auto flex items-center justify-between font-mono text-xs">
+      
+      <!-- Logo / Institutional Identity -->
+      <div class="flex items-center gap-3">
+        <a href="#" class="flex items-center gap-2.5 tracking-wider text-white hover:text-amber-400 transition-colors">
+          <div class="w-7 h-7 rounded bg-gradient-to-br from-amber-400/20 via-black to-amber-900/30 border border-amber-500/40 flex items-center justify-center text-amber-300 font-cinzel font-bold text-xs shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+            Σ
+          </div>
+          <span class="font-cinzel tracking-[0.14em] text-xs sm:text-sm font-semibold text-white">VIP LIQUIDITY SYNDICATE</span>
+        </a>
+        <span class="hidden md:inline-block px-2.5 py-0.5 rounded-full bg-white/[0.03] border border-amber-500/20 text-[10px] text-amber-200/60 font-cinzel tracking-[0.18em]">
+          NON-CUSTODIAL // 60-MIN SESSION
+        </span>
+      </div>
+
+      <!-- Center: Scene Quick-Switcher & Elapsed Timer -->
+      <div class="hidden lg:flex items-center gap-4">
+        
+        <!-- Interactive Scene Switcher Navigation with Roman Numerals -->
+        <nav class="flex items-center gap-1 p-1 rounded-full border border-white/[0.08] bg-black/50 backdrop-blur-md">
+          <button onclick="scrollToScene(0)" id="scene-nav-0" class="scene-pill px-3.5 py-1 rounded-full text-[10px] font-cinzel tracking-[0.18em] transition-all bg-amber-500/20 border border-amber-500/40 text-amber-200 font-bold shadow-[0_0_12px_rgba(212,175,55,0.25)]">
+            I • HOOK
+          </button>
+          <button onclick="scrollToScene(1)" id="scene-nav-1" class="scene-pill px-3.5 py-1 rounded-full text-[10px] font-cinzel tracking-[0.18em] transition-all text-white/50 hover:text-white border border-transparent">
+            II • TRUST
+          </button>
+          <button onclick="scrollToScene(2)" id="scene-nav-2" class="scene-pill px-3.5 py-1 rounded-full text-[10px] font-cinzel tracking-[0.18em] transition-all text-white/50 hover:text-white border border-transparent">
+            III • ACTION
+          </button>
+          <button onclick="scrollToScene(3)" id="scene-nav-3" class="scene-pill px-3.5 py-1 rounded-full text-[10px] font-cinzel tracking-[0.18em] transition-all text-white/50 hover:text-white border border-transparent">
+            IV • PAYOUT
+          </button>
+        </nav>
+
+        <!-- Session Elapsed Timer -->
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded border border-white/[0.08] bg-white/[0.02] tabular-nums">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-emerald shadow-[0_0_8px_rgba(16,185,129,0.7)] animate-pulse"></span>
+          <span id="hud-session-timer" class="text-[11px] tracking-[0.12em] text-white/90">
+            [00:15:00]
+          </span>
+        </div>
+
+      </div>
+
+      <!-- Right: Audio Toggle + Primary Action -->
+      <div class="flex items-center gap-3">
+        
+        <!-- Audio Procedural Toggle -->
+        <button id="audio-toggle-btn" class="px-3 py-1.5 rounded border border-white/[0.1] bg-white/[0.03] hover:border-brand-cyan/50 text-white/70 hover:text-white flex items-center gap-2 transition-all">
+          <div id="audio-eq-bars" class="hidden items-end gap-0.5 h-3.5 w-3">
+            <span class="w-0.5 bg-brand-cyan rounded eq-bar-1"></span>
+            <span class="w-0.5 bg-brand-cyan rounded eq-bar-2"></span>
+            <span class="w-0.5 bg-brand-cyan rounded eq-bar-3"></span>
+          </div>
+          <i id="audio-mute-icon" data-lucide="volume-x" class="w-3.5 h-3.5 text-white/50"></i>
+          <span id="audio-status-label" class="text-[11px] tracking-wider uppercase">[AUDIO: OFF]</span>
+        </button>
+
+        <!-- Link to Full Portal -->
+        <a href="portal.html" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded border border-white/[0.1] bg-white/[0.03] hover:border-amber-500/40 text-amber-200/80 hover:text-amber-200 text-xs font-cinzel tracking-wider transition-all" title="Перейти в интерактивный терминал синдиката">
+          <span>ПОРТАЛ</span>
+          <i data-lucide="arrow-up-right" class="w-3 h-3 text-amber-300/60"></i>
+        </a>
+
+        <!-- CTA Trigger Modal -->
+        <button onclick="VIPConcierge.open()" class="magnetic-btn px-4 py-1.5 rounded bg-brand-cyan hover:bg-[#33f3ff] text-black font-semibold text-xs tracking-wider uppercase shadow-[0_0_20px_rgba(0,240,255,0.35)] transition-all active:scale-95">
+          Согласовать сессию
+        </button>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- PINNED SCROLL-TO-VIDEO CINEMATIC HERO (4 SCENES / 60 SECONDS NARRATIVE)   -->
+  <!-- ========================================================================= -->
+  <div id="story-scroll-container" class="relative w-full" style="height: 480vh;">
+
+    <!-- STICKY VIEWPORT (Locked Fullscreen) -->
+    <div class="video-viewport-fixed flex items-center justify-center">
+      
+      <!-- Video Stage (4 Multi-Clip Layers) -->
+      <div id="video-stage" class="absolute inset-0 w-full h-full bg-[#030406]">
+        <!-- Scene 1: Hook -->
+        <video id="video-scene-1" class="video-layer opacity-100" muted playsinline preload="auto" poster="media/scene1_still.jpg">
+          <source src="media/scene1_hook.mp4" type="video/mp4">
+        </video>
+
+        <!-- Scene 2: Trust -->
+        <video id="video-scene-2" class="video-layer opacity-0" muted playsinline preload="auto" poster="media/scene2_still.jpg">
+          <source src="media/scene2_trust.mp4" type="video/mp4">
+        </video>
+
+        <!-- Scene 3: Action -->
+        <video id="video-scene-3" class="video-layer opacity-0" muted playsinline preload="auto" poster="media/scene3_action.mp4">
+          <source src="media/scene3_action.mp4" type="video/mp4">
+        </video>
+
+        <!-- Scene 4: Payout -->
+        <video id="video-scene-4" class="video-layer opacity-0" muted playsinline preload="auto" poster="media/scene4_payout.mp4">
+          <source src="media/scene4_payout.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- Chiaroscuro Overlay & Vignette -->
+      <div class="chiaroscuro-overlay"></div>
+
+      <!-- HUD Corner Reticles (+) -->
+      <div class="hud-crosshair top-16 left-6 sm:left-10">+</div>
+      <div class="hud-crosshair top-16 right-6 sm:right-10">+</div>
+      <div class="hud-crosshair bottom-8 left-6 sm:left-10">+</div>
+      <div class="hud-crosshair bottom-8 right-6 sm:right-10">+</div>
+
+      <!-- Left Rail: Scene Indicator & Progress Bar -->
+      <div class="absolute left-6 sm:left-10 top-1/2 -translate-y-1/2 hidden md:flex flex-col items-center gap-4 z-20">
+        <div class="font-mono text-[10px] tracking-[0.2em] uppercase text-white/40 rotate-180 [writing-mode:vertical-rl]">
+          NARRATIVE TIMELINE // 60 SEC
+        </div>
+        <div class="w-[1px] h-36 bg-white/10 relative overflow-hidden">
+          <div id="hud-progress-fill" class="w-full bg-brand-cyan absolute top-0 left-0 transition-all duration-75" style="height: 0%;"></div>
+        </div>
+        <div id="hud-scene-counter" class="font-mono text-xs text-brand-cyan tracking-wider font-semibold">
+          [01/04]
+        </div>
+      </div>
+
+      <!-- Right Rail: Telemetry Diagnostics -->
+      <div class="absolute right-6 sm:right-10 top-1/2 -translate-y-1/2 hidden xl:flex flex-col items-end gap-2 z-20 font-mono text-[10px] tracking-[0.14em] text-white/40 uppercase">
+        <div class="px-2.5 py-1 rounded bg-black/50 border border-white/[0.08] backdrop-blur-md">
+          SCRUB RATE: <span class="text-brand-emerald font-semibold">60.0 FPS</span>
+        </div>
+        <div class="px-2.5 py-1 rounded bg-black/50 border border-white/[0.08] backdrop-blur-md">
+          ISOLATION: <span class="text-white font-semibold">HARDWARE ENCLAVE</span>
+        </div>
+        <div class="px-2.5 py-1 rounded bg-black/50 border border-white/[0.08] backdrop-blur-md">
+          PERSONAL RISK: <span class="text-brand-cyan font-semibold">$0.00 ZERO</span>
+        </div>
+      </div>
+
+      <!-- Bottom Floating Scrubber Progress Indicator -->
+      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 px-4 py-2 rounded-full border border-white/[0.08] bg-black/60 backdrop-blur-md">
+        <span class="font-mono text-[10px] tracking-[0.18em] text-white/50 uppercase">SCROLL TO PROGRESS</span>
+        <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-brand-cyan animate-bounce"></i>
+      </div>
+
+    </div>
+
+    <!-- NARRATIVE TEXT OVERLAYS (Positioned along scroll track) -->
+    <div class="relative z-30 pointer-events-none">
+
+      <!-- SCENE 1: HOOK (0vh - 100vh) -->
+      <div class="h-screen w-full flex items-center justify-start px-6 sm:px-16 lg:px-24">
+        <div class="max-w-2xl pointer-events-auto space-y-6">
+          
+          <div class="chapter-badge-roman">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-amber animate-ping"></span>
+            <span class="font-cinzel">EPISODE I // THE UNTAPPED ASSET</span>
+          </div>
+
+          <h1 class="editorial-display-headline text-4xl sm:text-6xl lg:text-7xl xl:text-8xl">
+            Ваш телефон за 60 минут <span class="italic font-light gold-foil-text">ни разу не коснется</span> чужих рук.
+          </h1>
+
+          <div class="glass-card p-6 sm:p-7 rounded-2xl space-y-3">
+            <p class="text-sm sm:text-base text-zinc-300 font-light leading-relaxed">
+              <strong class="text-white font-medium">Сверхкрупный план (Macro).</strong> Матовый черный стол в лаундже, экран лежащего смартфона загорается от уведомления: подтвержденный VIP-ранг и лимит <span class="text-brand-cyan font-mono font-semibold">$35,000</span> на вечерний тур.
+            </p>
+            <p class="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
+              Кит оставил конторе состояние, но букмекер обязан держать линию открытой. Его профиль — дефицитный и готовый шлюз ликвидности.
+            </p>
+            <div class="pt-3 border-t border-white/[0.06] flex items-center justify-between font-mono text-xs text-white/50">
+              <span class="font-cinzel tracking-wider text-[11px]">СТАТУС: ПОДТВЕРЖДЕН</span>
+              <span class="text-brand-cyan font-semibold">STAKE PLATINUM IV • $35k</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- SCENE 2: TRUST (100vh - 200vh) -->
+      <div class="h-screen w-full flex items-center justify-start px-6 sm:px-16 lg:px-24">
+        <div class="max-w-2xl pointer-events-auto space-y-6">
+          
+          <div class="chapter-badge-roman border-cyan-500/30 text-cyan-200">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan"></span>
+            <span class="font-cinzel">EPISODE II // HARDWARE ENCLAVE</span>
+          </div>
+
+          <h2 class="editorial-display-headline text-4xl sm:text-6xl lg:text-7xl xl:text-8xl">
+            Ноль передачи паролей. <span class="italic font-light platinum-foil-text">Ноль AnyDesk.</span>
+          </h2>
+
+          <div class="glass-card p-6 sm:p-7 rounded-2xl space-y-3">
+            <p class="text-sm sm:text-base text-zinc-300 font-light leading-relaxed">
+              <strong class="text-white font-medium">Средний план с малой глубиной резкости (Rack-focus).</strong> Чашка эспрессо, расфокусированный силуэт аналитика напротив за ноутбуком. Смартфон берет в руку <span class="text-white font-semibold">сам владелец</span>.
+            </p>
+            <p class="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
+              Ноль передачи паролей, ноль удаленного доступа через AnyDesk. Никакой установки сторонних утилит. Все учетные данные и биометрия остаются на аппаратном уровне исключительно у вас.
+            </p>
+            <div class="pt-3 border-t border-white/[0.06] flex items-center justify-between font-mono text-xs text-white/50">
+              <span class="font-cinzel tracking-wider text-[11px]">УДАЛЕННЫЙ ДОСТУП: ЗАПРЕЩЕН</span>
+              <span class="text-brand-emerald font-semibold">100% NON-CUSTODIAL</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- SCENE 3: ACTION (200vh - 300vh) -->
+      <div class="h-screen w-full flex items-center justify-start px-6 sm:px-16 lg:px-24">
+        <div class="max-w-2xl pointer-events-auto space-y-6">
+          
+          <div class="chapter-badge-roman border-orange-500/30 text-orange-200">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-orange"></span>
+            <span class="font-cinzel">EPISODE III // LIQUIDITY INJECTION</span>
+          </div>
+
+          <h2 class="editorial-display-headline text-4xl sm:text-6xl lg:text-7xl xl:text-8xl">
+            Фонд рискует деньгами. <span class="italic font-light gold-foil-text">Вы нажимаете кнопки.</span>
+          </h2>
+
+          <div class="glass-card p-6 sm:p-7 rounded-2xl space-y-3">
+            <p class="text-sm sm:text-base text-zinc-300 font-light leading-relaxed">
+              <strong class="text-white font-medium">Вид от первого лица (POV).</strong> Аналитик разворачивает экран с QR-кодом депозита синдиката, баланс на телефоне кита пополняется на <span class="text-brand-emerald font-mono font-semibold">+$5,000 USDT</span>. Владелец сам вбивает коэффициент и нажимает кнопку пари.
+            </p>
+            <p class="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
+              Фонд рискует своими деньгами, кит сохраняет полный контроль над интерфейсом. Личный баланс партнера выводится в $0.00 до старта.
+            </p>
+            <div class="pt-3 border-t border-white/[0.06] flex items-center justify-between font-mono text-xs text-white/50">
+              <span class="font-cinzel tracking-wider text-[11px]">ЛИЧНЫЙ БАЛАНС: $0.00</span>
+              <span class="text-brand-cyan font-semibold">СИНДИКАТНЫЙ ПУЛ 100%</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- SCENE 4: PAYOUT (300vh - 400vh) -->
+      <div class="h-screen w-full flex items-center justify-start px-6 sm:px-16 lg:px-24">
+        <div class="max-w-2xl pointer-events-auto space-y-6">
+          
+          <div class="chapter-badge-roman border-emerald-500/30 text-emerald-200">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse"></span>
+            <span class="font-cinzel">EPISODE IV // IMMEDIATE SOVEREIGN PAYOUT</span>
+          </div>
+
+          <h2 class="editorial-display-headline text-4xl sm:text-6xl lg:text-7xl xl:text-8xl">
+            Свои 30% прибыли <span class="italic font-light emerald-foil-text">забираете на месте.</span>
+          </h2>
+
+          <div class="glass-card p-6 sm:p-7 rounded-2xl space-y-4">
+            <p class="text-sm sm:text-base text-zinc-300 font-light leading-relaxed">
+              <strong class="text-white font-medium">Фиксация выигрыша.</strong> Запрос на вывод средств на некастодиальный криптокошелек кита. Зеленый индикатор транзакции в сети USDT TRC20/ERC20. Спокойный кивок, сессия закрыта.
+            </p>
+            <p class="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
+              Свои 30% чистой прибыли игрок забирает на месте, не вставая из-за стола. При отрицательной сессии убыток полностью покрывается синдикатом.
+            </p>
+            
+            <div class="p-3.5 rounded-xl bg-black/50 border border-brand-emerald/40 flex items-center justify-between font-mono">
+              <div class="flex items-center gap-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-brand-emerald shadow-[0_0_12px_rgba(16,185,129,0.9)]"></span>
+                <span class="text-xs text-white font-cinzel tracking-wider">USDT TRANSACTION CONFIRMED</span>
+              </div>
+              <span class="text-xs text-brand-emerald font-bold font-mono">+$1,500.00 (30% SPLIT)</span>
+            </div>
+
+            <button onclick="VIPConcierge.open()" class="magnetic-btn w-full py-4 rounded-xl bg-gradient-to-r from-brand-emerald to-[#059669] hover:from-[#15cc90] hover:to-[#047857] text-white font-bold text-xs font-cinzel tracking-widest uppercase shadow-[0_0_30px_rgba(16,185,129,0.45)] transition-all active:scale-95">
+              Согласовать тестовый слот $5,000 – $10,000 ->
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- SECTION 5: INTERACTIVE MATHEMATICAL DIVIDEND CALCULATOR                   -->
+  <!-- ========================================================================= -->
+  <section id="calculator-section" class="relative z-30 py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full border-t border-white/[0.08] bg-[#030406]">
+    
+    <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+      <div class="chapter-badge-roman mx-auto mb-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan animate-pulse"></span>
+        <span class="font-cinzel">ALGORITHMIC VALUE ESTIMATOR</span>
+      </div>
+      <h2 class="editorial-display-headline text-3xl sm:text-5xl lg:text-6xl text-white">
+        Интерактивный калькулятор <span class="italic font-light gold-foil-text">дивидендов и сплита</span>
+      </h2>
+      <p class="text-sm sm:text-base text-zinc-400 font-light max-w-2xl mx-auto leading-relaxed">
+        Рассчитайте объем институционального капитала и вашу долю чистой прибыли в USDT на основе подтвержденных лимитов.
+      </p>
+    </div>
+
+    <!-- Dynamic Calculator Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-6xl mx-auto">
+      
+      <!-- Left: Step-by-Step Inputs (7 cols) -->
+      <div class="lg:col-span-7 space-y-6">
+        
+        <!-- Step 1: Bookmaker Selection -->
+        <div class="glass-card p-6 sm:p-7 rounded-2xl">
+          <div class="flex items-center justify-between mb-4">
+            <label class="text-xs font-cinzel uppercase text-brand-cyan tracking-wider font-semibold flex items-center gap-2">
+              <span class="w-5 h-5 rounded bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-[10px] font-mono">01</span>
+              <span>Платформа и VIP-ранг:</span>
+            </label>
+            <span class="text-xs font-mono text-white/70" id="selected-bk-label">Stake (Platinum IV)</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="bookmaker-selector">
+            <button type="button" onclick="selectBookmaker('Stake')" id="bk-btn-Stake" class="bk-card active text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-24 bg-brand-surfaceLight border-brand-cyan shadow-[0_0_20px_rgba(0,240,255,0.25)] ring-1 ring-brand-cyan/50">
+              <div class="flex items-center justify-between w-full">
+                <span class="font-bold text-white text-xs font-mono">Stake.com</span>
+                <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse"></span>
+              </div>
+              <div>
+                <span class="text-[10px] font-mono text-zinc-400 block">Platinum IV–Diamond</span>
+                <span class="text-[9px] font-mono text-brand-cyan block">Пул: $25k – $50k+</span>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectBookmaker('Sportsbet')" id="bk-btn-Sportsbet" class="bk-card text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-24 bg-white/[0.02] border-white/[0.08] hover:border-white/20">
+              <div class="flex items-center justify-between w-full">
+                <span class="font-bold text-white text-xs font-mono">Sportsbet.io</span>
+                <span class="w-2 h-2 rounded-full bg-slate-600"></span>
+              </div>
+              <div>
+                <span class="text-[10px] font-mono text-zinc-400 block">Clubhouse Legend</span>
+                <span class="text-[9px] font-mono text-brand-cyan block">Пул: $35k – $70k+</span>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectBookmaker('BCGame')" id="bk-btn-BCGame" class="bk-card text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-24 bg-white/[0.02] border-white/[0.08] hover:border-white/20">
+              <div class="flex items-center justify-between w-full">
+                <span class="font-bold text-white text-xs font-mono">BC.Game</span>
+                <span class="w-2 h-2 rounded-full bg-slate-600"></span>
+              </div>
+              <div>
+                <span class="text-[10px] font-mono text-zinc-400 block">SVIP 55+ Tier</span>
+                <span class="text-[9px] font-mono text-brand-cyan block">Пул: $60k – $120k+</span>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectBookmaker('Roobet')" id="bk-btn-Roobet" class="bk-card text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-24 bg-white/[0.02] border-white/[0.08] hover:border-white/20">
+              <div class="flex items-center justify-between w-full">
+                <span class="font-bold text-white text-xs font-mono">Roobet</span>
+                <span class="w-2 h-2 rounded-full bg-slate-600"></span>
+              </div>
+              <div>
+                <span class="text-[10px] font-mono text-zinc-400 block">King Whale Tier</span>
+                <span class="text-[9px] font-mono text-brand-cyan block">Пул: $20k – $45k+</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2: Limit Ceiling Slider -->
+        <div class="glass-card p-6 sm:p-7 rounded-2xl">
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-xs font-cinzel uppercase text-brand-cyan tracking-wider font-semibold flex items-center gap-2">
+              <span class="w-5 h-5 rounded bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-[10px] font-mono">02</span>
+              <span>Подтвержденный потолок ставки (Max Bet 1X2):</span>
+            </label>
+            <div class="text-xl font-mono font-bold text-white tracking-tight" id="display-limit">
+              $25,000
+            </div>
+          </div>
+
+          <p class="text-xs text-zinc-400 mb-6 font-light">
+            Сумма максимальной ставки на топовый матч (АПЛ / Лига Чемпионов, рынок 1X2) без порезки.
+          </p>
+
+          <input type="range" id="calc-limit-slider" min="5000" max="100000" step="1000" value="25000" class="mb-4">
+
+          <div class="flex justify-between text-[10px] font-mono text-zinc-500">
+            <span>$5,000 (Тестовый)</span>
+            <span>$25,000 (Tier-A)</span>
+            <span>$50,000 (Whale)</span>
+            <span>$100,000+ (Institutional)</span>
+          </div>
+
+          <!-- Quick Chips -->
+          <div class="flex flex-wrap gap-2 pt-4 mt-4 border-t border-white/[0.06]">
+            <span class="text-[10px] font-mono text-zinc-400 self-center mr-1">Быстрый выбор:</span>
+            <button type="button" onclick="setLimitPreset(10000)" class="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] hover:border-brand-cyan/50 text-[11px] font-mono text-white transition-colors">$10k</button>
+            <button type="button" onclick="setLimitPreset(25000)" class="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] hover:border-brand-cyan/50 text-[11px] font-mono text-white transition-colors">$25k</button>
+            <button type="button" onclick="setLimitPreset(50000)" class="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] hover:border-brand-cyan/50 text-[11px] font-mono text-white transition-colors">$50k</button>
+            <button type="button" onclick="setLimitPreset(75000)" class="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] hover:border-brand-cyan/50 text-[11px] font-mono text-white transition-colors">$75k</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Sessions Frequency Slider -->
+        <div class="glass-card p-6 sm:p-7 rounded-2xl">
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-xs font-cinzel uppercase text-brand-cyan tracking-wider font-semibold flex items-center gap-2">
+              <span class="w-5 h-5 rounded bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-[10px] font-mono">03</span>
+              <span>Количество 60-минутных сессий в месяц:</span>
+            </label>
+            <div class="text-base font-mono font-bold text-white tracking-tight" id="display-sessions">
+              4 сессии
+            </div>
+          </div>
+          <input type="range" id="calc-sessions-slider" min="1" max="12" step="1" value="4" class="mb-4">
+          <div class="flex justify-between text-[10px] font-mono text-zinc-500">
+            <span>1 сессия (Тест)</span>
+            <span>4 сессии (Раз в неделю)</span>
+            <span>8 сессий (Дважды в неделю)</span>
+            <span>12 сессий</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right: Live Mathematical Outputs Card (5 cols) -->
+      <div class="lg:col-span-5">
+        <div class="glass-card p-6 sm:p-8 rounded-2xl sticky top-24 border-brand-cyan/40 shadow-[0_0_50px_rgba(0,240,255,0.15)]">
+          
+          <div class="flex items-center justify-between pb-4 border-b border-white/[0.08] mb-6">
+            <span class="font-cinzel text-xs text-brand-cyan uppercase tracking-wider font-semibold">// ALLOCATION SPECIFICATION</span>
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-brand-emerald/10 border border-brand-emerald/30 text-brand-emerald text-[10px] font-mono">
+              <span class="w-1.5 h-1.5 rounded-full bg-brand-emerald"></span>
+              АУДИТ АКТИВЕН
+            </span>
+          </div>
+
+          <div class="space-y-6 mb-8">
+            
+            <!-- Bankroll Output -->
+            <div>
+              <div class="text-xs font-mono text-zinc-400 mb-1 flex items-center justify-between">
+                <span>Аллокация капитала фонда:</span>
+                <span class="text-brand-cyan text-[10px]">100% средства фонда</span>
+              </div>
+              <div class="text-2xl sm:text-3xl font-mono font-bold text-white tracking-tight" id="res-bankroll">
+                $50,000 USDT
+              </div>
+            </div>
+
+            <!-- Expected Profit Per Session -->
+            <div>
+              <div class="text-xs font-mono text-zinc-400 mb-1 flex items-center justify-between">
+                <span>Чистый профит за 60-мин сессию:</span>
+                <span class="text-zinc-500 text-[10px]">Оценка риск-деска</span>
+              </div>
+              <div class="text-xl font-mono font-bold text-white tracking-tight" id="res-session-profit">
+                ~$5,000 USDT
+              </div>
+            </div>
+
+            <!-- Downside Risk (Always $0.00) -->
+            <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.08]">
+              <div class="text-xs font-mono text-zinc-400 mb-1 flex items-center justify-between">
+                <span>Личный финансовый риск:</span>
+                <span class="text-brand-emerald text-[10px] font-bold">ГАРАНТИЯ</span>
+              </div>
+              <div class="text-xl font-mono font-bold text-brand-emerald tracking-tight flex items-center gap-2">
+                <span>$0.00</span>
+                <span class="text-xs font-normal text-zinc-400 font-sans">(Вывод баланса в 0 до старта)</span>
+              </div>
+            </div>
+
+            <!-- Whale Dividend Split Highlight -->
+            <div class="p-4 rounded-xl bg-gradient-to-b from-brand-cyan/15 to-transparent border border-brand-cyan/40">
+              <div class="text-xs font-mono text-brand-cyan mb-1 flex items-center justify-between">
+                <span class="font-bold font-cinzel">ВАША ДОЛЯ ПРИБЫЛИ (30% SPLIT):</span>
+                <span class="text-white text-[10px] font-mono">ВЫПЛАТА НА МЕСТЕ</span>
+              </div>
+              <div class="text-3xl sm:text-4xl font-mono font-bold text-brand-cyan tracking-tight mb-1" id="res-whale-dividend">
+                $6,000 USDT
+              </div>
+              <div class="text-xs font-mono text-zinc-300 flex items-center justify-between pt-2 border-t border-brand-cyan/20">
+                <span>В месяц (4 сессии)</span>
+                <span class="text-brand-cyan font-semibold" id="res-session-dividend">+$1,500 USDT / сессия</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Direct Trigger Button -->
+          <button onclick="transferCalculatorToModal()" class="magnetic-btn w-full py-4 rounded-xl bg-brand-cyan hover:bg-[#33f3ff] text-black font-cinzel font-bold text-sm tracking-widest uppercase flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(0,240,255,0.4)] transition-all active:scale-95">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+            <span>Забронировать слот аллокации</span>
+          </button>
+
+          <p class="text-[11px] text-zinc-500 text-center mt-3 font-mono">
+            🔒 Без передачи паролей • Личный баланс выводится в 0 • Регламент NDA
+          </p>
+
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- SECTION 6: INSTITUTIONAL COMPARISON MATRIX                                -->
+  <!-- ========================================================================= -->
+  <section class="py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full border-t border-white/[0.08] bg-[#030406]">
+    
+    <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+      <div class="chapter-badge-roman mx-auto mb-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-amber"></span>
+        <span class="font-cinzel">COMPARATIVE RISK ARCHITECTURE</span>
+      </div>
+      <h2 class="editorial-display-headline text-3xl sm:text-5xl lg:text-6xl text-white">
+        Обычные перекупщики vs <span class="italic font-light gold-foil-text">Наш синдикат</span>
+      </h2>
+      <p class="text-sm sm:text-base text-zinc-400 font-light max-w-2xl mx-auto leading-relaxed">
+        Почему передача смартфона в чужие руки или аренда аккаунтов на форумах несет 100% юридический и финансовый риск.
+      </p>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse font-sans">
+        <thead>
+          <tr class="border-b border-white/[0.12] text-xs font-cinzel uppercase tracking-wider text-zinc-400">
+            <th class="py-4 px-6">Параметр протокола</th>
+            <th class="py-4 px-6 text-red-400">Обычные перекупщики (Дроповоды)</th>
+            <th class="py-4 px-6 text-brand-cyan bg-brand-cyan/[0.03] border-x border-brand-cyan/20">Private Liquidity Syndicate</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/[0.06] text-xs sm:text-sm">
+          <tr>
+            <td class="py-4 px-6 font-medium text-white">Физический контроль устройства</td>
+            <td class="py-4 px-6 text-zinc-400">Забирают телефон в руки, уносят в соседние комнаты или требуют AnyDesk</td>
+            <td class="py-4 px-6 text-white bg-brand-cyan/[0.03] border-x border-brand-cyan/20 font-semibold">
+              Ваш телефон за 60 минут ни разу не коснется чужих рук
+            </td>
+          </tr>
+          <tr>
+            <td class="py-4 px-6 font-medium text-white">Учетные данные и 2FA</td>
+            <td class="py-4 px-6 text-zinc-400">Требуют логины, пароли, перепривязку почты и отключение 2FA</td>
+            <td class="py-4 px-6 text-white bg-brand-cyan/[0.03] border-x border-brand-cyan/20 font-semibold">
+              100% Non-Custodial. Ноль паролей. Доступ только у вас
+            </td>
+          </tr>
+          <tr>
+            <td class="py-4 px-6 font-medium text-white">Личный финансовый риск</td>
+            <td class="py-4 px-6 text-zinc-400">Заставляют оставлять деньги на балансе, при бане бросают депозит</td>
+            <td class="py-4 px-6 text-brand-emerald bg-brand-cyan/[0.03] border-x border-brand-cyan/20 font-semibold">
+              0% риска. Баланс выводится в $0.00. Риски на 100% несет фонд
+            </td>
+          </tr>
+          <tr>
+            <td class="py-4 px-6 font-medium text-white">Размер выделяемого пула</td>
+            <td class="py-4 px-6 text-zinc-400">Мелкие ставки $200–$500 от случайных людей с форумов</td>
+            <td class="py-4 px-6 text-white bg-brand-cyan/[0.03] border-x border-brand-cyan/20 font-semibold">
+              Прямая аллокация капитала: $10,000 – $50,000+ на сессию
+            </td>
+          </tr>
+          <tr>
+            <td class="py-4 px-6 font-medium text-white">Модель и скорость расчета</td>
+            <td class="py-4 px-6 text-zinc-400">Обещания выплат «через неделю», скрытые комиссии и исчезновения</td>
+            <td class="py-4 px-6 text-brand-cyan bg-brand-cyan/[0.03] border-x border-brand-cyan/20 font-semibold">
+              Сплит 70/30 (30% на ваш USDT-кошелек на месте до выхода из офиса)
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- SECTION 7: FINAL EXECUTIVE OFFER BLOCK                                    -->
+  <!-- ========================================================================= -->
+  <section class="py-28 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full text-center space-y-8">
+    <div class="chapter-badge-roman mx-auto mb-2">
+      <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan animate-pulse"></span>
+      <span class="font-cinzel">ALLOCATION DESK // PRIVATE ACCESS</span>
+    </div>
+    
+    <h2 class="editorial-display-headline text-4xl sm:text-6xl lg:text-7xl text-white">
+      Превратите простаивающие лимиты в <span class="italic font-light gold-foil-text">еженедельный поток</span> ликвидности.
+    </h2>
+
+    <p class="text-sm sm:text-base text-zinc-300 font-light max-w-2xl mx-auto leading-relaxed">
+      Мы открываем закрытую аллокационную квоту: выделение от $10,000 до $50,000+ синдикатного банкролла на очную сессию. Вы приходите с нулевым балансом, лично нажимаете кнопки в приложении и забираете 30% прибыли на месте.
+    </p>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+      <button onclick="VIPConcierge.open()" class="magnetic-btn w-full sm:w-auto px-10 py-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black font-cinzel font-bold text-xs tracking-widest uppercase shadow-[0_0_35px_rgba(212,175,55,0.45)] transition-all active:scale-95">
+        Согласовать время закрытой сессии ->
+      </button>
+      <a href="portal.html" class="w-full sm:w-auto px-6 py-4 rounded-xl border border-white/[0.12] hover:border-white/30 text-white font-cinzel text-xs tracking-wider transition-colors">
+        Изучить полный портал синдиката
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-14 px-4 sm:px-8 border-t border-white/[0.08] bg-[#020305] text-center font-mono text-xs text-white/40">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <span>© 2026 VIP Liquidity Syndicate. Non-Custodial Physical Session Protocol.</span>
+      <div class="flex items-center gap-4 text-white/60">
+        <span>LAT: 55.7558° N</span>
+        <span>SECURITY: ENCRYPTED</span>
+        <span>GOP: 5 (60FPS)</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- SCRIPTS & ENGINE BINDINGS                                                 -->
+  <!-- ========================================================================= -->
+  <!-- Audio Procedural Engine -->
+  <script src="sound-engine.js"></script>
+
+  <!-- VIP Concierge Modal Engine -->
+  <script src="vip-concierge-modal.js"></script>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // -----------------------------------------------------------------------
+    // 1. DAMPED LERP SCROLL-TO-VIDEO ENGINE (60 FPS)
+    // -----------------------------------------------------------------------
+    const videos = [
+      document.getElementById('video-scene-1'),
+      document.getElementById('video-scene-2'),
+      document.getElementById('video-scene-3'),
+      document.getElementById('video-scene-4')
+    ];
+
+    const storyContainer = document.getElementById('story-scroll-container');
+    const hudFill = document.getElementById('hud-progress-fill');
+    const hudCounter = document.getElementById('hud-scene-counter');
+    const hudTimer = document.getElementById('hud-session-timer');
+
+    let targetProgress = 0;
+    let currentProgress = 0;
+    const LERP_FACTOR = 0.08;
+    let currentActiveSceneIndex = 0;
+
+    // Ensure videos are loaded, muted, and ready
+    videos.forEach(v => {
+      if (v) {
+        v.muted = true;
+        v.pause();
+        v.load();
+      }
+    });
+
+    // Update target scroll progress
+    function onScrollUpdate() {
+      if (!storyContainer) return;
+      const rect = storyContainer.getBoundingClientRect();
+      const totalScrollable = rect.height - window.innerHeight;
+      if (totalScrollable <= 0) return;
+
+      const progress = Math.max(0, Math.min(1, -rect.top / totalScrollable));
+      targetProgress = progress;
+    }
+
+    window.addEventListener('scroll', onScrollUpdate, { passive: true });
+    window.addEventListener('resize', onScrollUpdate);
+
+    // Clickable Scene Navigation
+    function scrollToScene(sceneIndex) {
+      if (!storyContainer) return;
+      const totalScrollable = storyContainer.offsetHeight - window.innerHeight;
+      const targetScrollY = storyContainer.offsetTop + (sceneIndex / 3) * totalScrollable;
+      window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
+      if (window.SyndicateAudio && window.SyndicateAudio.playSceneTransition) {
+        window.SyndicateAudio.playSceneTransition(sceneIndex);
+      }
+    }
+
+    // 60fps render loop
+    function renderVideoScrub() {
+      // Damped Lerp
+      currentProgress += (targetProgress - currentProgress) * LERP_FACTOR;
+
+      // Update vertical HUD fill
+      if (hudFill) {
+        hudFill.style.height = (currentProgress * 100).toFixed(1) + '%';
+      }
+
+      // Map progress (0.0 to 1.0) into 4 distinct scene segments
+      const segmentCount = 4;
+      const sceneIndex = Math.min(3, Math.floor(currentProgress * segmentCount));
+
+      // Update HUD Scene Tags if changed
+      if (sceneIndex !== currentActiveSceneIndex) {
+        currentActiveSceneIndex = sceneIndex;
+        if (hudCounter) {
+          hudCounter.innerText = `[0${sceneIndex + 1}/04]`;
+        }
+        if (hudTimer) {
+          const times = ['[00:15:00]', '[00:30:00]', '[00:45:00]', '[00:60:00]'];
+          hudTimer.innerText = times[sceneIndex];
+        }
+        
+        // Update top nav pills active state
+        for (let i = 0; i < 4; i++) {
+          const pill = document.getElementById(`scene-nav-${i}`);
+          if (pill) {
+            if (i === sceneIndex) {
+              pill.className = 'scene-pill px-3 py-1 rounded-full text-[10px] font-mono tracking-wider transition-all bg-brand-cyan/20 border border-brand-cyan/40 text-brand-cyan font-bold shadow-[0_0_10px_rgba(0,240,255,0.25)]';
+            } else {
+              pill.className = 'scene-pill px-3 py-1 rounded-full text-[10px] font-mono tracking-wider transition-all text-white/50 hover:text-white border border-transparent';
+            }
+          }
+        }
+
+        if (window.SyndicateAudio && window.SyndicateAudio.playSceneTransition) {
+          window.SyndicateAudio.playSceneTransition(sceneIndex);
+        }
+      }
+
+      // Multi-scene crossfading and video time scrubbing
+      videos.forEach((video, i) => {
+        if (!video) return;
+
+        // Calculate opacity based on distance to segment center
+        const sceneCenter = i / (segmentCount - 1);
+        const distance = Math.abs(currentProgress - sceneCenter);
+        const maxDist = 1 / (segmentCount - 1);
+        
+        let opacity = 0;
+        if (distance < maxDist) {
+          opacity = 1 - (distance / maxDist);
+          opacity = Math.max(0, Math.min(1, opacity));
+        }
+
+        // Apply opacity
+        video.style.opacity = opacity.toFixed(3);
+
+        // Scrub current video time to progress within its segment
+        if (video.duration && !video.seeking) {
+          const sceneLocalProgress = Math.max(0, Math.min(1, (currentProgress - (i * 0.25)) / 0.25));
+          const seekTarget = sceneLocalProgress * video.duration;
+          if (Math.abs(video.currentTime - seekTarget) > 0.04) {
+            video.currentTime = seekTarget;
+          }
+        }
+      });
+
+      requestAnimationFrame(renderVideoScrub);
+    }
+
+    requestAnimationFrame(renderVideoScrub);
+
+    // -----------------------------------------------------------------------
+    // 2. INTERACTIVE CALCULATOR LOGIC
+    // -----------------------------------------------------------------------
+    const BOOKMAKERS = {
+      'Stake': { name: 'Stake.com', tier: 'Platinum IV', multiplier: 2.0, basePool: 50000 },
+      'Sportsbet': { name: 'Sportsbet.io', tier: 'Clubhouse Legend', multiplier: 2.2, basePool: 65000 },
+      'BCGame': { name: 'BC.Game', tier: 'SVIP 55+', multiplier: 2.4, basePool: 80000 },
+      'Roobet': { name: 'Roobet', tier: 'King Whale', multiplier: 1.8, basePool: 40000 }
+    };
+
+    let selectedBK = 'Stake';
+    let currentLimitVal = 25000;
+    let currentSessionsVal = 4;
+
+    function selectBookmaker(name) {
+      selectedBK = name;
+      document.getElementById('selected-bk-label').innerText = `${BOOKMAKERS[name].name} (${BOOKMAKERS[name].tier})`;
+
+      Object.keys(BOOKMAKERS).forEach(bk => {
+        const btn = document.getElementById(`bk-btn-${bk}`);
+        if (!btn) return;
+        const dot = btn.querySelector('.rounded-full');
+        if (bk === name) {
+          btn.className = 'bk-card active text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-24 bg-brand-surfaceLight border-brand-cyan shadow-[0_0_20px_rgba(0,240,255,0.25)] ring-1 ring-brand-cyan/50';
+          if (dot) dot.className = 'w-2 h-2 rounded-full bg-brand-cyan animate-pulse';
+        } else {
+          btn.className = 'bk-card text-left p-3.5 rounded-xl border transition-all relative flex flex-col justify-between h-24 bg-white/[0.02] border-white/[0.08] hover:border-white/20';
+          if (dot) dot.className = 'w-2 h-2 rounded-full bg-slate-600';
+        }
+      });
+
+      if (window.SyndicateAudio) {
+        window.SyndicateAudio.playMechanicalSwitch();
+      }
+
+      updateCalculator();
+    }
+
+    function setLimitPreset(val) {
+      const slider = document.getElementById('calc-limit-slider');
+      if (slider) {
+        slider.value = val;
+        currentLimitVal = val;
+        updateCalculator();
+        if (window.SyndicateAudio) {
+          window.SyndicateAudio.playHapticClick({ pitch: 1.2 });
+        }
+      }
+    }
+
+    function updateCalculator() {
+      const bk = BOOKMAKERS[selectedBK];
+      const bankroll = Math.round(currentLimitVal * bk.multiplier);
+      const sessionProfit = Math.round(bankroll * 0.10); // ~10% net per session
+      const whaleSessionDividend = Math.round(sessionProfit * 0.30); // 30% split
+      const whaleMonthlyDividend = whaleSessionDividend * currentSessionsVal;
+
+      document.getElementById('display-limit').innerText = '$' + currentLimitVal.toLocaleString('en-US');
+      document.getElementById('display-sessions').innerText = `${currentSessionsVal} ${currentSessionsVal === 1 ? 'сессия' : (currentSessionsVal < 5 ? 'сессии' : 'сессий')}`;
+      document.getElementById('res-bankroll').innerText = '$' + bankroll.toLocaleString('en-US') + ' USDT';
+      document.getElementById('res-session-profit').innerText = '~$' + sessionProfit.toLocaleString('en-US') + ' USDT';
+      document.getElementById('res-whale-dividend').innerText = '$' + whaleMonthlyDividend.toLocaleString('en-US') + ' USDT';
+      document.getElementById('res-session-dividend').innerText = '+$' + whaleSessionDividend.toLocaleString('en-US') + ' USDT / сессия';
+    }
+
+    const limitSlider = document.getElementById('calc-limit-slider');
+    if (limitSlider) {
+      limitSlider.addEventListener('input', (e) => {
+        currentLimitVal = parseInt(e.target.value, 10);
+        updateCalculator();
+        if (window.SyndicateAudio) {
+          window.SyndicateAudio.playHapticClick({ pitch: 0.9 + (currentLimitVal / 100000) * 0.5 });
+        }
+      });
+    }
+
+    const sessionSlider = document.getElementById('calc-sessions-slider');
+    if (sessionSlider) {
+      sessionSlider.addEventListener('input', (e) => {
+        currentSessionsVal = parseInt(e.target.value, 10);
+        updateCalculator();
+        if (window.SyndicateAudio) {
+          window.SyndicateAudio.playHapticClick({ pitch: 1.0 });
+        }
+      });
+    }
+
+    function transferCalculatorToModal() {
+      if (window.SyndicateAudio) {
+        window.SyndicateAudio.playPayoutConfirmation();
+      }
+      if (typeof VIPConcierge !== 'undefined') {
+        VIPConcierge.open({
+          bk: selectedBK,
+          tier: BOOKMAKERS[selectedBK].tier,
+          limit: '$' + currentLimitVal.toLocaleString('en-US')
+        });
+      }
+    }
+
+    // -----------------------------------------------------------------------
+    // 3. AUDIO HEADER CONTROLLER
+    // -----------------------------------------------------------------------
+    const audioBtn = document.getElementById('audio-toggle-btn');
+    const eqBars = document.getElementById('audio-eq-bars');
+    const muteIcon = document.getElementById('audio-mute-icon');
+    const audioLabel = document.getElementById('audio-status-label');
+
+    if (audioBtn) {
+      audioBtn.addEventListener('click', () => {
+        if (!window.SyndicateAudio) return;
+        const isMuted = window.SyndicateAudio.toggleMute();
+        
+        if (isMuted) {
+          eqBars.classList.add('hidden');
+          eqBars.classList.remove('flex');
+          muteIcon.classList.remove('hidden');
+          audioLabel.innerText = '[AUDIO: OFF]';
+          audioBtn.classList.remove('border-brand-cyan', 'text-brand-cyan');
+        } else {
+          eqBars.classList.remove('hidden');
+          eqBars.classList.add('flex');
+          muteIcon.classList.add('hidden');
+          audioLabel.innerText = '[AUDIO: ON]';
+          audioBtn.classList.add('border-brand-cyan', 'text-brand-cyan');
+        }
+      });
+    }
+
+    // Initial calculation run
+    updateCalculator();
+  </script>
+</body>
+</html>
